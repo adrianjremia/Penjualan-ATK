@@ -82,27 +82,6 @@ Route::middleware(['auth', 'role:0'])->group(function () {
 use App\Http\Controllers\Admin\TransaksiController;
 
 Route::prefix('admin')->middleware(['auth', 'role:0'])->group(function () {
-    Route::get('/transaksi', [TransaksiController::class, 'create'])
-        ->name('admin.transaksi.index');
-
-    Route::post('/transaksi', [TransaksiController::class, 'store'])
-        ->name('admin.transaksi.store');
-});
-
-Route::prefix('admin')->middleware(['auth', 'role:0'])->group(function () {
-
-    Route::get('/transaksi', [TransaksiController::class, 'index'])
-        ->name('admin.transaksi.index');
-
-    Route::post('/transaksi', [TransaksiController::class, 'store'])
-        ->name('admin.transaksi.store');
-
-    Route::get('/transaksi/{id}/invoice', [TransaksiController::class, 'invoice'])
-        ->name('admin.transaksi.invoice');
-});
-
-Route::prefix('admin')->middleware(['auth', 'role:0'])->group(function () {
-
     // FORM TRANSAKSI (kasir)
     Route::get('/transaksi', [TransaksiController::class, 'create'])
         ->name('admin.transaksi.create');
@@ -112,7 +91,7 @@ Route::prefix('admin')->middleware(['auth', 'role:0'])->group(function () {
 
     // RIWAYAT TRANSAKSI
     Route::get('/riwayat-transaksi', [TransaksiController::class, 'index'])
-        ->name('admin.riwayat-transaksi.index');
+        ->name('admin.transaksi.index');
 
     // INVOICE
     Route::get('/transaksi/{id}/invoice', [TransaksiController::class, 'invoice'])
