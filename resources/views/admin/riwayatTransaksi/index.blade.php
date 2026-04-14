@@ -1,21 +1,51 @@
-@foreach ($transaksis as $index => $t)
-<tr>
-    <td>T{{ str_pad($t->id_transaksi, 3, '0', STR_PAD_LEFT) }}</td>
-    <td>{{ $t->tanggal_transaksi->translatedFormat('d F Y \\p\\u\\k\\u\\l H.i') }}</td>
-    <td>{{ $t->detail_transaksi_count }} item</td>
-    <td class="fw-bold">Rp {{ number_format($t->total_harga, 0, ',', '.') }}</td>
-    <td>
-        <a href="{{ route('admin.transaksi.invoice', $t->id_transaksi) }}"
-           class="btn btn-outline-primary btn-sm">
-            👁 Detail
-        </a>
-    </td>
-</tr>
-@endforeach
+@extends('layouts.admin')
 
-<div class="d-flex justify-content-between mt-4 p-3 bg-light rounded">
-    <strong>Total {{ $transaksis->count() }} Transaksi</strong>
-    <strong class="fs-4 text-primary">
-        Rp {{ number_format($totalKeseluruhan, 0, ',', '.') }}
-    </strong>
-</div>
+@section('content')
+<h2>Riwayat Transaksi</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>Kode</th>
+            <th>Tanggal</th>
+            <th>Jumlah Item</th>
+            <th>Total Harga</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @forelse ($transaksis as $t)
+        <tr>
+            <td>T{{ str_pad($t->id_transaksi, 3, '0', STR_PAD_LEFT) }}</td>
+
+            <td>
+                {{ $t->tanggal_transaksi->translatedFormat('d F Y \p\u\k\u\l H.i') }}
+            </td>
+
+            <td>{{ $t->detail_transaksi_count }} item</td>
+
+            <td>
+                Rp {{ number_format($t->total_harga, 0, ',', '.') }}
+            </td>
+
+            <td>
+                <a href="{{ route('admin.transaksi.invoice', $t->id_transaksi) }}">
+                    Detail
+                </a>
+            </td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="5" align="center">Belum ada transaksi</td>
+        </tr>
+        @endforelse
+    </tbody>
+</table>
+
+<br>
+
+<strong>Total {{ $transaksis->count() }} Transaksi</strong><br>
+<strong>Total Omset: Rp {{ number_format($totalKeseluruhan, 0, ',', '.') }}</strong>
+
+@endsection
