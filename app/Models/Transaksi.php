@@ -10,7 +10,7 @@ class Transaksi extends Model
     protected $primaryKey = 'id_transaksi';
     public $incrementing = true;
     protected $keyType = 'int';
-    public $timestamps = true;
+    public $timestamps = false;
 
     protected $fillable = [
         'id_user',
@@ -18,10 +18,6 @@ class Transaksi extends Model
         'total_harga'
     ];
 
-    // 🔥 TAMBAHKAN INI
-    protected $casts = [
-        'tanggal_transaksi' => 'datetime',
-    ];
 
     public function detailTransaksi()
     {
