@@ -127,7 +127,7 @@
 
     .action-buttons {
         display: flex;
-        gap: 8px;
+        gap: 12px;
         align-items: center;
     }
 
@@ -135,8 +135,8 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 32px;
-        height: 32px;
+        gap: 6px;
+        padding: 6px 12px;
         border: none;
         border-radius: 4px;
         cursor: pointer;
@@ -147,12 +147,14 @@
     }
 
     .btn-edit {
-        background: #f3f4f6;
-        color: #374151;
+        background: transparent;
+        color: #2563eb;
+        border: none;
+        padding: 0;
     }
 
     .btn-edit:hover {
-        background: #e5e7eb;
+        color: #1d4ed8;
     }
 
     .btn-delete {
@@ -165,13 +167,13 @@
     }
 
     .btn-delete:hover {
-        transform: scale(1.1);
+        color: #dc2626;
     }
 
     .btn-delete img,
     .btn-edit img {
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
         object-fit: contain;
     }
 
@@ -235,12 +237,14 @@
                     <div class="action-buttons">
                         <a href="{{ route('admin.barang.edit', $item->id_barang) }}" class="btn-icon btn-edit" title="Edit">
                             <img src="{{ asset('images/icons/edit.png') }}" alt="Edit">
+                            Edit
                         </a>
                         <form action="{{ route('admin.barang.destroy', $item->id_barang) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus barang ini?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn-delete" title="Hapus">
+                            <button type="submit" class="btn-icon btn-delete" title="Hapus">
                                 <img src="{{ asset('images/icons/hapus.png') }}" alt="Hapus">
+                                Hapus
                             </button>
                         </form>
                     </div>
