@@ -52,18 +52,23 @@
             align-items: center;
             gap: 12px;
             padding: 12px 12px;
-            color: #4b5563;
+            color: #6b7280;
             text-decoration: none;
             font-size: 14px;
             border-radius: 6px;
             transition: all 0.2s;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
         }
 
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
+        .sidebar-menu a:hover {
             background: #f3f4f6;
+            color: #374151;
+        }
+
+        .sidebar-menu a.active {
+            background: #dbeafe;
             color: #2563eb;
+            font-weight: 500;
         }
 
         .sidebar-menu img {
@@ -90,13 +95,14 @@
         .sidebar-footer button {
             width: 100%;
             padding: 10px 12px;
-            background: #ef4444;
-            border: none;
-            color: white;
+            background: transparent;
+            border: 1px solid #fee2e2;
+            color: #ef4444;
             font-size: 14px;
+            font-weight: 600;
             border-radius: 6px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -104,7 +110,14 @@
         }
 
         .sidebar-footer button:hover {
-            background: #dc2626;
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+
+        .sidebar-footer img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
         }
 
         .main-wrapper {
@@ -149,11 +162,7 @@
         <form action="{{ route('logout') }}" method="POST">
             @csrf
             <button type="submit">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11 2H13C13.5304 2 14.0391 2.21071 14.4142 2.58579C14.7893 2.96086 15 3.46957 15 4V12C15 12.5304 14.7893 13.0391 14.4142 13.4142C14.0391 13.7893 13.5304 14 13 14H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M8 11.5L11 8.5L8 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M11 8.5H4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+                <img src="{{ asset('images/icons/logout.png') }}" alt="Logout">
                 Logout
             </button>
         </form>
