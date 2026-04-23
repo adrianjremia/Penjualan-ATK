@@ -90,14 +90,8 @@
         white-space: nowrap;
     }
 
-    .btn-tambah:hover:not(:disabled) {
+    .btn-tambah:hover {
         background: #2563eb;
-    }
-
-    .btn-tambah:disabled {
-        background: #d1d5db;
-        cursor: not-allowed;
-        color: #9ca3af;
     }
 
     .table-wrapper {
@@ -217,14 +211,8 @@
         gap: 8px;
     }
 
-    .btn-simpan:hover:not(:disabled) {
+    .btn-simpan:hover {
         background: #059669;
-    }
-
-    .btn-simpan:disabled {
-        background: #d1d5db;
-        color: #9ca3af;
-        cursor: not-allowed;
     }
 
     .btn-reset {
@@ -293,7 +281,7 @@
                     <input type="number" id="jumlahInput" value="1" min="1">
                 </div>
 
-                <button type="button" id="btnTambah" class="btn-tambah" onclick="addToCart()" disabled>
+                <button type="button" class="btn-tambah" onclick="addToCart()">
                     <span>+</span> Tambah
                 </button>
             </div>
@@ -348,12 +336,12 @@
             <input type="hidden" name="cart" id="cartInput">
             
             <div class="btn-group">
-                <button type="submit" id="btnSimpan" class="btn-simpan" disabled>
-                    <img src="{{ asset('images/icons/CART.png') }}" alt="cart" style="width: 18px; height: 18px; object-fit: contain;"> Simpan Transaksi
-                </button>
-                <button type="button" class="btn-reset" onclick="resetCart()">
-                    <img src="{{ asset('images/icons/reset.png') }}" alt="reset" style="width: 18px; height: 18px; object-fit: contain;"> Reset
-                </button>
+                <button type="submit" class="btn-simpan">
+    <img src="{{ asset('images/icons/CART.png') }}" alt="cart" style="width: 18px; height: 18px; object-fit: contain;"> Simpan Transaksi
+</button>
+<button type="button" class="btn-reset" onclick="resetCart()">
+    <img src="{{ asset('images/icons/reset.png') }}" alt="reset" style="width: 18px; height: 18px; object-fit: contain;"> Reset
+</button>
             </div>
         </form>
     </div>
@@ -367,19 +355,6 @@ let cart = [];
 function formatRupiah(value) {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
-
-function updateButtonState() {
-    const barangSelect = document.getElementById('barangSelect');
-    const btnTambah = document.getElementById('btnTambah');
-    
-    if (barangSelect.value === '') {
-        btnTambah.disabled = true;
-    } else {
-        btnTambah.disabled = false;
-    }
-}
-
-document.getElementById('barangSelect').addEventListener('change', updateButtonState);
 
 function addToCart() {
     const select = document.getElementById('barangSelect');
@@ -457,14 +432,6 @@ function renderCart() {
     document.getElementById('totalHarga').innerText = formatRupiah(totalHarga);
     document.getElementById('totalItem').innerText = totalItem;
     document.getElementById('totalBarang').innerText = totalBarang;
-
-    // Update button state
-    const btnSimpan = document.getElementById('btnSimpan');
-    if (cart.length === 0) {
-        btnSimpan.disabled = true;
-    } else {
-        btnSimpan.disabled = false;
-    }
 
     // kirim ke backend
     document.getElementById('cartInput').value = JSON.stringify(cart);
