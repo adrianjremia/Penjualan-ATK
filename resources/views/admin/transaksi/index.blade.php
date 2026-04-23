@@ -217,8 +217,14 @@
         gap: 8px;
     }
 
-    .btn-simpan:hover {
+    .btn-simpan:hover:not(:disabled) {
         background: #059669;
+    }
+
+    .btn-simpan:disabled {
+        background: #d1d5db;
+        color: #9ca3af;
+        cursor: not-allowed;
     }
 
     .btn-reset {
@@ -342,7 +348,7 @@
             <input type="hidden" name="cart" id="cartInput">
             
             <div class="btn-group">
-                <button type="submit" class="btn-simpan">
+                <button type="submit" id="btnSimpan" class="btn-simpan" disabled>
                     <img src="{{ asset('images/icons/CART.png') }}" alt="cart" style="width: 18px; height: 18px; object-fit: contain;"> Simpan Transaksi
                 </button>
                 <button type="button" class="btn-reset" onclick="resetCart()">
@@ -451,6 +457,14 @@ function renderCart() {
     document.getElementById('totalHarga').innerText = formatRupiah(totalHarga);
     document.getElementById('totalItem').innerText = totalItem;
     document.getElementById('totalBarang').innerText = totalBarang;
+
+    // Update button state
+    const btnSimpan = document.getElementById('btnSimpan');
+    if (cart.length === 0) {
+        btnSimpan.disabled = true;
+    } else {
+        btnSimpan.disabled = false;
+    }
 
     // kirim ke backend
     document.getElementById('cartInput').value = JSON.stringify(cart);
