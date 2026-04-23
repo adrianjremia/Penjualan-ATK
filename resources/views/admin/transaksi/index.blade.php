@@ -90,8 +90,14 @@
         white-space: nowrap;
     }
 
-    .btn-tambah:hover {
+    .btn-tambah:hover:not(:disabled) {
         background: #2563eb;
+    }
+
+    .btn-tambah:disabled {
+        background: #d1d5db;
+        cursor: not-allowed;
+        color: #9ca3af;
     }
 
     .table-wrapper {
@@ -281,7 +287,7 @@
                     <input type="number" id="jumlahInput" value="1" min="1">
                 </div>
 
-                <button type="button" class="btn-tambah" onclick="addToCart()">
+                <button type="button" id="btnTambah" class="btn-tambah" onclick="addToCart()" disabled>
                     <span>+</span> Tambah
                 </button>
             </div>
@@ -337,10 +343,10 @@
             
             <div class="btn-group">
                 <button type="submit" class="btn-simpan">
-                    <span>🛒</span> Simpan Transaksi
+                    <img src="{{ asset('images/icons/CART.png') }}" alt="cart" style="width: 18px; height: 18px; object-fit: contain;"> Simpan Transaksi
                 </button>
                 <button type="button" class="btn-reset" onclick="resetCart()">
-                    <span>↻</span> Reset
+                    <img src="{{ asset('images/icons/reset.png') }}" alt="reset" style="width: 18px; height: 18px; object-fit: contain;"> Reset
                 </button>
             </div>
         </form>
@@ -355,6 +361,19 @@ let cart = [];
 function formatRupiah(value) {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
+
+function updateButtonState() {
+    const barangSelect = document.getElementById('barangSelect');
+    const btnTambah = document.getElementById('btnTambah');
+    
+    if (barangSelect.value === '') {
+        btnTambah.disabled = true;
+    } else {
+        btnTambah.disabled = false;
+    }
+}
+
+document.getElementById('barangSelect').addEventListener('change', updateButtonState);
 
 function addToCart() {
     const select = document.getElementById('barangSelect');
