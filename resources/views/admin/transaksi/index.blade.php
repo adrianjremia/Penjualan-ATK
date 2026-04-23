@@ -215,6 +215,16 @@
         background: #059669;
     }
 
+    .btn-simpan:disabled {
+        background: #d1d5db;
+        color: #9ca3af;
+        cursor: not-allowed;
+    }
+
+    .btn-simpan:disabled:hover {
+        background: #d1d5db;
+    }
+
     .btn-reset {
         background: transparent;
         color: #6b7280;
@@ -356,6 +366,11 @@ function formatRupiah(value) {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateSubmitButton();
+});
+
 function addToCart() {
     const select = document.getElementById('barangSelect');
     const jumlah = parseInt(document.getElementById('jumlahInput').value);
@@ -402,6 +417,15 @@ function resetCart() {
     renderCart();
 }
 
+function updateSubmitButton() {
+    const submitBtn = document.querySelector('.btn-simpan');
+    if (cart.length === 0) {
+        submitBtn.disabled = true;
+    } else {
+        submitBtn.disabled = false;
+    }
+}
+
 function renderCart() {
     const tbody = document.getElementById('cartTable');
     tbody.innerHTML = '';
@@ -435,5 +459,8 @@ function renderCart() {
 
     // kirim ke backend
     document.getElementById('cartInput').value = JSON.stringify(cart);
+
+    // update button state
+    updateSubmitButton();
 }
 </script>
