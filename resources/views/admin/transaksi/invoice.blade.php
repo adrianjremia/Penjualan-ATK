@@ -1,29 +1,14 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice - {{ $transaksi->id_transaksi }}</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+@extends('layouts.admin')
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f5f5;
-            padding: 20px;
-        }
-
+@section('content')
+<style>
         .container {
             max-width: 900px;
-            margin: 0 auto;
             background-color: white;
             padding: 40px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            margin: 0 auto;
         }
 
         .header {
@@ -223,13 +208,13 @@
         }
 
         .btn {
-            padding: 10px 24px;
+            padding: 12px 24px;
             font-size: 14px;
             font-weight: 600;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
@@ -237,29 +222,28 @@
         }
 
         .btn-primary {
-            background-color: #4f46e5;
+            background-color: #3b82f6;
             color: white;
         }
 
         .btn-primary:hover {
-            background-color: #4338ca;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+            background-color: #2563eb;
         }
 
         .btn-secondary {
             background-color: transparent;
-            color: #666;
-            border: 1px solid #ddd;
+            color: #6b7280;
+            border: none;
         }
 
         .btn-secondary:hover {
-            background-color: #f5f5f5;
-            border-color: #999;
+            color: #1f2937;
         }
 
-        .icon {
-            font-size: 16px;
+        .btn img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
         }
 
         @media print {
@@ -286,21 +270,28 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: #4f46e5;
+            color: #374151;
             text-decoration: none;
             font-size: 14px;
             margin-bottom: 20px;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
         }
 
         .back-link:hover {
             gap: 12px;
-            color: #4338ca;
+            color: #1f2937;
+        }
+
+        .back-link img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
         }
     </style>
-</head>
-<body>
-    <a href="{{ route('admin.transaksi.index') }}" class="back-link">← Kembali ke Dashboard</a>
+<a href="{{ route('admin.transaksi.index') }}" class="back-link">
+    <img src="{{ asset('images/icons/back.png') }}" alt="Back">
+    Kembali ke Dashboard
+</a>
 
     <div class="container">
         <!-- Header -->
@@ -401,13 +392,16 @@
             </div>
             <div class="button-group">
                 <button class="btn btn-primary" onclick="window.print()">
-                    <span class="icon">🖨️</span> Cetak Invoice
+                    <img src="{{ asset('images/icons/print.png') }}" alt="Print">
+                    Cetak Invoice
                 </button>
                 <a href="{{ route('admin.transaksi.index') }}" class="btn btn-secondary">
-                    ← Kembali ke Dashboard
+                    <img src="{{ asset('images/icons/back.png') }}" alt="Back">
+                    Kembali ke Dashboard
                 </a>
             </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+
+@endsection
