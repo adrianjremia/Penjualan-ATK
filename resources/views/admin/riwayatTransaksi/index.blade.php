@@ -209,13 +209,13 @@
 <div class="card">
     <h2>Daftar Transaksi</h2>
 
-    <div class="filter-section">
+    <form method="GET" id="filterForm" class="filter-section">
         <div class="filter-group">
             <label>
                 <img src="{{ asset('images/icons/date.png') }}" alt="Tanggal">
                 Tanggal Mulai
             </label>
-            <input type="date" id="tanggalMulai" placeholder="dd/mm/yyyy">
+            <input type="date" name="tanggal_mulai" id="tanggalMulai" placeholder="dd/mm/yyyy" value="{{ request('tanggal_mulai') }}">
         </div>
 
         <div class="filter-group">
@@ -223,9 +223,9 @@
                 <img src="{{ asset('images/icons/date.png') }}" alt="Tanggal">
                 Tanggal Akhir
             </label>
-            <input type="date" id="tanggalAkhir" placeholder="dd/mm/yyyy">
+            <input type="date" name="tanggal_akhir" id="tanggalAkhir" placeholder="dd/mm/yyyy" value="{{ request('tanggal_akhir') }}">
         </div>
-    </div>
+    </form>
 
     <div class="table-wrapper">
         <table>
@@ -280,5 +280,20 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tanggalMulai = document.getElementById('tanggalMulai');
+    const tanggalAkhir = document.getElementById('tanggalAkhir');
+    const filterForm = document.getElementById('filterForm');
+
+    function submitFilter() {
+        filterForm.submit();
+    }
+
+    tanggalMulai.addEventListener('change', submitFilter);
+    tanggalAkhir.addEventListener('change', submitFilter);
+});
+</script>
 
 @endsection

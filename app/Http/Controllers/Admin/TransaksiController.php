@@ -19,12 +19,23 @@ class TransaksiController extends Controller
         return view('admin.transaksi.index', compact('barang'));
     }
 
-public function index()
+public function index(Request $request)
 {
-    $transaksis = Transaksi::withCount('detailTransaksi')
-        ->orderBy('tanggal_transaksi', 'desc')
-        ->get();
+    $query = Transaksi::withCount('detailTransaksi');
 
+    // Filter berdasarkan tanggal mulai
+    if ($request->filled('tanggal_mulai')) {
+        $tanggalMulai = $request->input('tanggal_mulai');
+        $query->whereDate('created_at', '>=', $tanggalMulai);
+    }
+
+    // Filter berdasarkan tanggal akhir
+    if ($request->filled('tanggal_akhir')) {
+        $tanggalAkhir = $request->input('tanggal_akhir');
+        $query->whereDate('created_at', '<=', $tanggalAkhir);
+    }
+
+    $transaksis = $query->orderBy('created_at', 'desc')->get();
     $totalKeseluruhan = $transaksis->sum('total_harga');
 
     return view('admin.riwayatTransaksi.index', compact(
