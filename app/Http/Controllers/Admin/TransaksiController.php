@@ -48,7 +48,7 @@ public function index()
 
         $transaksi = Transaksi::create([
             'id_user' => Auth::id(),
-            'tanggal_transaksi' => now(),
+            'tanggal_transaksi' => now()->format('Y-m-d H:i:s'),
             'total_harga' => 0,
             'created_at' => now()
         ]);

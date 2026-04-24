@@ -318,8 +318,8 @@
                 <label>Tanggal Transaksi:</label>
                 <div class="value">
                     @php
-                        $tanggal = \Carbon\Carbon::parse($transaksi->tanggal_transaksi);
-                        echo $tanggal->format('d F Y');
+                        $tanggal = \Carbon\Carbon::parse($transaksi->created_at);
+                        echo $tanggal->translatedFormat('d F Y');
                         echo ' pukul ' . $tanggal->format('H:i');
                     @endphp
                 </div>
