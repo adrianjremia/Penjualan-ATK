@@ -26,25 +26,7 @@ Route::get('/dashboard/admin', [DashboardController::class, 'admin'])
 Route::get('/dashboard/pemilik', [DashboardController::class, 'pemilik'])
     ->middleware(['auth', 'role:1']);
 
-Route::middleware(['auth', 'role:0'])->group(function () {
 
-    Route::get('/dashboard/admin', function () {
-        return view('admin.dashboard');
-    });
-
-    Route::get('/admin/barang', function () {
-        return view('admin.barang');
-    });
-
-    Route::get('/admin/transaksi', function () {
-        return view('admin.transaksi');
-    });
-
-    Route::get('/admin/riwayat', function () {
-        return view('admin.riwayat');
-    });
-
-});
 
 use App\Http\Controllers\Admin\BarangController;
 
