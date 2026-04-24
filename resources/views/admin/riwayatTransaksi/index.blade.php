@@ -245,7 +245,7 @@
                     <td class="id-transaksi">T{{ str_pad($t->id_transaksi, 3, '0', STR_PAD_LEFT) }}</td>
 
                     <td class="tanggal-cell">
-                        {{ $t->created_at->translatedFormat('d F Y \p\u\k\u\l H.i') }}
+                        {{ \Carbon\Carbon::parse($t->created_at)->translatedFormat('d F Y \p\u\k\u\l H.i') }}
                     </td>
 
                     <td>{{ $t->detail_transaksi_count }} item</td>
