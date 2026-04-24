@@ -39,6 +39,31 @@ class DashboardController extends Controller
 
     public function pemilik()
     {
-        return view('dashboard.pemilik');
+        // Total penjualan semua waktu
+        $totalPenjualan = Transaksi::sum('total_harga');
+
+        // Hitung total laba (total penjualan - total biaya beli)
+        $totalLaba = 0;
+        $transaksis = Transaksi::with('detailTransaksi.barang')->get();
+        
+        foreach ($transaksis as $transaksi) {
+            foreach ($transaksi->detailTransaksi as $detail) {
+                $laba = ($detail->barang->harga_jual - $detail->barang->harga_beli) * $detail->jumlah;
+                $totalLaba += $laba;
+            }
+        }
+
+        // Stok menipis (stok kurang dari 10)
+        $stokMenipis = Barang::where('stok', '<', 10)->count();
+
+        // Margin keuntungan
+        $marginKeuntungan = $totalPenjualan > 0 ? round(($totalLaba / $totalPenjualan) * 100, 1) : 0;
+
+        return view('dashboard.pemilik', compact(
+            'totalPenjualan',
+            'totalLaba',
+            'stokMenipis',
+            'marginKeuntungan'
+        ));
     }
 }

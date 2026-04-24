@@ -24,7 +24,8 @@ Route::get('/dashboard/admin', [DashboardController::class, 'admin'])
 
 // PEMILIK
 Route::get('/dashboard/pemilik', [DashboardController::class, 'pemilik'])
-    ->middleware(['auth', 'role:1']);
+    ->middleware(['auth', 'role:1'])
+    ->name('dashboard.pemilik');
 
 
 
