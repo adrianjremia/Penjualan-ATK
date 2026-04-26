@@ -32,6 +32,9 @@ use App\Http\Controllers\Owner\LaporanController;
 Route::middleware(['auth', 'role:1'])->group(function () {
     Route::get('/pemilik/laporan-penjualan', [LaporanController::class, 'penjualan'])
         ->name('laporan.penjualan');
+
+    Route::get('/pemilik/laporan-laba-rugi', [LaporanController::class, 'labaRugi'])
+        ->name('laporan.laba-rugi');
 });
 
 
