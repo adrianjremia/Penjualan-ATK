@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transaksi;
+use App\Models\Barang;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -118,6 +119,31 @@ class LaporanController extends Controller
             'totalLaba',
             'laporanHarian',
             'marginKeuntungan'
+        ));
+    }
+
+    public function stok(Request $request)
+    {
+        $query = Barang::query();
+
+        // Search by nama barang
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('nama_barang', 'like', "%{$search}%");
+        }
+
+        $barangs = $query->orderBy('stok', 'asc')->get();
+
+        // Count stok berdasarkan status
+        $totalProduk = Barang::count();
+        $stokAman = Barang::where('stok', '>=', 10)->count();
+        $stokMenipis = Barang::where('stok', '<', 10)->count();
+
+        return view('owner.laporan.stok', compact(
+            'barangs',
+            'totalProduk',
+            'stokAman',
+            'stokMenipis'
         ));
     }
 }
