@@ -24,27 +24,23 @@ Route::get('/dashboard/admin', [DashboardController::class, 'admin'])
 
 // PEMILIK
 Route::get('/dashboard/pemilik', [DashboardController::class, 'pemilik'])
-    ->middleware(['auth', 'role:1']);
+    ->middleware(['auth', 'role:1'])
+    ->name('dashboard.pemilik');
 
-Route::middleware(['auth', 'role:0'])->group(function () {
+use App\Http\Controllers\Owner\LaporanController;
 
-    Route::get('/dashboard/admin', function () {
-        return view('admin.dashboard');
-    });
+Route::middleware(['auth', 'role:1'])->group(function () {
+    Route::get('/pemilik/laporan-penjualan', [LaporanController::class, 'penjualan'])
+        ->name('laporan.penjualan');
 
-    Route::get('/admin/barang', function () {
-        return view('admin.barang');
-    });
+    Route::get('/pemilik/laporan-laba-rugi', [LaporanController::class, 'labaRugi'])
+        ->name('laporan.laba-rugi');
 
-    Route::get('/admin/transaksi', function () {
-        return view('admin.transaksi');
-    });
-
-    Route::get('/admin/riwayat', function () {
-        return view('admin.riwayat');
-    });
-
+    Route::get('/pemilik/informasi-stok', [LaporanController::class, 'stok'])
+        ->name('laporan.stok');
 });
+
+
 
 use App\Http\Controllers\Admin\BarangController;
 
