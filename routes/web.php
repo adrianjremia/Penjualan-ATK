@@ -27,6 +27,13 @@ Route::get('/dashboard/pemilik', [DashboardController::class, 'pemilik'])
     ->middleware(['auth', 'role:1'])
     ->name('dashboard.pemilik');
 
+use App\Http\Controllers\Owner\LaporanController;
+
+Route::middleware(['auth', 'role:1'])->group(function () {
+    Route::get('/pemilik/laporan-penjualan', [LaporanController::class, 'penjualan'])
+        ->name('laporan.penjualan');
+});
+
 
 
 use App\Http\Controllers\Admin\BarangController;
