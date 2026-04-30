@@ -16,13 +16,13 @@ class LaporanController extends Controller
 
         // Filter berdasarkan tanggal awal
         if ($request->filled('tanggal_awal')) {
-            $tanggalAwal = Carbon::createFromFormat('d/m/Y', $request->input('tanggal_awal'));
+            $tanggalAwal = $request->input('tanggal_awal');
             $query->whereDate('created_at', '>=', $tanggalAwal);
         }
 
         // Filter berdasarkan tanggal akhir
         if ($request->filled('tanggal_akhir')) {
-            $tanggalAkhir = Carbon::createFromFormat('d/m/Y', $request->input('tanggal_akhir'));
+            $tanggalAkhir = $request->input('tanggal_akhir');
             $query->whereDate('created_at', '<=', $tanggalAkhir);
         }
 
