@@ -256,6 +256,21 @@
     </form>
 </div>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tanggalAwal = document.getElementById('tanggal_awal');
+    const tanggalAkhir = document.getElementById('tanggal_akhir');
+    const filterForm = document.getElementById('filterForm');
+
+    function submitFilter() {
+        filterForm.submit();
+    }
+
+    tanggalAwal.addEventListener('change', submitFilter);
+    tanggalAkhir.addEventListener('change', submitFilter);
+});
+</script>
+
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-header">

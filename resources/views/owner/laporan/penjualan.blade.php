@@ -201,20 +201,33 @@
 <div class="card">
     <h2>Filter Periode</h2>
     
-    <form method="GET" class="filter-group">
+    <form method="GET" id="filterForm" class="filter-group">
         <div class="filter-item">
             <label>Tanggal Awal</label>
-            <input type="date" name="tanggal_awal" value="{{ request('tanggal_awal') }}">
+            <input type="date" id="tanggalAwal" name="tanggal_awal" value="{{ request('tanggal_awal') }}">
         </div>
 
         <div class="filter-item">
             <label>Tanggal Akhir</label>
-            <input type="date" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}">
+            <input type="date" id="tanggalAkhir" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}">
         </div>
-
-        <button type="submit" style="align-self: flex-end; padding: 10px 24px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Filter</button>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tanggalAwal = document.getElementById('tanggalAwal');
+    const tanggalAkhir = document.getElementById('tanggalAkhir');
+    const filterForm = document.getElementById('filterForm');
+
+    function submitFilter() {
+        filterForm.submit();
+    }
+
+    tanggalAwal.addEventListener('change', submitFilter);
+    tanggalAkhir.addEventListener('change', submitFilter);
+});
+</script>
 
 <div class="stats-grid">
     <div class="stat-card">
