@@ -156,6 +156,10 @@
             <img src="{{ asset('images/icons/dataBarang.png') }}" alt="Informasi Stok">
             Informasi Stok
         </a>
+        <a href="{{ url('/pemilik/forecasting') }}" class="{{ request()->is('pemilik/forecasting*') ? 'active' : '' }}">
+            <img src="{{ asset('images/icons/chartUp.png') }}" alt="Prediksi Penjualan">
+            Prediksi Penjualan
+        </a>
     </div>
 
     <div class="sidebar-footer">

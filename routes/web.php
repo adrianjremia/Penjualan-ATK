@@ -38,6 +38,9 @@ Route::middleware(['auth', 'role:1'])->group(function () {
 
     Route::get('/pemilik/informasi-stok', [LaporanController::class, 'stok'])
         ->name('laporan.stok');
+
+    Route::get('/pemilik/forecasting', [LaporanController::class, 'forecasting'])
+        ->name('laporan.forecasting');
 });
 
 

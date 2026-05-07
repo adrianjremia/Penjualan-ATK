@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use App\Models\Transaksi;
 use App\Models\Barang;
+use App\Services\ForecastingService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -144,6 +145,52 @@ class LaporanController extends Controller
             'totalProduk',
             'stokAman',
             'stokMenipis'
+        ));
+    }
+
+    public function forecasting(Request $request)
+    {
+        $method = $request->input('method', 'sma');
+        $idBarang = $request->input('id_barang');
+
+        // Generate forecast untuk semua produk atau produk tertentu
+        if ($idBarang) {
+            $forecast = ForecastingService::generateForecast($idBarang, $method);
+            $barang = Barang::find($idBarang);
+            
+            $forecasts = [
+                $idBarang => [
+                    'id_barang' => $idBarang,
+                    'nama_barang' => $barang->nama_barang,
+                    'kategori' => $barang->kategori,
+                    'stok_saat_ini' => $barang->stok,
+                    'forecast' => $forecast['forecast'],
+                    'mape' => $forecast['mape'],
+                    'historicalData' => $forecast['historicalData'],
+                    'months' => $forecast['months'],
+                    'needsRestock' => $barang->stok < $forecast['forecast']
+                ]
+            ];
+        } else {
+            $forecasts = ForecastingService::generateForecastForAllProducts($method);
+        }
+
+        // Get all barangs untuk dropdown filter
+        $barangs = Barang::orderBy('nama_barang')->get();
+        
+        // Hitung ringkasan
+        $totalProducts = count($forecasts);
+        $productsNeedRestock = collect($forecasts)->filter(fn($f) => $f['needsRestock'])->count();
+        $averageMAPE = $totalProducts > 0 ? round(collect($forecasts)->avg('mape'), 2) : 0;
+
+        return view('owner.laporan.forecasting', compact(
+            'forecasts',
+            'barangs',
+            'method',
+            'idBarang',
+            'totalProducts',
+            'productsNeedRestock',
+            'averageMAPE'
         ));
     }
 }
