@@ -165,7 +165,6 @@ class LaporanController extends Controller
                     'kategori' => $barang->kategori,
                     'stok_saat_ini' => $barang->stok,
                     'forecast' => $forecast['forecast'],
-                    'mape' => $forecast['mape'],
                     'historicalData' => $forecast['historicalData'],
                     'months' => $forecast['months'],
                     'needsRestock' => $barang->stok < $forecast['forecast']
@@ -181,7 +180,6 @@ class LaporanController extends Controller
         // Hitung ringkasan
         $totalProducts = count($forecasts);
         $productsNeedRestock = collect($forecasts)->filter(fn($f) => $f['needsRestock'])->count();
-        $averageMAPE = $totalProducts > 0 ? round(collect($forecasts)->avg('mape'), 2) : 0;
 
         return view('owner.laporan.forecasting', compact(
             'forecasts',
@@ -189,8 +187,7 @@ class LaporanController extends Controller
             'method',
             'idBarang',
             'totalProducts',
-            'productsNeedRestock',
-            'averageMAPE'
+            'productsNeedRestock'
         ));
     }
 }

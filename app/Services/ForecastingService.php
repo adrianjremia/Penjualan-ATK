@@ -44,28 +44,6 @@ class ForecastingService
     }
 
     /**
-     * Hitung Mean Absolute Percentage Error (MAPE)
-     */
-    public static function calculateMAPE($actual, $predicted)
-    {
-        if (count($actual) !== count($predicted) || empty($actual)) {
-            return 0;
-        }
-
-        $sum = 0;
-        $validCount = 0;
-
-        for ($i = 0; $i < count($actual); $i++) {
-            if ($actual[$i] > 0) {
-                $sum += abs(($actual[$i] - $predicted[$i]) / $actual[$i]);
-                $validCount++;
-            }
-        }
-
-        return $validCount > 0 ? round(($sum / $validCount) * 100, 2) : 0;
-    }
-
-    /**
      * Dapatkan data penjualan per bulan untuk produk tertentu
      */
     public static function getSalesDataByMonth($idBarang = null)
@@ -112,13 +90,12 @@ class ForecastingService
         $data = array_values($salesData);
 
         if (empty($data)) {
-            return [
-                'forecast' => 0,
-                'mape' => 0,
-                'method' => $method,
-                'historicalData' => [],
-                'months' => []
-            ];
+        return [
+            'forecast' => 0,
+            'method' => $method,
+            'historicalData' => [],
+            'months' => []
+        ];
         }
 
         // Hitung forecast berdasarkan method
@@ -131,25 +108,8 @@ class ForecastingService
         // Validasi forecast tidak negatif
         $forecast = max(0, round($forecast));
 
-        // Hitung MAPE dengan membandingkan predicted vs actual
-        // Gunakan last 3 months sebagai test set
-        $mape = 0;
-        if (count($data) >= 4) {
-            $trainData = array_slice($data, 0, count($data) - 1);
-            $testData = array_slice($data, count($data) - 1);
-            
-            if ($method === 'ses') {
-                $predictedTest = self::calculateSES($trainData);
-            } else {
-                $predictedTest = self::calculateSMA($trainData);
-            }
-            
-            $mape = self::calculateMAPE($testData, [$predictedTest]);
-        }
-
         return [
             'forecast' => $forecast,
-            'mape' => $mape,
             'method' => $method,
             'historicalData' => $data,
             'months' => array_keys($salesData)
@@ -173,7 +133,6 @@ class ForecastingService
                 'kategori' => $barang->kategori,
                 'stok_saat_ini' => $barang->stok,
                 'forecast' => $forecastData['forecast'],
-                'mape' => $forecastData['mape'],
                 'historicalData' => $forecastData['historicalData'],
                 'months' => $forecastData['months'],
                 'needsRestock' => $barang->stok < $forecastData['forecast']

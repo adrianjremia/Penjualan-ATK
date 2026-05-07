@@ -220,13 +220,8 @@
     </div>
 
     <div class="stat-card">
-        <div class="stat-label">Akurasi (MAPE)</div>
-        <div class="stat-value">{{ $averageMAPE }}%</div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-label">Metode</div>
-        <div class="stat-value" style="font-size: 16px;">{{ $method === 'sma' ? 'SMA' : 'SES' }}</div>
+        <div class="stat-label">Metode Forecasting</div>
+        <div class="stat-value" style="font-size: 16px;">{{ $method === 'sma' ? 'SMA-3' : 'Exponential Smoothing' }}</div>
     </div>
 </div>
 
