@@ -183,6 +183,21 @@ class LaporanController extends Controller
             $forecast = ForecastingService::generateForecast($idBarang, $method);
             $barang = Barang::find($idBarang);
             
+            // Dapatkan data penjualan per bulan untuk setahun penuh
+            $monthlySales = ForecastingService::getSalesDataByMonth($idBarang);
+            
+            // Siapkan data untuk 12 bulan (Jan-Des 2026)
+            $fullYearData = [];
+            $months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            for ($i = 1; $i <= 12; $i++) {
+                $monthKey = '2026-' . str_pad($i, 2, '0', STR_PAD_LEFT);
+                $fullYearData[] = [
+                    'month' => $months[$i - 1],
+                    'month_key' => $monthKey,
+                    'total_sold' => $monthlySales[$monthKey] ?? 0
+                ];
+            }
+            
             $forecasts = [
                 $idBarang => [
                     'id_barang' => $idBarang,
@@ -192,6 +207,7 @@ class LaporanController extends Controller
                     'forecast' => $forecast['forecast'],
                     'historicalData' => $forecast['historicalData'],
                     'months' => $forecast['months'],
+                    'monthlyData' => $fullYearData,
                     'needsRestock' => $barang->stok < $forecast['forecast']
                 ]
             ];

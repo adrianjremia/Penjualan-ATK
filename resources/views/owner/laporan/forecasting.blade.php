@@ -309,6 +309,31 @@
                     }
                 });
             </script>
+
+            <div style="margin-top: 40px;">
+                <h3 style="margin-bottom: 20px; font-size: 18px; font-weight: 600; color: #1f2937;">Data Penjualan Bulanan Tahun 2026</h3>
+                
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                        <thead>
+                            <tr style="background-color: #f3f4f6; border-bottom: 2px solid #e5e7eb;">
+                                <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151;">Bulan</th>
+                                <th style="padding: 12px; text-align: right; font-weight: 600; color: #374151;">Total Terjual (unit)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($forecast['monthlyData'] as $data)
+                                <tr style="border-bottom: 1px solid #e5e7eb; @if($data['total_sold'] > 0) background-color: #f9fafb; @endif">
+                                    <td style="padding: 12px; color: #1f2937;">{{ $data['month'] }} 2026</td>
+                                    <td style="padding: 12px; text-align: right; @if($data['total_sold'] > 0) color: #059669; font-weight: 600; @else color: #9ca3af; @endif">
+                                        {{ $data['total_sold'] }} unit
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         @endif
     </div>
 @else
