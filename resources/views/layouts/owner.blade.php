@@ -153,8 +153,8 @@
             Laporan Laba Rugi
         </a>
         <a href="{{ url('/pemilik/informasi-stok') }}" class="{{ request()->is('pemilik/informasi-stok*') ? 'active' : '' }}">
-            <img src="{{ asset('images/icons/dataBarang.png') }}" alt="Informasi Stok">
-            Informasi Stok
+            <img src="{{ asset('images/icons/dataBarang.png') }}" alt="Laporan Penjualan & Inventaris">
+            Laporan Penjualan & Inventaris
         </a>
         <a href="{{ url('/pemilik/forecasting') }}" class="{{ request()->is('pemilik/forecasting*') ? 'active' : '' }}">
             <img src="{{ asset('images/icons/chartUp.png') }}" alt="Prediksi Penjualan">

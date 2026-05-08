@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use App\Models\Transaksi;
 use App\Models\Barang;
+use App\Models\DetailTransaksi;
 use App\Services\ForecastingService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LaporanController extends Controller
 {
@@ -133,18 +135,41 @@ class LaporanController extends Controller
             $query->where('nama_barang', 'like', "%{$search}%");
         }
 
-        $barangs = $query->orderBy('stok', 'asc')->get();
+        $barangs = $query->orderBy('nama_barang')->get();
 
-        // Count stok berdasarkan status
+        // Hitung revenue per barang dari transaksi bulan ini
+        $currentMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+
+        $barangsWithRevenue = $barangs->map(function($barang) use ($currentMonth, $endOfMonth) {
+            $revenue = DetailTransaksi::join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id_transaksi')
+                ->where('detail_transaksis.id_barang', $barang->id_barang)
+                ->whereBetween('transaksis.created_at', [$currentMonth, $endOfMonth])
+                ->sum(DB::raw('detail_transaksis.jumlah * ' . $barang->harga_jual));
+
+            return array_merge($barang->toArray(), ['revenue' => $revenue ?? 0]);
+        });
+
+        // Top 5 Produk Terlaris Bulan Ini (by quantity sold)
+        $top5Products = DetailTransaksi::join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id_transaksi')
+            ->join('barangs', 'detail_transaksis.id_barang', '=', 'barangs.id_barang')
+            ->select('barangs.id_barang', 'barangs.nama_barang', 'barangs.kategori', 'barangs.harga_jual')
+            ->selectRaw('SUM(detail_transaksis.jumlah) as total_sold')
+            ->selectRaw('SUM(detail_transaksis.jumlah * barangs.harga_jual) as total_revenue')
+            ->whereBetween('transaksis.created_at', [$currentMonth, $endOfMonth])
+            ->groupBy('barangs.id_barang', 'barangs.nama_barang', 'barangs.kategori', 'barangs.harga_jual')
+            ->orderByDesc('total_sold')
+            ->limit(5)
+            ->get();
+
         $totalProduk = Barang::count();
-        $stokAman = Barang::where('stok', '>=', 10)->count();
-        $stokMenipis = Barang::where('stok', '<', 10)->count();
+        $totalRevenueBulanIni = $barangsWithRevenue->sum('revenue');
 
         return view('owner.laporan.stok', compact(
-            'barangs',
+            'barangsWithRevenue',
+            'top5Products',
             'totalProduk',
-            'stokAman',
-            'stokMenipis'
+            'totalRevenueBulanIni'
         ));
     }
 
