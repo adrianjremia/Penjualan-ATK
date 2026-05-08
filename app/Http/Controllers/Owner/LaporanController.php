@@ -142,21 +142,21 @@ class LaporanController extends Controller
         $endOfMonth = Carbon::now()->endOfMonth();
 
         $barangsWithRevenue = $barangs->map(function($barang) use ($currentMonth, $endOfMonth) {
-            $revenue = DetailTransaksi::join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id_transaksi')
-                ->where('detail_transaksis.id_barang', $barang->id_barang)
-                ->whereBetween('transaksis.created_at', [$currentMonth, $endOfMonth])
-                ->sum(DB::raw('detail_transaksis.jumlah * ' . $barang->harga_jual));
+            $revenue = DetailTransaksi::join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
+                ->where('detail_transaksi.id_barang', $barang->id_barang)
+                ->whereBetween('transaksi.created_at', [$currentMonth, $endOfMonth])
+                ->sum(DB::raw('detail_transaksi.jumlah * ' . $barang->harga_jual));
 
             return array_merge($barang->toArray(), ['revenue' => $revenue ?? 0]);
         });
 
         // Top 5 Produk Terlaris Bulan Ini (by quantity sold)
-        $top5Products = DetailTransaksi::join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id_transaksi')
-            ->join('barangs', 'detail_transaksis.id_barang', '=', 'barangs.id_barang')
+        $top5Products = DetailTransaksi::join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
+            ->join('barangs', 'detail_transaksi.id_barang', '=', 'barangs.id_barang')
             ->select('barangs.id_barang', 'barangs.nama_barang', 'barangs.kategori', 'barangs.harga_jual')
-            ->selectRaw('SUM(detail_transaksis.jumlah) as total_sold')
-            ->selectRaw('SUM(detail_transaksis.jumlah * barangs.harga_jual) as total_revenue')
-            ->whereBetween('transaksis.created_at', [$currentMonth, $endOfMonth])
+            ->selectRaw('SUM(detail_transaksi.jumlah) as total_sold')
+            ->selectRaw('SUM(detail_transaksi.jumlah * barangs.harga_jual) as total_revenue')
+            ->whereBetween('transaksi.created_at', [$currentMonth, $endOfMonth])
             ->groupBy('barangs.id_barang', 'barangs.nama_barang', 'barangs.kategori', 'barangs.harga_jual')
             ->orderByDesc('total_sold')
             ->limit(5)
