@@ -328,7 +328,6 @@
                             <th>Kategori</th>
                             <th>Stok Saat Ini</th>
                             <th>Prediksi (Bulan Depan)</th>
-                            <th>Akurasi (MAPE)</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -344,7 +343,6 @@
                                 <td>{{ $f['kategori'] }}</td>
                                 <td style="font-weight: 600;">{{ $f['stok_saat_ini'] }}</td>
                                 <td style="font-weight: 600; color: #3b82f6;">{{ $f['forecast'] }}</td>
-                                <td>{{ $f['mape'] }}%</td>
                                 <td>
                                     @if($f['needsRestock'])
                                         <span class="status-badge status-warning">⚠️ Restock Segera</span>
@@ -364,7 +362,6 @@
                     <ul style="margin: 8px 0 0 20px; padding: 0;">
                         <li><strong>Prediksi:</strong> Estimasi jumlah penjualan bulan depan berdasarkan data historis</li>
                         <li><strong>Status Restock:</strong> Jika stok saat ini lebih rendah dari prediksi penjualan, produk perlu direstock</li>
-                        <li><strong>Akurasi (MAPE):</strong> Semakin rendah persentase, semakin akurat prediksinya</li>
                     </ul>
                 </div>
             </div>
