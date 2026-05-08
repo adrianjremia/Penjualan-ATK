@@ -152,12 +152,12 @@ class LaporanController extends Controller
 
         // Top 5 Produk Terlaris Bulan Ini (by quantity sold)
         $top5Products = DetailTransaksi::join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
-            ->join('barangs', 'detail_transaksi.id_barang', '=', 'barangs.id_barang')
-            ->select('barangs.id_barang', 'barangs.nama_barang', 'barangs.kategori', 'barangs.harga_jual')
+            ->join('barang', 'detail_transaksi.id_barang', '=', 'barang.id_barang')
+            ->select('barang.id_barang', 'barang.nama_barang', 'barang.kategori', 'barang.harga_jual')
             ->selectRaw('SUM(detail_transaksi.jumlah) as total_sold')
-            ->selectRaw('SUM(detail_transaksi.jumlah * barangs.harga_jual) as total_revenue')
+            ->selectRaw('SUM(detail_transaksi.jumlah * barang.harga_jual) as total_revenue')
             ->whereBetween('transaksi.created_at', [$currentMonth, $endOfMonth])
-            ->groupBy('barangs.id_barang', 'barangs.nama_barang', 'barangs.kategori', 'barangs.harga_jual')
+            ->groupBy('barang.id_barang', 'barang.nama_barang', 'barang.kategori', 'barang.harga_jual')
             ->orderByDesc('total_sold')
             ->limit(5)
             ->get();
