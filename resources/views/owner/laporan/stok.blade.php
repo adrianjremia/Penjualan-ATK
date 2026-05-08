@@ -61,14 +61,6 @@
         line-height: 1.2;
     }
 
-    .stat-value.aman {
-        color: #059669;
-    }
-
-    .stat-value.menipis {
-        color: #dc2626;
-    }
-
     .stat-description {
         font-size: 12px;
         color: #9ca3af;
@@ -80,6 +72,7 @@
         border: 1px solid #e5e7eb;
         border-radius: 8px;
         padding: 24px;
+        margin-bottom: 24px;
     }
 
     .card h2 {
@@ -87,6 +80,64 @@
         font-weight: 600;
         color: #1f2937;
         margin-bottom: 20px;
+    }
+
+    .top5-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .top5-item {
+        background: linear-gradient(135deg, #f3f4f6 0%, #ffffff 100%);
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .top5-rank {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        background: #3b82f6;
+        color: white;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 12px;
+    }
+
+    .top5-name {
+        font-weight: 600;
+        color: #1f2937;
+        font-size: 14px;
+    }
+
+    .top5-stats {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 12px;
+    }
+
+    .top5-stat {
+        flex: 1;
+    }
+
+    .top5-stat-label {
+        color: #6b7280;
+        font-size: 11px;
+        margin-bottom: 4px;
+    }
+
+    .top5-stat-value {
+        color: #1f2937;
+        font-weight: 600;
     }
 
     .search-box {
@@ -153,111 +204,20 @@
         background: #f9fafb;
     }
 
-    .status-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    .status-badge.aman {
-        background: #ecfdf5;
-        color: #059669;
-    }
-
-    .status-badge.menipis {
-        background: #fef2f2;
-        color: #dc2626;
-    }
-
-    .status-badge img {
-        width: 14px;
-        height: 14px;
-        object-fit: contain;
-    }
-
-    .legend {
-        display: flex;
-        gap: 32px;
-        padding: 16px 0;
-        margin-top: 20px;
-        border-top: 1px solid #e5e7eb;
-        border-bottom: 1px solid #e5e7eb;
-        font-size: 13px;
-    }
-
-    .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .legend-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 2px;
-    }
-
-    .legend-dot.aman {
-        background: #059669;
-    }
-
-    .legend-dot.menipis {
-        background: #dc2626;
-    }
-
-    .alert-warning {
-        background: #fef2f2;
-        border: 1px solid #fee2e2;
-        border-radius: 6px;
-        padding: 16px;
-        margin-top: 24px;
-        display: flex;
-        gap: 12px;
-    }
-
-    .alert-warning img {
-        width: 20px;
-        height: 20px;
-        object-fit: contain;
-        flex-shrink: 0;
-        margin-top: 2px;
-    }
-
-    .alert-content {
-        flex: 1;
-    }
-
-    .alert-title {
-        font-weight: 600;
-        color: #991b1b;
-        margin-bottom: 4px;
-        font-size: 14px;
-    }
-
-    .alert-message {
-        color: #7f1d1d;
-        font-size: 13px;
-    }
-
     @media (max-width: 640px) {
         .stats-grid {
             grid-template-columns: 1fr;
         }
 
-        .legend {
-            flex-direction: column;
-            gap: 12px;
+        .top5-grid {
+            grid-template-columns: 1fr;
         }
     }
 </style>
 
 <div class="page-header">
-    <h1>Informasi Stok</h1>
-    <p>Monitor ketersediaan stok barang di toko</p>
+    <h1>Laporan Penjualan & Inventaris</h1>
+    <p>Analisis penjualan dan status stok barang bulan ini</p>
 </div>
 
 <div class="stats-grid">
@@ -274,29 +234,49 @@
 
     <div class="stat-card">
         <div class="stat-header">
-            <span class="stat-label">Stok Aman</span>
-            <img src="{{ asset('images/icons/check.png') }}" alt="Aman" class="stat-icon">
+            <span class="stat-label">Revenue Bulan Ini</span>
+            <img src="{{ asset('images/icons/pendapatanHarian.png') }}" alt="Revenue" class="stat-icon">
         </div>
         <div>
-            <div class="stat-value aman">{{ $stokAman }}</div>
-            <div class="stat-description">Produk stok cukup</div>
-        </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-header">
-            <span class="stat-label">Stok Menipis</span>
-            <img src="{{ asset('images/icons/warning.png') }}" alt="Menipis" class="stat-icon">
-        </div>
-        <div>
-            <div class="stat-value menipis">{{ $stokMenipis }}</div>
-            <div class="stat-description">Perlu restock segera</div>
+            <div class="stat-value">Rp {{ number_format($totalRevenueBulanIni, 0, ',', '.') }}</div>
+            <div class="stat-description">Total penjualan</div>
         </div>
     </div>
 </div>
 
+@if($top5Products->count() > 0)
 <div class="card">
-    <h2>Daftar Stok Barang</h2>
+    <h2>Top 5 Produk Terlaris Bulan Ini</h2>
+
+    <div class="top5-grid">
+        @foreach($top5Products as $index => $product)
+        <div class="top5-item">
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                <div class="top5-rank">{{ $index + 1 }}</div>
+                <div style="flex: 1;">
+                    <div class="top5-name">{{ $product->nama_barang }}</div>
+                    <div style="font-size: 11px; color: #9ca3af; margin-top: 2px;">{{ $product->kategori }}</div>
+                </div>
+            </div>
+
+            <div class="top5-stats">
+                <div class="top5-stat">
+                    <div class="top5-stat-label">Terjual</div>
+                    <div class="top5-stat-value">{{ $product->total_sold }} pcs</div>
+                </div>
+                <div class="top5-stat">
+                    <div class="top5-stat-label">Revenue</div>
+                    <div class="top5-stat-value">Rp {{ number_format($product->total_revenue, 0, ',', '.') }}</div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+@endif
+
+<div class="card">
+    <h2>Daftar Inventaris & Penjualan Produk</h2>
 
     <div class="search-box">
         <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -320,29 +300,17 @@
                     <th>Nama Barang</th>
                     <th>Kategori</th>
                     <th>Stok Saat Ini</th>
-                    <th>Status Stok</th>
+                    <th>Total Revenue</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($barangs as $barang)
+                @forelse($barangsWithRevenue as $barang)
                 <tr>
-                    <td>P{{ str_pad($barang->id_barang, 3, '0', STR_PAD_LEFT) }}</td>
-                    <td>{{ $barang->nama_barang }}</td>
-                    <td>{{ $barang->kategori }}</td>
-                    <td>{{ $barang->stok }} {{ $barang->satuan }}</td>
-                    <td>
-                        @if($barang->stok >= 10)
-                            <span class="status-badge aman">
-                                <img src="{{ asset('images/icons/check.png') }}" alt="Aman">
-                                Aman
-                            </span>
-                        @else
-                            <span class="status-badge menipis">
-                                <img src="{{ asset('images/icons/warning.png') }}" alt="Menipis">
-                                Menipis
-                            </span>
-                        @endif
-                    </td>
+                    <td>P{{ str_pad($barang['id_barang'], 3, '0', STR_PAD_LEFT) }}</td>
+                    <td>{{ $barang['nama_barang'] }}</td>
+                    <td>{{ $barang['kategori'] }}</td>
+                    <td>{{ $barang['stok'] }} {{ $barang['satuan'] }}</td>
+                    <td>Rp {{ number_format($barang['revenue'], 0, ',', '.') }}</td>
                 </tr>
                 @empty
                 <tr>
@@ -352,27 +320,6 @@
             </tbody>
         </table>
     </div>
-
-    <div class="legend">
-        <div class="legend-item">
-            <div class="legend-dot aman"></div>
-            <span><strong>Aman:</strong> Stok ≥ 10 unit</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-dot menipis"></div>
-            <span><strong>Menipis:</strong> Stok < 10 unit (perlu restock)</span>
-        </div>
-    </div>
-
-    @if($stokMenipis > 0)
-    <div class="alert-warning">
-        <img src="{{ asset('images/icons/warning.png') }}" alt="Warning">
-        <div class="alert-content">
-            <div class="alert-title">Perhatian: {{ $stokMenipis }} Produk Stok Menipis</div>
-            <div class="alert-message">Segera lakukan restock untuk produk dengan status "Menipis" agar tidak kehabisan stok.</div>
-        </div>
-    </div>
-    @endif
 </div>
 
 @endsection

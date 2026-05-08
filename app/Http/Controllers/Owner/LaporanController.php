@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use App\Models\Transaksi;
 use App\Models\Barang;
+use App\Models\DetailTransaksi;
+use App\Services\ForecastingService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LaporanController extends Controller
 {
@@ -132,18 +135,100 @@ class LaporanController extends Controller
             $query->where('nama_barang', 'like', "%{$search}%");
         }
 
-        $barangs = $query->orderBy('stok', 'asc')->get();
+        $barangs = $query->orderBy('nama_barang')->get();
 
-        // Count stok berdasarkan status
+        // Hitung revenue per barang dari transaksi bulan ini
+        $currentMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+
+        $barangsWithRevenue = $barangs->map(function($barang) use ($currentMonth, $endOfMonth) {
+            $revenue = DetailTransaksi::join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
+                ->where('detail_transaksi.id_barang', $barang->id_barang)
+                ->whereBetween('transaksi.created_at', [$currentMonth, $endOfMonth])
+                ->sum(DB::raw('detail_transaksi.jumlah * ' . $barang->harga_jual));
+
+            return array_merge($barang->toArray(), ['revenue' => $revenue ?? 0]);
+        });
+
+        // Top 5 Produk Terlaris Bulan Ini (by quantity sold)
+        $top5Products = DetailTransaksi::join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
+            ->join('barang', 'detail_transaksi.id_barang', '=', 'barang.id_barang')
+            ->select('barang.id_barang', 'barang.nama_barang', 'barang.kategori', 'barang.harga_jual')
+            ->selectRaw('SUM(detail_transaksi.jumlah) as total_sold')
+            ->selectRaw('SUM(detail_transaksi.jumlah * barang.harga_jual) as total_revenue')
+            ->whereBetween('transaksi.created_at', [$currentMonth, $endOfMonth])
+            ->groupBy('barang.id_barang', 'barang.nama_barang', 'barang.kategori', 'barang.harga_jual')
+            ->orderByDesc('total_sold')
+            ->limit(5)
+            ->get();
+
         $totalProduk = Barang::count();
-        $stokAman = Barang::where('stok', '>=', 10)->count();
-        $stokMenipis = Barang::where('stok', '<', 10)->count();
+        $totalRevenueBulanIni = $barangsWithRevenue->sum('revenue');
 
         return view('owner.laporan.stok', compact(
-            'barangs',
+            'barangsWithRevenue',
+            'top5Products',
             'totalProduk',
-            'stokAman',
-            'stokMenipis'
+            'totalRevenueBulanIni'
+        ));
+    }
+
+    public function forecasting(Request $request)
+    {
+        $method = $request->input('method', 'sma');
+        $idBarang = $request->input('id_barang');
+
+        // Generate forecast untuk semua produk atau produk tertentu
+        if ($idBarang) {
+            $forecast = ForecastingService::generateForecast($idBarang, $method);
+            $barang = Barang::find($idBarang);
+            
+            // Dapatkan data penjualan per bulan untuk setahun penuh
+            $monthlySales = ForecastingService::getSalesDataByMonth($idBarang);
+            
+            // Siapkan data untuk 12 bulan (Jan-Des 2026)
+            $fullYearData = [];
+            $months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            for ($i = 1; $i <= 12; $i++) {
+                $monthKey = '2026-' . str_pad($i, 2, '0', STR_PAD_LEFT);
+                $fullYearData[] = [
+                    'month' => $months[$i - 1],
+                    'month_key' => $monthKey,
+                    'total_sold' => $monthlySales[$monthKey] ?? 0
+                ];
+            }
+            
+            $forecasts = [
+                $idBarang => [
+                    'id_barang' => $idBarang,
+                    'nama_barang' => $barang->nama_barang,
+                    'kategori' => $barang->kategori,
+                    'stok_saat_ini' => $barang->stok,
+                    'forecast' => $forecast['forecast'],
+                    'historicalData' => $forecast['historicalData'],
+                    'months' => $forecast['months'],
+                    'monthlyData' => $fullYearData,
+                    'needsRestock' => $barang->stok < $forecast['forecast']
+                ]
+            ];
+        } else {
+            $forecasts = ForecastingService::generateForecastForAllProducts($method);
+        }
+
+        // Get all barangs untuk dropdown filter
+        $barangs = Barang::orderBy('nama_barang')->get();
+        
+        // Hitung ringkasan
+        $totalProducts = count($forecasts);
+        $productsNeedRestock = collect($forecasts)->filter(fn($f) => $f['needsRestock'])->count();
+
+        return view('owner.laporan.forecasting', compact(
+            'forecasts',
+            'barangs',
+            'method',
+            'idBarang',
+            'totalProducts',
+            'productsNeedRestock'
         ));
     }
 }
