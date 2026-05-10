@@ -185,12 +185,12 @@ class LaporanController extends Controller
             $forecast = ForecastingService::generateForecast($idBarang);
             $barang = Barang::find($idBarang);
             
-            // Format minggu labels untuk chart (dari 2026-W01 menjadi "Minggu 1, 2026")
+            // Format minggu labels untuk chart
             $formattedWeeks = array_map(function($week) {
                 if (preg_match('/(\d{4})-W(\d{2})/', $week, $matches)) {
                     $year = $matches[1];
                     $weekNum = intval($matches[2]);
-                    return "Minggu $weekNum, $year";
+                    return "Minggu $weekNum";
                 }
                 return $week;
             }, $forecast['weeks']);
