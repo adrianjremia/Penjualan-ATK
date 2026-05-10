@@ -18,141 +18,220 @@
         font-size: 14px;
     }
 
-    .filter-card {
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+
+    .summary-card {
         background: #ffffff;
         border: 1px solid #e5e7eb;
         border-radius: 8px;
         padding: 20px;
-        margin-bottom: 24px;
-        display: flex;
-        gap: 16px;
-        align-items: flex-end;
-        flex-wrap: wrap;
+        text-align: center;
     }
 
-    .filter-group {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        flex: 1;
-        min-width: 200px;
+    .summary-label {
+        font-size: 12px;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
     }
 
-    .filter-group label {
-        font-size: 13px;
-        font-weight: 600;
+    .summary-value {
+        font-size: 32px;
+        font-weight: 700;
         color: #1f2937;
     }
 
-    .filter-group select,
-    .filter-group input {
-        padding: 10px 12px;
+    .summary-card.critical {
+        border-left: 4px solid #dc2626;
+        background-color: #fef2f2;
+    }
+
+    .summary-card.critical .summary-value {
+        color: #dc2626;
+    }
+
+    .summary-card.medium {
+        border-left: 4px solid #f59e0b;
+        background-color: #fffbf0;
+    }
+
+    .summary-card.medium .summary-value {
+        color: #f59e0b;
+    }
+
+    .summary-card.safe {
+        border-left: 4px solid #059669;
+        background-color: #f0fdf4;
+    }
+
+    .summary-card.safe .summary-value {
+        color: #059669;
+    }
+
+    .filter-section {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 32px;
+    }
+
+    .filter-section label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 8px;
+    }
+
+    .filter-section select {
+        width: 100%;
+        padding: 10px;
         border: 1px solid #d1d5db;
         border-radius: 6px;
         font-size: 14px;
-        font-family: inherit;
+        color: #1f2937;
+        background: white;
     }
 
-    .filter-group select:focus,
-    .filter-group input:focus {
-        outline: none;
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    .detail-section {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 32px;
+    }
+
+    .detail-header {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 20px;
     }
 
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 16px;
         margin-bottom: 24px;
     }
 
     .stat-card {
-        background: #ffffff;
+        background: #f9fafb;
         border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 20px;
+        border-radius: 6px;
+        padding: 16px;
     }
 
     .stat-label {
         font-size: 12px;
         color: #6b7280;
-        font-weight: 500;
+        text-transform: uppercase;
         margin-bottom: 8px;
     }
 
     .stat-value {
-        font-size: 28px;
+        font-size: 24px;
         font-weight: 700;
         color: #1f2937;
     }
 
-    .card {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 24px;
-        margin-bottom: 24px;
+    .status-alert {
+        border-radius: 6px;
+        padding: 16px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        line-height: 1.6;
     }
 
-    .card h3 {
+    .status-alert.critical {
+        background-color: #fee2e2;
+        border: 1px solid #fca5a5;
+        color: #7f1d1d;
+    }
+
+    .status-alert.medium {
+        background-color: #fef3c7;
+        border: 1px solid #fde68a;
+        color: #78350f;
+    }
+
+    .status-alert.safe {
+        background-color: #f0fdf4;
+        border: 1px solid #86efac;
+        color: #15803d;
+    }
+
+    .trend-section {
+        background: #f3f4f6;
+        border-radius: 6px;
+        padding: 16px;
+        margin-bottom: 20px;
+    }
+
+    .trend-label {
+        font-size: 12px;
+        color: #6b7280;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .trend-value {
         font-size: 16px;
         font-weight: 600;
         color: #1f2937;
-        margin-bottom: 20px;
     }
 
-    .chart-container {
-        position: relative;
-        height: 400px;
-        margin-bottom: 20px;
+    .weekly-breakdown {
+        margin-top: 24px;
     }
 
-    .forecast-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .forecast-table thead {
-        background: #f3f4f6;
-    }
-
-    .forecast-table th {
-        padding: 12px;
-        text-align: left;
-        font-size: 13px;
+    .weekly-breakdown h4 {
+        font-size: 14px;
         font-weight: 600;
         color: #1f2937;
-        border-bottom: 1px solid #e5e7eb;
+        margin-bottom: 12px;
     }
 
-    .forecast-table td {
-        padding: 12px;
-        border-bottom: 1px solid #e5e7eb;
+    .weekly-table {
+        width: 100%;
+        border-collapse: collapse;
         font-size: 14px;
+    }
+
+    .weekly-table thead {
+        background: #f9fafb;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+    .weekly-table th {
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
         color: #374151;
     }
 
-    .forecast-table tr:hover {
-        background: #f9fafb;
+    .weekly-table td {
+        padding: 12px;
+        border-bottom: 1px solid #e5e7eb;
+        color: #6b7280;
     }
 
-    .status-badge {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 4px;
-        font-size: 12px;
-        font-weight: 600;
+    .weekly-table tbody tr:hover {
+        background-color: #f9fafb;
     }
 
-    .status-safe {
-        background: #d1fae5;
-        color: #065f46;
-    }
-
-    .status-warning {
-        background: #fee2e2;
-        color: #991b1b;
+    .forecast-chart {
+        margin-top: 24px;
+        margin-bottom: 24px;
+        position: relative;
+        height: 300px;
     }
 
     .no-data {
@@ -161,236 +240,277 @@
         color: #9ca3af;
     }
 
-    @media (max-width: 768px) {
-        .filter-card {
-            flex-direction: column;
-            align-items: stretch;
-        }
+    .product-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+    }
 
-        .filter-group {
-            min-width: unset;
-        }
+    .product-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        color: inherit;
+    }
 
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
+    .product-card:hover {
+        border-color: #3b82f6;
+        box-shadow: 0 1px 3px rgba(59, 130, 246, 0.1);
+    }
 
-        .chart-container {
-            height: 300px;
-        }
+    .product-card.critical {
+        border-left: 4px solid #dc2626;
+    }
+
+    .product-card.medium {
+        border-left: 4px solid #f59e0b;
+    }
+
+    .product-card.safe {
+        border-left: 4px solid #059669;
+    }
+
+    .product-name {
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 8px;
+        font-size: 15px;
+    }
+
+    .product-info {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 4px;
+    }
+
+    .product-status {
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 8px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .product-status.critical {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
+
+    .product-status.medium {
+        background-color: #fef3c7;
+        color: #92400e;
+    }
+
+    .product-status.safe {
+        background-color: #f0fdf4;
+        color: #166534;
     }
 </style>
 
 <div class="page-header">
-    <h1>Prediksi Penjualan</h1>
-    <p>Analisis tren dan forecast penjualan untuk perencanaan stok</p>
+    <h1>Prediksi Penjualan (Forecasting Mingguan)</h1>
+    <p>Analisis prediksi penjualan mingguan dengan Single Exponential Smoothing (Alpha 0.3)</p>
 </div>
 
-<div class="filter-card">
-    <div class="filter-group">
-        <label for="method">Metode Forecasting</label>
-        <select id="method" name="method" onchange="location.href='?method=' + this.value + (document.getElementById('id_barang').value ? '&id_barang=' + document.getElementById('id_barang').value : '')">
-            <option value="sma" {{ $method === 'sma' ? 'selected' : '' }}>Simple Moving Average (SMA)</option>
-            <option value="ses" {{ $method === 'ses' ? 'selected' : '' }}>Exponential Smoothing (SES)</option>
-        </select>
+<!-- Summary Cards -->
+<div class="summary-grid">
+    <div class="summary-card critical">
+        <div class="summary-label">Stok Kritis</div>
+        <div class="summary-value">{{ $productsCritical }}</div>
     </div>
+    <div class="summary-card medium">
+        <div class="summary-label">Stok Menengah</div>
+        <div class="summary-value">{{ $productsMedium }}</div>
+    </div>
+    <div class="summary-card safe">
+        <div class="summary-label">Stok Aman</div>
+        <div class="summary-value">{{ $productsSafe }}</div>
+    </div>
+    <div class="summary-card">
+        <div class="summary-label">Total Produk</div>
+        <div class="summary-value">{{ $totalProducts }}</div>
+    </div>
+</div>
 
-    <div class="filter-group">
-        <label for="id_barang">Filter Produk</label>
-        <select id="id_barang" name="id_barang" onchange="location.href='?method={{ $method }}' + (this.value ? '&id_barang=' + this.value : '')">
-            <option value="">Semua Produk</option>
+<!-- Filter Section -->
+<div class="filter-section">
+    <label for="productFilter">Pilih Produk untuk Melihat Detail</label>
+    <form method="GET" id="filterForm">
+        <select id="productFilter" name="id_barang" onchange="document.getElementById('filterForm').submit()">
+            <option value="">-- Ringkasan Semua Produk --</option>
             @foreach($barangs as $barang)
                 <option value="{{ $barang->id_barang }}" {{ $idBarang == $barang->id_barang ? 'selected' : '' }}>
                     {{ $barang->nama_barang }}
                 </option>
             @endforeach
         </select>
-    </div>
-</div>
-
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-label">Total Produk</div>
-        <div class="stat-value">{{ $totalProducts }}</div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-label">Perlu Restock</div>
-        <div class="stat-value" style="color: #dc2626;">{{ $productsNeedRestock }}</div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-label">Metode Forecasting</div>
-        <div class="stat-value" style="font-size: 16px;">{{ $method === 'sma' ? 'SMA-3' : 'Exponential Smoothing' }}</div>
-    </div>
+    </form>
 </div>
 
 @if($idBarang && isset($forecasts[$idBarang]))
-    @php $forecast = $forecasts[$idBarang]; @endphp
+    @php
+        $forecast = $forecasts[$idBarang];
+        $status = $forecast['status'];
+    @endphp
     
-    <div class="card">
-        <h3>{{ $forecast['nama_barang'] }} - Detail Prediksi</h3>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
-            <div>
-                <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">Stok Saat Ini</div>
-                <div style="font-size: 24px; font-weight: 700; color: #1f2937;">{{ $forecast['stok_saat_ini'] }}</div>
+    <div class="detail-section">
+        <div class="detail-header">📊 Detail Produk: {{ $forecast['nama_barang'] }}</div>
+
+        <!-- Status Alert -->
+        <div class="status-alert {{ $status['type'] }}">
+            {!! $status['message'] !!}
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Stok Saat Ini</div>
+                <div class="stat-value">{{ $forecast['stok_saat_ini'] }}</div>
             </div>
-            <div>
-                <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">Prediksi Penjualan Bulan Depan</div>
-                <div style="font-size: 24px; font-weight: 700; color: #3b82f6;">{{ $forecast['forecast'] }}</div>
+            <div class="stat-card">
+                <div class="stat-label">Prediksi Minggu Depan</div>
+                <div class="stat-value" style="color: #3b82f6;">{{ $forecast['forecast_minggu_depan'] }}</div>
             </div>
-            <div>
-                <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">Status Stok</div>
-                <div style="font-size: 14px; margin-top: 4px;">
-                    @if($forecast['needsRestock'])
-                        <span class="status-badge status-warning">⚠️ Perlu Restock</span>
-                    @else
-                        <span class="status-badge status-safe">✓ Aman</span>
-                    @endif
-                </div>
+            <div class="stat-card">
+                <div class="stat-label">Kategori</div>
+                <div class="stat-value" style="font-size: 16px;">{{ $forecast['kategori'] }}</div>
             </div>
         </div>
 
-        @if(!empty($forecast['historicalData']))
-            <div class="chart-container">
-                <canvas id="forecastChart"></canvas>
+        <!-- Trend Section -->
+        <div class="trend-section">
+            <div class="trend-label">📈 Analisis Tren Mingguan</div>
+            <div class="trend-value">
+                Penjualan produk ini <strong>{{ $forecast['trend']['direction'] }}</strong> sebesar <strong>{{ $forecast['trend']['percentage'] }}%</strong> dibandingkan minggu lalu.
+                <br>
+                <span style="font-size: 13px; color: #6b7280; font-weight: normal;">(Minggu lalu: {{ $forecast['trend']['previousWeek'] }} unit → Minggu ini: {{ $forecast['trend']['lastWeek'] }} unit)</span>
             </div>
+        </div>
 
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script>
-                const ctx = document.getElementById('forecastChart').getContext('2d');
-                const historicalData = {!! json_encode($forecast['historicalData']) !!};
-                const months = {!! json_encode($forecast['months']) !!};
-                const forecast = {!! json_encode($forecast['forecast']) !!};
-                
-                const chartData = {
-                    labels: months.concat(['Prediksi']),
-                    datasets: [
-                        {
+        <!-- Weekly Breakdown -->
+        @if(!empty($forecast['weeklyBreakdown']))
+        <div class="weekly-breakdown">
+            <h4>📋 Prediksi Penjualan 4 Minggu ke Depan</h4>
+            <table class="weekly-table">
+                <thead>
+                    <tr>
+                        <th>Periode</th>
+                        <th style="text-align: right;">Prediksi Penjualan (unit)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($forecast['weeklyBreakdown'] as $week)
+                    <tr>
+                        <td>{{ $week['week'] }}</td>
+                        <td style="text-align: right; font-weight: 600; color: #3b82f6;">{{ $week['forecast'] }} unit</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @endif
+
+        <!-- Historical Data Chart (if available) -->
+        @if(!empty($forecast['historicalData']))
+        <div class="forecast-chart">
+            <h4 style="margin-bottom: 16px;">📈 Grafik Penjualan Historis (Per Minggu)</h4>
+            <canvas id="forecastChart"></canvas>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+        <script>
+            const ctx = document.getElementById('forecastChart');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: {!! json_encode($forecast['weeks']) !!},
+                        datasets: [{
                             label: 'Penjualan Aktual',
-                            data: historicalData.concat(null),
+                            data: {!! json_encode($forecast['historicalData']) !!},
                             borderColor: '#3b82f6',
                             backgroundColor: 'rgba(59, 130, 246, 0.1)',
                             borderWidth: 2,
-                            fill: true,
-                            tension: 0.4
-                        },
-                        {
-                            label: 'Prediksi',
-                            data: Array(historicalData.length - 1).fill(null).concat(historicalData[historicalData.length - 1], forecast),
-                            borderColor: '#ef4444',
-                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            fill: false,
                             tension: 0.4,
-                            pointRadius: 5
-                        }
-                    ]
-                };
-
-                new Chart(ctx, {
-                    type: 'line',
-                    data: chartData,
+                            fill: true,
+                            pointRadius: 5,
+                            pointBackgroundColor: '#3b82f6',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2
+                        }]
+                    },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
                             legend: {
+                                display: true,
                                 position: 'top'
                             }
                         },
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
                             }
                         }
                     }
                 });
-            </script>
-
-            <div style="margin-top: 40px;">
-                <h3 style="margin-bottom: 20px; font-size: 18px; font-weight: 600; color: #1f2937;">Data Penjualan Bulanan Tahun 2026</h3>
-                
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-                        <thead>
-                            <tr style="background-color: #f3f4f6; border-bottom: 2px solid #e5e7eb;">
-                                <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151;">Bulan</th>
-                                <th style="padding: 12px; text-align: right; font-weight: 600; color: #374151;">Total Terjual (unit)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($forecast['monthlyData'] as $data)
-                                <tr style="border-bottom: 1px solid #e5e7eb; @if($data['total_sold'] > 0) background-color: #f9fafb; @endif">
-                                    <td style="padding: 12px; color: #1f2937;">{{ $data['month'] }} 2026</td>
-                                    <td style="padding: 12px; text-align: right; @if($data['total_sold'] > 0) color: #059669; font-weight: 600; @else color: #9ca3af; @endif">
-                                        {{ $data['total_sold'] }} unit
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            }
+        </script>
         @endif
     </div>
 @else
-    <div class="card">
-        <h3>Tabel Prediksi Penjualan - {{ ucfirst($method) }}</h3>
-
-        @if(empty($forecasts))
-            <div class="no-data">
-                <p>Belum ada data transaksi untuk dilakukan prediksi</p>
-            </div>
-        @else
-            <div style="overflow-x: auto;">
-                <table class="forecast-table">
-                    <thead>
-                        <tr>
-                            <th>Produk</th>
-                            <th>Kategori</th>
-                            <th>Stok Saat Ini</th>
-                            <th>Prediksi (Bulan Depan)</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($forecasts as $f)
-                            <tr>
-                                <td>
-                                    <a href="?method={{ $method }}&id_barang={{ $f['id_barang'] }}" 
-                                       style="color: #3b82f6; text-decoration: none; cursor: pointer;">
-                                        {{ $f['nama_barang'] }}
-                                    </a>
-                                </td>
-                                <td>{{ $f['kategori'] }}</td>
-                                <td style="font-weight: 600;">{{ $f['stok_saat_ini'] }}</td>
-                                <td style="font-weight: 600; color: #3b82f6;">{{ $f['forecast'] }}</td>
-                                <td>
-                                    @if($f['needsRestock'])
-                                        <span class="status-badge status-warning">⚠️ Restock Segera</span>
-                                    @else
-                                        <span class="status-badge status-safe">✓ Aman</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            <div style="margin-top: 20px; padding: 16px; background: #f0f9ff; border-left: 4px solid #3b82f6; border-radius: 4px;">
-                <div style="font-size: 13px; color: #1e40af;">
-                    <strong>📊 Penjelasan:</strong>
-                    <ul style="margin: 8px 0 0 20px; padding: 0;">
-                        <li><strong>Prediksi:</strong> Estimasi jumlah penjualan bulan depan berdasarkan data historis</li>
-                        <li><strong>Status Restock:</strong> Jika stok saat ini lebih rendah dari prediksi penjualan, produk perlu direstock</li>
-                    </ul>
+    <!-- All Products Overview -->
+    <div class="detail-section">
+        <div class="detail-header">📊 Ringkasan Semua Produk</div>
+        
+        @if(!empty($allForecasts))
+        <div class="product-list">
+            @foreach($allForecasts as $item)
+            <a href="?id_barang={{ $item['id_barang'] }}" class="product-card {{ $item['status']['type'] }}">
+                <div class="product-name">{{ $item['nama_barang'] }}</div>
+                <div class="product-info">Stok: <strong>{{ $item['stok_saat_ini'] }} unit</strong></div>
+                <div class="product-info">Prediksi Minggu: <strong style="color: #3b82f6;">{{ $item['forecast_minggu_depan'] }} unit</strong></div>
+                <div class="product-info">Kategori: {{ $item['kategori'] }}</div>
+                <div class="product-info" style="font-size: 12px; margin-top: 8px;">
+                    Tren: <strong>{{ $item['trend']['direction'] }} {{ $item['trend']['percentage'] }}%</strong>
                 </div>
-            </div>
+                <div class="product-status {{ $item['status']['type'] }}">
+                    @if($item['status']['type'] === 'critical')
+                        ⚠️ KRITIS
+                    @elseif($item['status']['type'] === 'medium')
+                        ℹ️ MENENGAH
+                    @else
+                        ✓ AMAN
+                    @endif
+                </div>
+            </a>
+            @endforeach
+        </div>
+        @else
+        <div class="no-data">
+            Belum ada data penjualan untuk prediksi
+        </div>
         @endif
+
+        <div style="margin-top: 24px; padding: 16px; background: #f0f9ff; border-left: 4px solid #0284c7; border-radius: 4px;">
+            <div style="font-size: 13px; color: #0c4a6e;">
+                <strong>ℹ️ Penjelasan Status:</strong>
+                <ul style="margin: 8px 0 0 20px; padding: 0;">
+                    <li><strong>⚠️ KRITIS:</strong> Stok tidak cukup untuk minggu depan. Segera lakukan pengadaan.</li>
+                    <li><strong>ℹ️ MENENGAH:</strong> Stok aman minggu depan, namun akan habis dalam beberapa minggu.</li>
+                    <li><strong>✓ AMAN:</strong> Stok cukup untuk 4 minggu ke depan.</li>
+                </ul>
+            </div>
+        </div>
     </div>
 @endif
 

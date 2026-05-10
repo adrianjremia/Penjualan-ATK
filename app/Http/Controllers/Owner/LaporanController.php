@@ -175,28 +175,15 @@ class LaporanController extends Controller
 
     public function forecasting(Request $request)
     {
-        $method = $request->input('method', 'sma');
         $idBarang = $request->input('id_barang');
 
-        // Generate forecast untuk semua produk atau produk tertentu
+        // Generate forecast untuk semua produk
+        $allForecasts = ForecastingService::generateForecastForAllProducts();
+
+        // Jika ada produk yang dipilih, tampilkan detail untuk produk itu
         if ($idBarang) {
-            $forecast = ForecastingService::generateForecast($idBarang, $method);
+            $forecast = ForecastingService::generateForecast($idBarang);
             $barang = Barang::find($idBarang);
-            
-            // Dapatkan data penjualan per bulan untuk setahun penuh
-            $monthlySales = ForecastingService::getSalesDataByMonth($idBarang);
-            
-            // Siapkan data untuk 12 bulan (Jan-Des 2026)
-            $fullYearData = [];
-            $months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            for ($i = 1; $i <= 12; $i++) {
-                $monthKey = '2026-' . str_pad($i, 2, '0', STR_PAD_LEFT);
-                $fullYearData[] = [
-                    'month' => $months[$i - 1],
-                    'month_key' => $monthKey,
-                    'total_sold' => $monthlySales[$monthKey] ?? 0
-                ];
-            }
             
             $forecasts = [
                 $idBarang => [
@@ -204,31 +191,36 @@ class LaporanController extends Controller
                     'nama_barang' => $barang->nama_barang,
                     'kategori' => $barang->kategori,
                     'stok_saat_ini' => $barang->stok,
-                    'forecast' => $forecast['forecast'],
+                    'forecast_minggu_depan' => $forecast['forecast'],
+                    'trend' => $forecast['trend'],
+                    'status' => ForecastingService::determineStockStatus($barang, $forecast['weeklyBreakdown']),
                     'historicalData' => $forecast['historicalData'],
-                    'months' => $forecast['months'],
-                    'monthlyData' => $fullYearData,
-                    'needsRestock' => $barang->stok < $forecast['forecast']
+                    'weeks' => $forecast['weeks'],
+                    'weeklyBreakdown' => $forecast['weeklyBreakdown']
                 ]
             ];
         } else {
-            $forecasts = ForecastingService::generateForecastForAllProducts($method);
+            $forecasts = $allForecasts;
         }
 
         // Get all barangs untuk dropdown filter
         $barangs = Barang::orderBy('nama_barang')->get();
         
-        // Hitung ringkasan
-        $totalProducts = count($forecasts);
-        $productsNeedRestock = collect($forecasts)->filter(fn($f) => $f['needsRestock'])->count();
+        // Hitung ringkasan dari semua produk
+        $totalProducts = count($allForecasts);
+        $productsCritical = collect($allForecasts)->filter(fn($f) => $f['status']['type'] === 'critical')->count();
+        $productsMedium = collect($allForecasts)->filter(fn($f) => $f['status']['type'] === 'medium')->count();
+        $productsSafe = collect($allForecasts)->filter(fn($f) => $f['status']['type'] === 'safe')->count();
 
         return view('owner.laporan.forecasting', compact(
             'forecasts',
             'barangs',
-            'method',
             'idBarang',
             'totalProducts',
-            'productsNeedRestock'
+            'productsCritical',
+            'productsMedium',
+            'productsSafe',
+            'allForecasts'
         ));
     }
 }
