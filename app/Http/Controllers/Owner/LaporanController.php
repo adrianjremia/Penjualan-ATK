@@ -185,6 +185,16 @@ class LaporanController extends Controller
             $forecast = ForecastingService::generateForecast($idBarang);
             $barang = Barang::find($idBarang);
             
+            // Format minggu labels untuk chart (dari 2026-W01 menjadi "Minggu 1, 2026")
+            $formattedWeeks = array_map(function($week) {
+                if (preg_match('/(\d{4})-W(\d{2})/', $week, $matches)) {
+                    $year = $matches[1];
+                    $weekNum = intval($matches[2]);
+                    return "Minggu $weekNum, $year";
+                }
+                return $week;
+            }, $forecast['weeks']);
+            
             $forecasts = [
                 $idBarang => [
                     'id_barang' => $idBarang,
@@ -195,7 +205,7 @@ class LaporanController extends Controller
                     'trend' => $forecast['trend'],
                     'status' => ForecastingService::determineStockStatus($barang, $forecast['weeklyBreakdown']),
                     'historicalData' => $forecast['historicalData'],
-                    'weeks' => $forecast['weeks'],
+                    'weeks' => $formattedWeeks,
                     'weeklyBreakdown' => $forecast['weeklyBreakdown']
                 ]
             ];
