@@ -320,8 +320,35 @@
 <!-- Summary Cards -->
 <div class="summary-grid">
     <div class="summary-card critical">
-        <div class="summary-label">Stok Kritis</div>
+        <div class="summary-label" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <img src="{{ asset('images/icons/warning.png') }}" alt="Warning" style="width: 16px; height: 16px;">
+            Stok Kritis
+        </div>
         <div class="summary-value">{{ $productsCritical }}</div>
+    </div>
+
+    <div class="summary-card medium">
+        <div class="summary-label" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <img src="{{ asset('images/icons/info.png') }}" alt="Info" style="width: 16px; height: 16px;">
+            Stok Menengah
+        </div>
+        <div class="summary-value">{{ $productsMedium }}</div>
+    </div>
+
+    <div class="summary-card safe">
+        <div class="summary-label" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <img src="{{ asset('images/icons/check.png') }}" alt="Check" style="width: 16px; height: 16px;">
+            Stok Aman
+        </div>
+        <div class="summary-value">{{ $productsSafe }}</div>
+    </div>
+
+    <div class="summary-card">
+        <div class="summary-label" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <img src="{{ asset('images/icons/chartBar.png') }}" alt="Chart" style="width: 16px; height: 16px;">
+            Total Produk
+        </div>
+        <div class="summary-value">{{ $totalProducts }}</div>
     </div>
     <div class="summary-card medium">
         <div class="summary-label">Stok Menengah</div>
@@ -384,7 +411,10 @@
 
         <!-- Trend Section -->
         <div class="trend-section">
-            <div class="trend-label">📈 Analisis Tren Mingguan</div>
+            <div class="trend-label" style="display: flex; align-items: center; gap: 8px;">
+                <img src="{{ asset('images/icons/chartUp.png') }}" alt="Trend" style="width: 18px; height: 18px;">
+                Analisis Tren Mingguan
+            </div>
             <div class="trend-value">
                 Penjualan produk ini <strong>{{ $forecast['trend']['direction'] }}</strong> sebesar <strong>{{ $forecast['trend']['percentage'] }}%</strong> dibandingkan minggu lalu.
                 <br>
@@ -395,7 +425,10 @@
         <!-- Weekly Breakdown -->
         @if(!empty($forecast['weeklyBreakdown']))
         <div class="weekly-breakdown">
-            <h4>📋 Prediksi Penjualan 4 Minggu ke Depan</h4>
+            <h4 style="display: flex; align-items: center; gap: 8px;">
+                <img src="{{ asset('images/icons/chartBar.png') }}" alt="Bar Chart" style="width: 18px; height: 18px;">
+                Prediksi Penjualan 4 Minggu ke Depan
+            </h4>
             <table class="weekly-table">
                 <thead>
                     <tr>
@@ -418,7 +451,10 @@
         <!-- Historical Data Chart (if available) -->
         @if(!empty($forecast['historicalData']))
         <div class="forecast-chart">
-            <h4 style="margin-bottom: 16px;">📈 Grafik Penjualan Historis (Per Minggu)</h4>
+            <h4 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                <img src="{{ asset('images/icons/chartUp.png') }}" alt="Chart" style="width: 18px; height: 18px;">
+                Grafik Penjualan Historis (Per Minggu)
+            </h4>
             <canvas id="forecastChart"></canvas>
         </div>
 
@@ -470,7 +506,10 @@
 @else
     <!-- All Products Overview -->
     <div class="detail-section">
-        <div class="detail-header">📊 Ringkasan Semua Produk</div>
+        <div class="detail-header" style="display: flex; align-items: center; gap: 8px;">
+            <img src="{{ asset('images/icons/chartBar.png') }}" alt="Chart" style="width: 20px; height: 20px;">
+            Ringkasan Semua Produk
+        </div>
         
         @if(!empty($allForecasts))
         <div class="product-list">
@@ -483,13 +522,16 @@
                 <div class="product-info" style="font-size: 12px; margin-top: 8px;">
                     Tren: <strong>{{ $item['trend']['direction'] }} {{ $item['trend']['percentage'] }}%</strong>
                 </div>
-                <div class="product-status {{ $item['status']['type'] }}">
+                <div class="product-status {{ $item['status']['type'] }}" style="display: flex; align-items: center; justify-content: center; gap: 6px;">
                     @if($item['status']['type'] === 'critical')
-                        ⚠️ KRITIS
+                        <img src="{{ asset('images/icons/warning.png') }}" alt="Warning" style="width: 16px; height: 16px;">
+                        KRITIS
                     @elseif($item['status']['type'] === 'medium')
-                        ℹ️ MENENGAH
+                        <img src="{{ asset('images/icons/info.png') }}" alt="Info" style="width: 16px; height: 16px;">
+                        MENENGAH
                     @else
-                        ✓ AMAN
+                        <img src="{{ asset('images/icons/check.png') }}" alt="Check" style="width: 16px; height: 16px;">
+                        AMAN
                     @endif
                 </div>
             </a>

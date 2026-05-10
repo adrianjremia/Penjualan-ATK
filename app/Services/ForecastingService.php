@@ -209,7 +209,7 @@ class ForecastingService
         if ($stok < $week1Forecast) {
             return [
                 'type' => 'critical',
-                'message' => "⚠️ STOK KRITIS: Stok saat ini ({$stok}) diprediksi tidak cukup untuk kebutuhan minggu depan ({$week1Forecast}). Segera lakukan pengadaan barang.",
+                'message' => "<img src=\"/images/icons/warning.png\" alt=\"Warning\" style=\"width: 16px; height: 16px; vertical-align: middle; margin-right: 8px;\"> <strong>STOK KRITIS:</strong> Stok saat ini ({$stok}) diprediksi tidak cukup untuk kebutuhan minggu depan ({$week1Forecast}). Segera lakukan pengadaan barang.",
                 'weeksUntilEmpty' => 0
             ];
         }
@@ -230,7 +230,7 @@ class ForecastingService
         if ($weeksUntilEmpty > 0 && $weeksUntilEmpty < 4) {
             return [
                 'type' => 'medium',
-                'message' => "ℹ️ STOK MENENGAH: Stok aman untuk minggu depan, namun diprediksi habis dalam {$weeksUntilEmpty} minggu.",
+                'message' => "<img src=\"/images/icons/info.png\" alt=\"Info\" style=\"width: 16px; height: 16px; vertical-align: middle; margin-right: 8px;\"> <strong>STOK MENENGAH:</strong> Stok aman untuk minggu depan, namun diprediksi habis dalam {$weeksUntilEmpty} minggu.",
                 'weeksUntilEmpty' => $weeksUntilEmpty
             ];
         }
@@ -238,7 +238,7 @@ class ForecastingService
         // Stok aman untuk 4 minggu ke depan
         return [
             'type' => 'safe',
-            'message' => "✓ STOK AMAN: Stok cukup untuk kebutuhan 4 minggu ke depan.",
+            'message' => "<img src=\"/images/icons/check.png\" alt=\"Check\" style=\"width: 16px; height: 16px; vertical-align: middle; margin-right: 8px;\"> <strong>STOK AMAN:</strong> Stok cukup untuk kebutuhan 4 minggu ke depan.",
             'weeksUntilEmpty' => 4
         ];
     }
