@@ -48,11 +48,12 @@ class ForecastingService
 
         $details = $query->get();
 
-        // Group by week
+        // Group by week (ISO week format: 2026-W01, 2026-W02, etc)
         $salesByWeek = [];
         
         foreach ($details as $detail) {
-            $weekKey = Carbon::parse($detail->transaksi->created_at)->format('Y-W');
+            $carbon = Carbon::parse($detail->transaksi->created_at);
+            $weekKey = $carbon->format('Y') . '-W' . str_pad($carbon->weekOfYear, 2, '0', STR_PAD_LEFT);
             
             if (!isset($salesByWeek[$weekKey])) {
                 $salesByWeek[$weekKey] = 0;
