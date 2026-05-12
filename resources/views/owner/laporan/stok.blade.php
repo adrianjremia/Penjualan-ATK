@@ -76,10 +76,44 @@
     }
 
     .card h2 {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 600;
         color: #1f2937;
         margin-bottom: 20px;
+    }
+
+    .filter-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .filter-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .filter-item label {
+        font-size: 13px;
+        color: #374151;
+        font-weight: 500;
+    }
+
+    .filter-item input[type="date"] {
+        padding: 10px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #1f2937;
+        background: #ffffff;
+    }
+
+    .filter-item input[type="date"]:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     .top5-grid {
@@ -224,14 +258,14 @@
 <div class="card">
     <h2>Filter Periode</h2>
     
-    <form method="GET" id="filterForm" class="filter-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 0;">
+    <form method="GET" id="filterForm" class="filter-group">
         <div class="filter-item">
-            <label>Tanggal Awal</label>
+            <label for="tanggalAwal">Tanggal Awal</label>
             <input type="date" id="tanggalAwal" name="tanggal_awal" value="{{ $tanggalAwal }}">
         </div>
 
         <div class="filter-item">
-            <label>Tanggal Akhir</label>
+            <label for="tanggalAkhir">Tanggal Akhir</label>
             <input type="date" id="tanggalAkhir" name="tanggal_akhir" value="{{ $tanggalAkhir }}">
         </div>
     </form>

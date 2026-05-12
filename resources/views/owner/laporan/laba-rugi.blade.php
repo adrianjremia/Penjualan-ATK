@@ -33,16 +33,14 @@
         margin-bottom: 20px;
     }
 
-    .filter-section {
+    .filter-group {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
-        margin-bottom: 24px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #e5e7eb;
+        margin-bottom: 20px;
     }
 
-    .filter-group {
+    .filter-item {
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -221,7 +219,7 @@
     }
 
     @media (max-width: 768px) {
-        .filter-section {
+        .filter-group {
             grid-template-columns: 1fr;
         }
 
@@ -243,13 +241,13 @@
 <div class="card">
     <h2>Filter Periode</h2>
 
-    <form method="GET" id="filterForm" class="filter-section">
-        <div class="filter-group">
+    <form method="GET" id="filterForm" class="filter-group">
+        <div class="filter-item">
             <label for="tanggal_awal">Tanggal Awal</label>
             <input type="date" name="tanggal_awal" id="tanggal_awal" value="{{ request('tanggal_awal') }}">
         </div>
 
-        <div class="filter-group">
+        <div class="filter-item">
             <label for="tanggal_akhir">Tanggal Akhir</label>
             <input type="date" name="tanggal_akhir" id="tanggal_akhir" value="{{ request('tanggal_akhir') }}">
         </div>
