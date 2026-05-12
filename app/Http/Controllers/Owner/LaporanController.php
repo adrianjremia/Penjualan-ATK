@@ -138,22 +138,24 @@ class LaporanController extends Controller
         $barangs = $query->orderBy('nama_barang')->get();
 
         // Determine date range for filtering
-        if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
-            $tanggalAwal = $request->input('tanggal_awal');
-            $tanggalAkhir = $request->input('tanggal_akhir');
+        $tanggalAwal = $request->input('tanggal_awal');
+        $tanggalAkhir = $request->input('tanggal_akhir');
+        $hasFilter = $request->filled('tanggal_awal') && $request->filled('tanggal_akhir');
+
+        if ($hasFilter) {
             $periodLabel = "dari " . Carbon::parse($tanggalAwal)->format('d M Y') . " hingga " . Carbon::parse($tanggalAkhir)->format('d M Y');
         } else {
-            // Default ke bulan ini jika tidak ada filter
-            $tanggalAwal = Carbon::now()->startOfMonth()->format('Y-m-d');
-            $tanggalAkhir = Carbon::now()->endOfMonth()->format('Y-m-d');
-            $periodLabel = "Bulan " . Carbon::now()->format('F Y');
+            $periodLabel = "Semua periode";
         }
 
         // Hitung revenue dan jumlah terjual per barang berdasarkan periode yang dipilih
-        $barangsWithRevenue = $barangs->map(function($barang) use ($tanggalAwal, $tanggalAkhir) {
+        $barangsWithRevenue = $barangs->map(function($barang) use ($tanggalAwal, $tanggalAkhir, $hasFilter) {
             $query = DetailTransaksi::join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
-                ->where('detail_transaksi.id_barang', $barang->id_barang)
-                ->whereBetween('transaksi.created_at', [$tanggalAwal, $tanggalAkhir]);
+                ->where('detail_transaksi.id_barang', $barang->id_barang);
+
+            if ($hasFilter) {
+                $query->whereBetween('transaksi.created_at', [$tanggalAwal, $tanggalAkhir]);
+            }
 
             $totalSold = $query->sum('detail_transaksi.jumlah');
             $revenue = $totalSold > 0 ? $totalSold * $barang->harga_jual : 0;
@@ -165,12 +167,17 @@ class LaporanController extends Controller
         });
 
         // Top 5 Produk Terlaris berdasarkan periode (by quantity sold)
-        $top5Products = DetailTransaksi::join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
+        $top5Query = DetailTransaksi::join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
             ->join('barang', 'detail_transaksi.id_barang', '=', 'barang.id_barang')
             ->select('barang.id_barang', 'barang.nama_barang', 'barang.kategori', 'barang.harga_jual')
             ->selectRaw('SUM(detail_transaksi.jumlah) as total_sold')
-            ->selectRaw('SUM(detail_transaksi.jumlah * barang.harga_jual) as total_revenue')
-            ->whereBetween('transaksi.created_at', [$tanggalAwal, $tanggalAkhir])
+            ->selectRaw('SUM(detail_transaksi.jumlah * barang.harga_jual) as total_revenue');
+
+        if ($hasFilter) {
+            $top5Query->whereBetween('transaksi.created_at', [$tanggalAwal, $tanggalAkhir]);
+        }
+
+        $top5Products = $top5Query
             ->groupBy('barang.id_barang', 'barang.nama_barang', 'barang.kategori', 'barang.harga_jual')
             ->orderByDesc('total_sold')
             ->limit(5)
