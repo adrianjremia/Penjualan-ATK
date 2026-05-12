@@ -235,7 +235,7 @@ class LaporanController extends Controller
         $productsSafe = collect($allForecasts)->filter(fn($f) => $f['status']['type'] === 'safe')->count();
 
         return view('owner.laporan.forecasting', compact(
-            'forecasts',
+            'forecasts',oih 
             'barangs',
             'idBarang',
             'totalProducts',
