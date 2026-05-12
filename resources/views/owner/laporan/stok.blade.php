@@ -261,12 +261,12 @@
     <form method="GET" id="filterForm" class="filter-group">
         <div class="filter-item">
             <label for="tanggalAwal">Tanggal Awal</label>
-            <input type="date" id="tanggalAwal" name="tanggal_awal" value="{{ $tanggalAwal }}">
+            <input type="date" id="tanggalAwal" name="tanggal_awal" value="{{ $tanggalAwal }}" placeholder="dd/mm/yyyy">
         </div>
 
         <div class="filter-item">
             <label for="tanggalAkhir">Tanggal Akhir</label>
-            <input type="date" id="tanggalAkhir" name="tanggal_akhir" value="{{ $tanggalAkhir }}">
+            <input type="date" id="tanggalAkhir" name="tanggal_akhir" value="{{ $tanggalAkhir }}" placeholder="dd/mm/yyyy">
         </div>
     </form>
 </div>
@@ -366,6 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <th>Nama Barang</th>
                     <th>Kategori</th>
                     <th>Stok Saat Ini</th>
+                    <th>Jumlah Terjual</th>
                     <th>Total Revenue</th>
                 </tr>
             </thead>
@@ -376,6 +377,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td>{{ $barang['nama_barang'] }}</td>
                     <td>{{ $barang['kategori'] }}</td>
                     <td>{{ $barang['stok'] }} {{ $barang['satuan'] }}</td>
+                    <td>{{ $barang['total_sold'] ?? 0 }} unit</td>
                     <td>Rp {{ number_format($barang['revenue'], 0, ',', '.') }}</td>
                 </tr>
                 @empty
