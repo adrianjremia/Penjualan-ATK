@@ -149,14 +149,19 @@ class LaporanController extends Controller
             $periodLabel = "Bulan " . Carbon::now()->format('F Y');
         }
 
-        // Hitung revenue per barang berdasarkan periode yang dipilih
+        // Hitung revenue dan jumlah terjual per barang berdasarkan periode yang dipilih
         $barangsWithRevenue = $barangs->map(function($barang) use ($tanggalAwal, $tanggalAkhir) {
-            $revenue = DetailTransaksi::join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
+            $query = DetailTransaksi::join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
                 ->where('detail_transaksi.id_barang', $barang->id_barang)
-                ->whereBetween('transaksi.created_at', [$tanggalAwal, $tanggalAkhir])
-                ->sum(DB::raw('detail_transaksi.jumlah * ' . $barang->harga_jual));
+                ->whereBetween('transaksi.created_at', [$tanggalAwal, $tanggalAkhir]);
 
-            return array_merge($barang->toArray(), ['revenue' => $revenue ?? 0]);
+            $totalSold = $query->sum('detail_transaksi.jumlah');
+            $revenue = $totalSold > 0 ? $totalSold * $barang->harga_jual : 0;
+
+            return array_merge($barang->toArray(), [
+                'total_sold' => $totalSold ?? 0,
+                'revenue' => $revenue ?? 0
+            ]);
         });
 
         // Top 5 Produk Terlaris berdasarkan periode (by quantity sold)
