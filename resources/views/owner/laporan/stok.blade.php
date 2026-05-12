@@ -261,12 +261,12 @@
     <form method="GET" id="filterForm" class="filter-group">
         <div class="filter-item">
             <label for="tanggalAwal">Tanggal Awal</label>
-            <input type="date" id="tanggalAwal" name="tanggal_awal" value="{{ $tanggalAwal }}" placeholder="dd/mm/yyyy">
+            <input type="date" id="tanggalAwal" name="tanggal_awal" value="{{ request('tanggal_awal') ?? '' }}">
         </div>
 
         <div class="filter-item">
             <label for="tanggalAkhir">Tanggal Akhir</label>
-            <input type="date" id="tanggalAkhir" name="tanggal_akhir" value="{{ $tanggalAkhir }}" placeholder="dd/mm/yyyy">
+            <input type="date" id="tanggalAkhir" name="tanggal_akhir" value="{{ request('tanggal_akhir') ?? '' }}">
         </div>
     </form>
 </div>
@@ -382,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" style="text-align: center; color: #9ca3af;">Tidak ada barang yang sesuai</td>
+                    <td colspan="6" style="text-align: center; color: #9ca3af;">Tidak ada barang yang sesuai</td>
                 </tr>
                 @endforelse
             </tbody>
