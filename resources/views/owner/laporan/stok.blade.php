@@ -217,8 +217,40 @@
 
 <div class="page-header">
     <h1>Laporan Penjualan & Inventaris</h1>
-    <p>Analisis penjualan dan status stok barang bulan ini</p>
+    <p>Analisis penjualan dan status stok barang</p>
 </div>
+
+<!-- Filter Periode -->
+<div class="card">
+    <h2>Filter Periode</h2>
+    
+    <form method="GET" id="filterForm" class="filter-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 0;">
+        <div class="filter-item">
+            <label>Tanggal Awal</label>
+            <input type="date" id="tanggalAwal" name="tanggal_awal" value="{{ $tanggalAwal }}">
+        </div>
+
+        <div class="filter-item">
+            <label>Tanggal Akhir</label>
+            <input type="date" id="tanggalAkhir" name="tanggal_akhir" value="{{ $tanggalAkhir }}">
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tanggalAwal = document.getElementById('tanggalAwal');
+    const tanggalAkhir = document.getElementById('tanggalAkhir');
+    const filterForm = document.getElementById('filterForm');
+
+    function submitFilter() {
+        filterForm.submit();
+    }
+
+    tanggalAwal.addEventListener('change', submitFilter);
+    tanggalAkhir.addEventListener('change', submitFilter);
+});
+</script>
 
 <div class="stats-grid">
     <div class="stat-card">
@@ -234,19 +266,19 @@
 
     <div class="stat-card">
         <div class="stat-header">
-            <span class="stat-label">Revenue Bulan Ini</span>
+            <span class="stat-label">Revenue Periode</span>
             <img src="{{ asset('images/icons/pendapatanHarian.png') }}" alt="Revenue" class="stat-icon">
         </div>
         <div>
-            <div class="stat-value">Rp {{ number_format($totalRevenueBulanIni, 0, ',', '.') }}</div>
-            <div class="stat-description">Total penjualan</div>
+            <div class="stat-value">Rp {{ number_format($totalRevenuePeriode, 0, ',', '.') }}</div>
+            <div class="stat-description">{{ $periodLabel }}</div>
         </div>
     </div>
 </div>
 
 @if($top5Products->count() > 0)
 <div class="card">
-    <h2>Top 5 Produk Terlaris Bulan Ini</h2>
+    <h2>Top 5 Produk Terlaris {{ $periodLabel }}</h2>
 
     <div class="top5-grid">
         @foreach($top5Products as $index => $product)
