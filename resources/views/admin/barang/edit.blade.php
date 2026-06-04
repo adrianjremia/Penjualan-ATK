@@ -212,7 +212,9 @@
                     name="harga_beli" 
                     placeholder="0"
                     value="{{ $barang->harga_beli }}" 
+                    min="0"
                     required>
+                <small id="hargaBeliWarning" style="color: #ef4444; display: none; margin-top: 4px;">⚠️ Harga tidak boleh negatif</small>
             </div>
 
             <div class="form-group">
@@ -223,7 +225,9 @@
                     name="harga_jual" 
                     placeholder="0"
                     value="{{ $barang->harga_jual }}" 
+                    min="0"
                     required>
+                <small id="hargaJualWarning" style="color: #ef4444; display: none; margin-top: 4px;">⚠️ Harga tidak boleh negatif</small>
             </div>
         </div>
 
@@ -236,7 +240,9 @@
                     name="stok" 
                     placeholder="0"
                     value="{{ $barang->stok }}" 
+                    min="0"
                     required>
+                <small id="stokWarning" style="color: #ef4444; display: none; margin-top: 4px;">⚠️ Stok tidak boleh negatif</small>
             </div>
 
             <div class="form-group">
@@ -259,3 +265,51 @@
 </div>
 
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stokInput = document.getElementById('stok');
+    const hargaBeli = document.getElementById('harga_beli');
+    const hargaJual = document.getElementById('harga_jual');
+    const stokWarning = document.getElementById('stokWarning');
+    const hargaBeliWarning = document.getElementById('hargaBeliWarning');
+    const hargaJualWarning = document.getElementById('hargaJualWarning');
+
+    function validateStok() {
+        if (stokInput.value < 0) {
+            stokWarning.style.display = 'block';
+            stokInput.style.borderColor = '#ef4444';
+        } else {
+            stokWarning.style.display = 'none';
+            stokInput.style.borderColor = '#d1d5db';
+        }
+    }
+
+    function validateHargaBeli() {
+        if (hargaBeli.value < 0) {
+            hargaBeliWarning.style.display = 'block';
+            hargaBeli.style.borderColor = '#ef4444';
+        } else {
+            hargaBeliWarning.style.display = 'none';
+            hargaBeli.style.borderColor = '#d1d5db';
+        }
+    }
+
+    function validateHargaJual() {
+        if (hargaJual.value < 0) {
+            hargaJualWarning.style.display = 'block';
+            hargaJual.style.borderColor = '#ef4444';
+        } else {
+            hargaJualWarning.style.display = 'none';
+            hargaJual.style.borderColor = '#d1d5db';
+        }
+    }
+
+    stokInput.addEventListener('change', validateStok);
+    stokInput.addEventListener('input', validateStok);
+    hargaBeli.addEventListener('change', validateHargaBeli);
+    hargaBeli.addEventListener('input', validateHargaBeli);
+    hargaJual.addEventListener('change', validateHargaJual);
+    hargaJual.addEventListener('input', validateHargaJual);
+});
+</script>

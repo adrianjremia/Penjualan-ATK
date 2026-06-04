@@ -27,10 +27,14 @@ class BarangController extends Controller
         $request->validate([
             'nama_barang' => 'required',
             'kategori'    => 'required',
-            'harga_beli'  => 'required|numeric',
-            'harga_jual'  => 'required|numeric',
-            'stok'        => 'required|integer',
+            'harga_beli'  => 'required|numeric|min:0',
+            'harga_jual'  => 'required|numeric|min:0',
+            'stok'        => 'required|integer|min:0',
             'satuan'      => 'required',
+        ], [
+            'stok.min' => 'Stok tidak boleh negatif (minimal 0)',
+            'harga_beli.min' => 'Harga beli tidak boleh negatif',
+            'harga_jual.min' => 'Harga jual tidak boleh negatif',
         ]);
 
         Barang::create($request->all());
@@ -52,10 +56,14 @@ class BarangController extends Controller
         $request->validate([
             'nama_barang' => 'required',
             'kategori'    => 'required',
-            'harga_beli'  => 'required|numeric',
-            'harga_jual'  => 'required|numeric',
-            'stok'        => 'required|integer',
+            'harga_beli'  => 'required|numeric|min:0',
+            'harga_jual'  => 'required|numeric|min:0',
+            'stok'        => 'required|integer|min:0',
             'satuan'      => 'required',
+        ], [
+            'stok.min' => 'Stok tidak boleh negatif (minimal 0)',
+            'harga_beli.min' => 'Harga beli tidak boleh negatif',
+            'harga_jual.min' => 'Harga jual tidak boleh negatif',
         ]);
 
         $barang = Barang::findOrFail($id);
