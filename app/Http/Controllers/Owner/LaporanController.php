@@ -137,66 +137,87 @@ class LaporanController extends Controller
 
         $barangs = $query->orderBy('nama_barang')->get();
 
-        // Hitung revenue per barang dari transaksi bulan ini
-        $currentMonth = Carbon::now()->startOfMonth();
-        $endOfMonth = Carbon::now()->endOfMonth();
+        // Determine date range for filtering
+        $tanggalAwal = $request->input('tanggal_awal');
+        $tanggalAkhir = $request->input('tanggal_akhir');
+        $hasFilter = $request->filled('tanggal_awal') && $request->filled('tanggal_akhir');
 
-        $barangsWithRevenue = $barangs->map(function($barang) use ($currentMonth, $endOfMonth) {
-            $revenue = DetailTransaksi::join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
-                ->where('detail_transaksi.id_barang', $barang->id_barang)
-                ->whereBetween('transaksi.created_at', [$currentMonth, $endOfMonth])
-                ->sum(DB::raw('detail_transaksi.jumlah * ' . $barang->harga_jual));
+        if ($hasFilter) {
+            $periodLabel = "dari " . Carbon::parse($tanggalAwal)->format('d M Y') . " hingga " . Carbon::parse($tanggalAkhir)->format('d M Y');
+        } else {
+            $periodLabel = "Semua periode";
+        }
 
-            return array_merge($barang->toArray(), ['revenue' => $revenue ?? 0]);
+        // Hitung revenue dan jumlah terjual per barang berdasarkan periode yang dipilih
+        $barangsWithRevenue = $barangs->map(function($barang) use ($tanggalAwal, $tanggalAkhir, $hasFilter) {
+            $query = DetailTransaksi::join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
+                ->where('detail_transaksi.id_barang', $barang->id_barang);
+
+            if ($hasFilter) {
+                $query->whereBetween('transaksi.created_at', [$tanggalAwal, $tanggalAkhir]);
+            }
+
+            $totalSold = $query->sum('detail_transaksi.jumlah');
+            $revenue = $totalSold > 0 ? $totalSold * $barang->harga_jual : 0;
+
+            return array_merge($barang->toArray(), [
+                'total_sold' => $totalSold ?? 0,
+                'revenue' => $revenue ?? 0
+            ]);
         });
 
-        // Top 5 Produk Terlaris Bulan Ini (by quantity sold)
-        $top5Products = DetailTransaksi::join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
+        // Top 5 Produk Terlaris berdasarkan periode (by quantity sold)
+        $top5Query = DetailTransaksi::join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
             ->join('barang', 'detail_transaksi.id_barang', '=', 'barang.id_barang')
             ->select('barang.id_barang', 'barang.nama_barang', 'barang.kategori', 'barang.harga_jual')
             ->selectRaw('SUM(detail_transaksi.jumlah) as total_sold')
-            ->selectRaw('SUM(detail_transaksi.jumlah * barang.harga_jual) as total_revenue')
-            ->whereBetween('transaksi.created_at', [$currentMonth, $endOfMonth])
+            ->selectRaw('SUM(detail_transaksi.jumlah * barang.harga_jual) as total_revenue');
+
+        if ($hasFilter) {
+            $top5Query->whereBetween('transaksi.created_at', [$tanggalAwal, $tanggalAkhir]);
+        }
+
+        $top5Products = $top5Query
             ->groupBy('barang.id_barang', 'barang.nama_barang', 'barang.kategori', 'barang.harga_jual')
             ->orderByDesc('total_sold')
             ->limit(5)
             ->get();
 
         $totalProduk = Barang::count();
-        $totalRevenueBulanIni = $barangsWithRevenue->sum('revenue');
+        $totalRevenuePeriode = $barangsWithRevenue->sum('revenue');
 
         return view('owner.laporan.stok', compact(
             'barangsWithRevenue',
             'top5Products',
             'totalProduk',
-            'totalRevenueBulanIni'
+            'totalRevenuePeriode',
+            'tanggalAwal',
+            'tanggalAkhir',
+            'periodLabel'
         ));
     }
 
     public function forecasting(Request $request)
     {
-        $method = $request->input('method', 'sma');
         $idBarang = $request->input('id_barang');
 
-        // Generate forecast untuk semua produk atau produk tertentu
+        // Generate forecast untuk semua produk
+        $allForecasts = ForecastingService::generateForecastForAllProducts();
+
+        // Jika ada produk yang dipilih, tampilkan detail untuk produk itu
         if ($idBarang) {
-            $forecast = ForecastingService::generateForecast($idBarang, $method);
+            $forecast = ForecastingService::generateForecast($idBarang);
             $barang = Barang::find($idBarang);
             
-            // Dapatkan data penjualan per bulan untuk setahun penuh
-            $monthlySales = ForecastingService::getSalesDataByMonth($idBarang);
-            
-            // Siapkan data untuk 12 bulan (Jan-Des 2026)
-            $fullYearData = [];
-            $months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            for ($i = 1; $i <= 12; $i++) {
-                $monthKey = '2026-' . str_pad($i, 2, '0', STR_PAD_LEFT);
-                $fullYearData[] = [
-                    'month' => $months[$i - 1],
-                    'month_key' => $monthKey,
-                    'total_sold' => $monthlySales[$monthKey] ?? 0
-                ];
-            }
+            // Format minggu labels untuk chart
+            $formattedWeeks = array_map(function($week) {
+                if (preg_match('/(\d{4})-W(\d{2})/', $week, $matches)) {
+                    $year = $matches[1];
+                    $weekNum = intval($matches[2]);
+                    return "Minggu $weekNum";
+                }
+                return $week;
+            }, $forecast['weeks']);
             
             $forecasts = [
                 $idBarang => [
@@ -204,31 +225,36 @@ class LaporanController extends Controller
                     'nama_barang' => $barang->nama_barang,
                     'kategori' => $barang->kategori,
                     'stok_saat_ini' => $barang->stok,
-                    'forecast' => $forecast['forecast'],
+                    'forecast_minggu_depan' => $forecast['forecast'],
+                    'trend' => $forecast['trend'],
+                    'status' => ForecastingService::determineStockStatus($barang, $forecast['weeklyBreakdown']),
                     'historicalData' => $forecast['historicalData'],
-                    'months' => $forecast['months'],
-                    'monthlyData' => $fullYearData,
-                    'needsRestock' => $barang->stok < $forecast['forecast']
+                    'weeks' => $formattedWeeks,
+                    'weeklyBreakdown' => $forecast['weeklyBreakdown']
                 ]
             ];
         } else {
-            $forecasts = ForecastingService::generateForecastForAllProducts($method);
+            $forecasts = $allForecasts;
         }
 
         // Get all barangs untuk dropdown filter
         $barangs = Barang::orderBy('nama_barang')->get();
         
-        // Hitung ringkasan
-        $totalProducts = count($forecasts);
-        $productsNeedRestock = collect($forecasts)->filter(fn($f) => $f['needsRestock'])->count();
+        // Hitung ringkasan dari semua produk
+        $totalProducts = count($allForecasts);
+        $productsCritical = collect($allForecasts)->filter(fn($f) => $f['status']['type'] === 'critical')->count();
+        $productsMedium = collect($allForecasts)->filter(fn($f) => $f['status']['type'] === 'medium')->count();
+        $productsSafe = collect($allForecasts)->filter(fn($f) => $f['status']['type'] === 'safe')->count();
 
         return view('owner.laporan.forecasting', compact(
             'forecasts',
             'barangs',
-            'method',
             'idBarang',
             'totalProducts',
-            'productsNeedRestock'
+            'productsCritical',
+            'productsMedium',
+            'productsSafe',
+            'allForecasts'
         ));
     }
 }

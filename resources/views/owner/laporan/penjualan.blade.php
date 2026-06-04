@@ -57,14 +57,14 @@
         border: 1px solid #d1d5db;
         border-radius: 6px;
         font-size: 14px;
-        background: #f9fafb;
+        background: #ffffff;
         font-family: inherit;
     }
 
     .filter-item input:focus {
         outline: none;
         border-color: #3b82f6;
-        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     .stats-grid {

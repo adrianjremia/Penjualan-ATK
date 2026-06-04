@@ -53,14 +53,24 @@
         }
 
         .store-info h3 {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 800;
             color: #1a1a1a;
-            margin-bottom: 8px;
+            margin-bottom: 3px;
+            letter-spacing: 0.5px;
+        }
+
+        .store-info .subtitle {
+            font-size: 12px;
+            font-weight: 600;
+            color: #4b5563;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
         }
 
         .store-info p {
-            color: #666;
+            color: #555;
             font-size: 13px;
             line-height: 1.6;
             margin-bottom: 3px;
@@ -254,6 +264,7 @@
             .container {
                 box-shadow: none;
                 padding: 0;
+                border: none;
             }
 
             .button-group {
@@ -286,11 +297,12 @@
             height: 16px;
             object-fit: contain;
         }
-    </style>
-<a href="{{ route('admin.transaksi.index') }}" class="back-link">
-    <img src="{{ asset('images/icons/back.png') }}" alt="Back">
-    Kembali ke Dashboard
-</a>
+</style>
+    
+    <a href="{{ route('admin.transaksi.index') }}" class="back-link">
+        <img src="{{ asset('images/icons/back.png') }}" alt="Back">
+        Kembali ke Dashboard
+    </a>
 
     <div class="container">
         <!-- Header -->
@@ -307,9 +319,10 @@
 
         <!-- Store Information -->
         <div class="store-info">
-            <h3>Toko Serba Ada</h3>
-            <p>Jl. Contoh No. 123, Jakarta</p>
-            <p>Telp: (021) 12345678</p>
+            <h3>CV. BERKAT KASIH</h3>
+            <div class="subtitle">Stationary & General Supplier</div>
+            <p>Jl. Teluk Gong Raya No. 1, Jakarta 14450</p>
+            <p>Telp / Fax. : (021) 6685838</p>
         </div>
 
         <!-- Transaction Information -->

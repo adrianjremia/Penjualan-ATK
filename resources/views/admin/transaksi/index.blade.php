@@ -348,6 +348,7 @@
             <div class="btn-group">
                 <button type="submit" class="btn-simpan">
     <img src="{{ asset('images/icons/CART.png') }}" alt="cart" style="width: 18px; height: 18px; object-fit: contain;"> Simpan Transaksi
+
 </button>
 <button type="button" class="btn-reset" onclick="resetCart()">
     <img src="{{ asset('images/icons/reset.png') }}" alt="reset" style="width: 18px; height: 18px; object-fit: contain;"> Reset

@@ -76,10 +76,44 @@
     }
 
     .card h2 {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 600;
         color: #1f2937;
         margin-bottom: 20px;
+    }
+
+    .filter-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .filter-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .filter-item label {
+        font-size: 13px;
+        color: #374151;
+        font-weight: 500;
+    }
+
+    .filter-item input[type="date"] {
+        padding: 10px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #1f2937;
+        background: #ffffff;
+    }
+
+    .filter-item input[type="date"]:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     .top5-grid {
@@ -217,8 +251,40 @@
 
 <div class="page-header">
     <h1>Laporan Penjualan & Inventaris</h1>
-    <p>Analisis penjualan dan status stok barang bulan ini</p>
+    <p>Analisis penjualan dan status stok barang</p>
 </div>
+
+<!-- Filter Periode -->
+<div class="card">
+    <h2>Filter Periode</h2>
+    
+    <form method="GET" id="filterForm" class="filter-group">
+        <div class="filter-item">
+            <label for="tanggalAwal">Tanggal Awal</label>
+            <input type="date" id="tanggalAwal" name="tanggal_awal" value="{{ request('tanggal_awal') ?? '' }}">
+        </div>
+
+        <div class="filter-item">
+            <label for="tanggalAkhir">Tanggal Akhir</label>
+            <input type="date" id="tanggalAkhir" name="tanggal_akhir" value="{{ request('tanggal_akhir') ?? '' }}">
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tanggalAwal = document.getElementById('tanggalAwal');
+    const tanggalAkhir = document.getElementById('tanggalAkhir');
+    const filterForm = document.getElementById('filterForm');
+
+    function submitFilter() {
+        filterForm.submit();
+    }
+
+    tanggalAwal.addEventListener('change', submitFilter);
+    tanggalAkhir.addEventListener('change', submitFilter);
+});
+</script>
 
 <div class="stats-grid">
     <div class="stat-card">
@@ -234,19 +300,19 @@
 
     <div class="stat-card">
         <div class="stat-header">
-            <span class="stat-label">Revenue Bulan Ini</span>
+            <span class="stat-label">Revenue Periode</span>
             <img src="{{ asset('images/icons/pendapatanHarian.png') }}" alt="Revenue" class="stat-icon">
         </div>
         <div>
-            <div class="stat-value">Rp {{ number_format($totalRevenueBulanIni, 0, ',', '.') }}</div>
-            <div class="stat-description">Total penjualan</div>
+            <div class="stat-value">Rp {{ number_format($totalRevenuePeriode, 0, ',', '.') }}</div>
+            <div class="stat-description">{{ $periodLabel }}</div>
         </div>
     </div>
 </div>
 
 @if($top5Products->count() > 0)
 <div class="card">
-    <h2>Top 5 Produk Terlaris Bulan Ini</h2>
+    <h2>Top 5 Produk Terlaris {{ $periodLabel }}</h2>
 
     <div class="top5-grid">
         @foreach($top5Products as $index => $product)
@@ -300,6 +366,7 @@
                     <th>Nama Barang</th>
                     <th>Kategori</th>
                     <th>Stok Saat Ini</th>
+                    <th>Jumlah Terjual</th>
                     <th>Total Revenue</th>
                 </tr>
             </thead>
@@ -310,11 +377,12 @@
                     <td>{{ $barang['nama_barang'] }}</td>
                     <td>{{ $barang['kategori'] }}</td>
                     <td>{{ $barang['stok'] }} {{ $barang['satuan'] }}</td>
+                    <td>{{ $barang['total_sold'] ?? 0 }} unit</td>
                     <td>Rp {{ number_format($barang['revenue'], 0, ',', '.') }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" style="text-align: center; color: #9ca3af;">Tidak ada barang yang sesuai</td>
+                    <td colspan="6" style="text-align: center; color: #9ca3af;">Tidak ada barang yang sesuai</td>
                 </tr>
                 @endforelse
             </tbody>
