@@ -46,7 +46,7 @@ class ActivityLogController extends Controller
         // Get users for filter dropdown
         $users = User::where('role', 0)->orderBy('username')->get();
 
-        return view('owner.activity-log.index', compact(
+        return view('owner.record_aktivitas.index', compact(
             'recordAktivitas',
             'actions',
             'users'
