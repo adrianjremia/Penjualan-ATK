@@ -273,18 +273,22 @@
                 <div style="flex: 1;">
                     <label for="barangSelect">Barang</label>
                     <select id="barangSelect">
-                        <option value="">Pilih barang</option>
-                        @foreach($barang as $b)
-                            <option
-                                value="{{ $b->id_barang }}"
-                                data-nama="{{ $b->nama_barang }}"
-                                data-harga="{{ $b->harga_jual }}"
-                                data-stok="{{ $b->stok }}">
-                                {{ $b->nama_barang }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <option value="">Pilih barang</option>
+        @foreach($barang as $b)
+            <option
+                value="{{ $b->id_barang }}"
+                data-nama="{{ $b->nama_barang }}"
+                data-harga="{{ $b->harga_jual }}"
+                data-stok="{{ $b->stok }}">
+                {{ $b->nama_barang }}
+            </option>
+        @endforeach
+    </select>
+    
+    <small id="infoStokToko" style="display: none; margin-top: 6px; font-size: 12px; font-weight: 500; color: #3b82f6; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 4px 10px; display: inline-flex; align-items: center;">
+    Stok tersedia:&nbsp;<span id="angkaStok" style="font-weight: 700;">0</span>
+</small>
+</div>
 
                 <div style="flex: 0.2;">
                     <label for="jumlahInput">Jumlah</label>
@@ -368,8 +372,33 @@ function formatRupiah(value) {
 }
 
 // Initialize on page load
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     updateSubmitButton();
+
+    // 🔥 TAMBAHKAN LOGIKA DETEKSI PILIHAN BARANG INI
+    const selectBarang = document.getElementById('barangSelect');
+    const infoStok = document.getElementById('infoStokToko');
+    const angkaStok = document.getElementById('angkaStok');
+
+    if (selectBarang) {
+        selectBarang.addEventListener('change', function() {
+            const selectedOption = this.selectedOptions[0];
+            
+            // Jika user memilih opsi default "Pilih barang"
+            if (!this.value) {
+                infoStok.style.display = 'none';
+                return;
+            }
+
+            // Ambil data stok dari atribut data-stok HTML option
+            const sisaStok = selectedOption.dataset.stok;
+
+            // Masukkan angka ke tampilan dan munculkan teksnya
+            angkaStok.innerText = sisaStok;
+            infoStok.style.display = 'inline-flex';;
+        });
+    }
 });
 
 function addToCart() {

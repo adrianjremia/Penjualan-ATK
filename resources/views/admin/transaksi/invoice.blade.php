@@ -12,11 +12,11 @@
 
         .header {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 40px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 20px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 20px;
         }
 
         .header-left h1 {
@@ -32,7 +32,7 @@
         }
 
         .header-right {
-            text-align: right;
+            text-align: center;
         }
 
         .header-right .label {
@@ -49,8 +49,9 @@
         }
 
         .store-info {
-            margin-bottom: 30px;
-        }
+    margin-bottom: 30px;
+    text-align: center;
+}
 
         .store-info h3 {
             font-size: 22px;
@@ -323,22 +324,23 @@
 
     <div class="container">
         <div class="header">
-            <div class="header-left">
-                <h1>INVOICE</h1>
-                <p>Sistem Point of Sale</p>
-            </div>
-            <div class="header-right">
-                <span class="label">ID Transaksi:</span>
-                <div class="value">T{{ str_pad($transaksi->id_transaksi, 3, '0', STR_PAD_LEFT) }}</div>
-            </div>
-        </div>
+    <div class="header-left">
+        <h1>INVOICE</h1>
+        <p>Sistem Point of Sale</p>
+    </div>
 
-        <div class="store-info">
-            <h3>CV. BERKAT KASIH</h3>
-            <div class="subtitle">Stationary & General Supplier</div>
-            <p>Jl. Teluk Gong Raya No. 1, Jakarta 14450</p>
-            <p>Telp / Fax. : (021) 6685838</p>
-        </div>
+    <div style="text-align: center;">
+        <h3 style="font-size: 22px; font-weight: 800; color: #1a1a1a; margin-bottom: 3px;">CV. BERKAT KASIH</h3>
+        <div style="font-size: 12px; font-weight: 600; color: #4b5563; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Stationary & General Supplier</div>
+        <p style="color: #555; font-size: 13px; margin-bottom: 3px;">Jl. Teluk Gong Raya No. 1, Jakarta 14450</p>
+        <p style="color: #555; font-size: 13px;">Telp / Fax. : (021) 6685838</p>
+    </div>
+
+    <div class="header-right">
+        <span class="label">ID Transaksi:</span>
+        <div class="value">T{{ str_pad($transaksi->id_transaksi, 3, '0', STR_PAD_LEFT) }}</div>
+    </div>
+</div>
 
         <div class="transaction-info">
             <div class="info-block">
