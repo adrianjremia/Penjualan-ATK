@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('record_aktivitas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_user');
+            $table->unsignedBigInteger('id_user')->nullable();
             $table->string('action'); // 'create_transaksi', 'edit_transaksi', 'delete_transaksi', etc
             $table->text('description')->nullable();
             $table->string('model_type')->nullable(); // 'Transaksi', 'Barang', etc
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->text('user_agent')->nullable();
             $table->timestamps();
 
-            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
+            $table->foreign('id_user')->references('id')->on('users')->onDelete('set null');
             $table->index(['id_user', 'created_at']);
             $table->index(['action', 'created_at']);
             $table->index(['model_type', 'model_id']);
