@@ -160,6 +160,14 @@
             <img src="{{ asset('images/icons/chartUp.png') }}" alt="Prediksi Penjualan">
             Prediksi Penjualan
         </a>
+        <a href="{{ url('/pemilik/riwayat-transaksi') }}" class="{{ request()->is('pemilik/riwayat-transaksi*') ? 'active' : '' }}">
+            <img src="{{ asset('images/icons/riwayatTransaksi.png') }}" alt="Riwayat Transaksi">
+            Riwayat Transaksi
+        </a>
+        <a href="{{ url('/pemilik/record-aktivitas') }}" class="{{ request()->is('pemilik/record-aktivitas*') ? 'active' : '' }}">
+            <img src="{{ asset('images/icons/recordAktivitas.png') }}" alt="Record Aktivitas">
+            Record Aktivitas
+        </a>
     </div>
 
     <div class="sidebar-footer">

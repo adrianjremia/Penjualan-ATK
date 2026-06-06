@@ -58,7 +58,9 @@ class ActivityLogService
             $changes = [];
             foreach ($newValues as $key => $newVal) {
                 if (isset($oldValues[$key]) && $oldValues[$key] !== $newVal) {
-                    $changes[] = "{$key}: {$oldValues[$key]} → {$newVal}";
+                    $oldStr = is_array($oldValues[$key]) ? json_encode($oldValues[$key]) : (string)$oldValues[$key];
+                    $newStr = is_array($newVal) ? json_encode($newVal) : (string)$newVal;
+                    $changes[] = "{$key}: {$oldStr} → {$newStr}";
                 }
             }
             if (!empty($changes)) {

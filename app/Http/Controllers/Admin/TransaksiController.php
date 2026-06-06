@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\RecordAktivitasService;
+use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Transaksi;
@@ -93,7 +93,7 @@ public function index(Request $request)
         ]);
 
         // Log activity
-        RecordAktivitasService::logCreate(
+        ActivityLogService::logCreate(
             Auth::id(),
             'transaksi',
             $transaksi->id_transaksi,
@@ -119,7 +119,7 @@ public function invoice($id)
 public function editInvoice($id)
 {
     $transaksi = Transaksi::with(['detailTransaksi.barang'])->findOrFail($id);
-    return view('admin.transaksi.edit', compact('transaksi'));
+    return view('admin.riwayatTransaksi.edit', compact('transaksi'));
 }
 
 // UPDATE INVOICE
@@ -190,7 +190,7 @@ public function updateInvoice(Request $request, $id)
         ]);
 
         // Log activity
-        RecordAktivitasService::logUpdate(
+        ActivityLogService::logUpdate(
             Auth::id(),
             'transaksi',
             $transaksi->id_transaksi,

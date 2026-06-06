@@ -122,7 +122,14 @@
         color: #6b7280;
     }
 
-    .btn-detail {
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .btn-detail,
+    .btn-edit {
         display: inline-flex;
         align-items: center;
         gap: 6px;
@@ -137,11 +144,13 @@
         padding: 0;
     }
 
-    .btn-detail:hover {
+    .btn-detail:hover,
+    .btn-edit:hover {
         color: #1f2937;
     }
 
-    .btn-detail img {
+    .btn-detail img,
+    .btn-edit img {
         width: 16px;
         height: 16px;
         object-fit: contain;
@@ -255,10 +264,16 @@
                     </td>
 
                     <td>
-                        <a href="{{ route('admin.transaksi.invoice', $t->id_transaksi) }}" class="btn-detail">
-                            <img src="{{ asset('images/icons/detail.png') }}" alt="Detail">
-                            Detail
-                        </a>
+                        <div class="action-buttons">
+                            <a href="{{ route('admin.transaksi.edit', $t->id_transaksi) }}" class="btn-edit">
+                                <img src="{{ asset('images/icons/edit.png') }}" alt="Edit">
+                                Edit
+                            </a>
+                            <a href="{{ route('admin.transaksi.invoice', $t->id_transaksi) }}" class="btn-detail">
+                                <img src="{{ asset('images/icons/detail.png') }}" alt="Detail">
+                                Detail
+                            </a>
+                        </div>
                     </td>
                 </tr>
                 @empty

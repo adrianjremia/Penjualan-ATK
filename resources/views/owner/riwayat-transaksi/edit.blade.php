@@ -1,4 +1,4 @@
-@extends('layouts.pemilik')
+@extends('layouts.owner')
 
 @section('content')
 <style>
