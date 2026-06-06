@@ -329,7 +329,7 @@
             </thead>
 
             <tbody>
-                @forelse($activityLogs as $log)
+                @forelse($recordAktivitas as $log)
                 <tr>
                     <td class="timestamp">
                         {{ \Carbon\Carbon::parse($log->created_at)->translatedFormat('d F Y H:i:s') }}
@@ -376,24 +376,24 @@
         </table>
     </div>
 
-    @if($activityLogs->total() > 0)
+    @if($recordAktivitas->total() > 0)
         <div class="pagination">
-            @if($activityLogs->onFirstPage())
+            @if($recordAktivitas->onFirstPage())
                 <span>← Sebelumnya</span>
             @else
-                <a href="{{ $activityLogs->previousPageUrl() }}">← Sebelumnya</a>
+                <a href="{{ $recordAktivitas->previousPageUrl() }}">← Sebelumnya</a>
             @endif
 
-            @foreach ($activityLogs->getUrlRange(1, $activityLogs->lastPage()) as $page => $url)
-                @if ($page == $activityLogs->currentPage())
+            @foreach ($recordAktivitas->getUrlRange(1, $recordAktivitas->lastPage()) as $page => $url)
+                @if ($page == $recordAktivitas->currentPage())
                     <span class="active">{{ $page }}</span>
                 @else
                     <a href="{{ $url }}">{{ $page }}</a>
                 @endif
             @endforeach
 
-            @if($activityLogs->hasMorePages())
-                <a href="{{ $activityLogs->nextPageUrl() }}">Selanjutnya →</a>
+            @if($recordAktivitas->hasMorePages())
+                <a href="{{ $recordAktivitas->nextPageUrl() }}">Selanjutnya →</a>
             @else
                 <span>Selanjutnya →</span>
             @endif

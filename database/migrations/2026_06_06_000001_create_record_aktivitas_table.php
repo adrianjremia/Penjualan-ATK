@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('activity_logs', function (Blueprint $table) {
+        Schema::create('record_aktivitas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_user');
             $table->string('action'); // 'create_transaksi', 'edit_transaksi', 'delete_transaksi', etc
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('activity_logs');
+        Schema::dropIfExists('record_aktivitas');
     }
 };

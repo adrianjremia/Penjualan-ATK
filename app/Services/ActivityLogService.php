@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\ActivityLog;
+use App\Models\RecordAktivitas;
 use Illuminate\Support\Facades\Request;
 
 class ActivityLogService
@@ -19,7 +19,7 @@ class ActivityLogService
         $oldValues = null,
         $newValues = null
     ) {
-        return ActivityLog::create([
+        return RecordAktivitas::create([
             'id_user' => $userId,
             'action' => $action,
             'description' => $description,

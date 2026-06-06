@@ -4,14 +4,14 @@ namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\ActivityLog;
+use App\Models\RecordAktivitas;
 use App\Models\User;
 
 class ActivityLogController extends Controller
 {
     public function index(Request $request)
     {
-        $query = ActivityLog::with('user');
+        $query = RecordAktivitas::with('user');
 
         // Filter by user
         if ($request->filled('id_user')) {
@@ -35,10 +35,10 @@ class ActivityLogController extends Controller
             $query->searchDescription($request->input('search'));
         }
 
-        $activityLogs = $query->orderBy('created_at', 'desc')->paginate(50);
+        $recordAktivitas = $query->orderBy('created_at', 'desc')->paginate(50);
 
         // Get unique actions for filter dropdown
-        $actions = ActivityLog::select('action')
+        $actions = RecordAktivitas::select('action')
             ->distinct()
             ->orderBy('action')
             ->pluck('action');
@@ -47,7 +47,7 @@ class ActivityLogController extends Controller
         $users = User::where('role', 0)->orderBy('username')->get();
 
         return view('owner.activity-log.index', compact(
-            'activityLogs',
+            'recordAktivitas',
             'actions',
             'users'
         ));

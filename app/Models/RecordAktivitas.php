@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ActivityLog extends Model
+class RecordAktivitas extends Model
 {
-    use HasFactory;
+    protected $table = 'record_aktivitas';
 
-    protected $table = 'activity_logs';
     protected $fillable = [
         'id_user',
         'action',
@@ -29,48 +28,60 @@ class ActivityLog extends Model
         'updated_at' => 'datetime'
     ];
 
-    // Relasi ke User
-    public function user()
+    /**
+     * Relationship: belongs to User
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
 
-    // Helper method untuk display action label
-    public function getActionLabel()
-    {
-        $labels = [
-            'create_transaksi' => 'Buat Transaksi',
-            'edit_transaksi' => 'Edit Transaksi',
-            'delete_transaksi' => 'Hapus Transaksi',
-            'create_barang' => 'Buat Barang',
-            'edit_barang' => 'Edit Barang',
-            'delete_barang' => 'Hapus Barang',
-        ];
-
-        return $labels[$this->action] ?? $this->action;
-    }
-
-    // Scope untuk filter by user
+    /**
+     * Scope: filter by user
+     */
     public function scopeByUser($query, $userId)
     {
         return $query->where('id_user', $userId);
     }
 
-    // Scope untuk filter by action
+    /**
+     * Scope: filter by action
+     */
     public function scopeByAction($query, $action)
     {
         return $query->where('action', $action);
     }
 
-    // Scope untuk filter by date range
+    /**
+     * Scope: filter by date range
+     */
     public function scopeByDateRange($query, $startDate, $endDate)
     {
         return $query->whereBetween('created_at', [$startDate, $endDate]);
     }
 
-    // Scope untuk search description
+    /**
+     * Scope: search in description
+     */
     public function scopeSearchDescription($query, $search)
     {
         return $query->where('description', 'like', "%{$search}%");
+    }
+
+    /**
+     * Get human-readable action label
+     */
+    public function getActionLabelAttribute()
+    {
+        $labels = [
+            'create_transaksi' => 'Membuat Transaksi',
+            'edit_transaksi' => 'Edit Transaksi',
+            'delete_transaksi' => 'Hapus Transaksi',
+            'create_barang' => 'Membuat Barang',
+            'edit_barang' => 'Edit Barang',
+            'delete_barang' => 'Hapus Barang',
+        ];
+
+        return $labels[$this->action] ?? ucfirst($this->action);
     }
 }
