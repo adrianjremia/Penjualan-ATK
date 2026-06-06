@@ -97,7 +97,7 @@ class RiwayatTransaksiController extends Controller
         // If there are stock warnings, return to edit page with warning
         if (!empty($stockWarnings)) {
             return redirect()
-                ->route('owner.riwayat-transaksi.editInvoice', $transaksi->id_transaksi)
+                ->route('owner.riwayat-transaksi.edit', $transaksi->id_transaksi)
                 ->with('warning', implode(' | ', $stockWarnings))
                 ->withInput();
         }

@@ -155,7 +155,7 @@ public function updateInvoice(Request $request, $id)
     // If there are stock warnings, return to edit page with warning
     if (!empty($stockWarnings)) {
         return redirect()
-            ->route('admin.transaksi.editInvoice', $transaksi->id_transaksi)
+            ->route('admin.transaksi.edit', $transaksi->id_transaksi)
             ->with('warning', implode(' | ', $stockWarnings))
             ->withInput();
     }
