@@ -381,9 +381,15 @@
                     @endphp
                     <tr>
                         <td>{{ $detail->barang->nama_barang }}</td>
-                        <td class="text-right">Rp {{ number_format($detail->barang->harga_jual, 0, ',', '.') }}</td>
+                        <td class="text-right">Rp {{ number_format($detail->harga ?: $detail->barang->harga_jual, 0, ',', '.') }}</td>
                         <td class="text-right">{{ $detail->jumlah }}</td>
-                        <td class="text-right">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
+                        <td class="text-right">
+                            @php
+                                $harga = $detail->harga ?: $detail->barang->harga_jual;
+                                $subtotal = $harga * $detail->jumlah;
+                            @endphp
+                            Rp {{ number_format($subtotal, 0, ',', '.') }}
+                        </td>
                     </tr>
                 @empty
                     <tr>
@@ -406,7 +412,16 @@
 
         <div class="total-payment">
             <div class="label">Total Pembayaran:</div>
-            <div class="amount">Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</div>
+            <div class="amount">
+                @php
+                    $calculatedTotal = 0;
+                    foreach ($transaksi->detailTransaksi as $detail) {
+                        $harga = $detail->harga ?: $detail->barang->harga_jual;
+                        $calculatedTotal += $harga * $detail->jumlah;
+                    }
+                @endphp
+                Rp {{ number_format($calculatedTotal, 0, ',', '.') }}
+            </div>
         </div>
 
         <div class="footer">

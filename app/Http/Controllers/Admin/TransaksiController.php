@@ -173,6 +173,9 @@ public function updateInvoice(Request $request, $id)
             $newQty = $itemData['jumlah'];
             $qtyDelta = $newQty - $oldQty;
 
+            // Use actual harga (fallback to barang.harga_jual if detail.harga is 0 or null)
+            $harga = $detail->harga ?: $barang->harga_jual;
+
             // Record old and new values
             $oldValues[] = [
                 'id_detail' => $detail->id_detail,
@@ -181,7 +184,7 @@ public function updateInvoice(Request $request, $id)
                 'subtotal' => $detail->subtotal
             ];
 
-            $newSubtotal = $detail->harga * $newQty;
+            $newSubtotal = $harga * $newQty;
             $newValues[] = [
                 'id_detail' => $detail->id_detail,
                 'barang' => $barang->nama_barang,
@@ -194,8 +197,9 @@ public function updateInvoice(Request $request, $id)
                 $barang->increment('stok', -$qtyDelta);
             }
 
-            // Update detail transaksi
+            // Update detail transaksi with correct harga and subtotal
             $detail->update([
+                'harga' => $harga,
                 'jumlah' => $newQty,
                 'subtotal' => $newSubtotal
             ]);

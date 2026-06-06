@@ -115,6 +115,9 @@ class RiwayatTransaksiController extends Controller
                 $newQty = $itemData['jumlah'];
                 $qtyDelta = $newQty - $oldQty;
 
+                // Use actual harga (fallback to barang.harga_jual if detail.harga is 0 or null)
+                $harga = $detail->harga ?: $barang->harga_jual;
+
                 // Record old and new values
                 $oldValues[] = [
                     'id_detail' => $detail->id_detail,
@@ -123,7 +126,7 @@ class RiwayatTransaksiController extends Controller
                     'subtotal' => $detail->subtotal
                 ];
 
-                $newSubtotal = $detail->harga * $newQty;
+                $newSubtotal = $harga * $newQty;
                 $newValues[] = [
                     'id_detail' => $detail->id_detail,
                     'barang' => $barang->nama_barang,
@@ -136,8 +139,9 @@ class RiwayatTransaksiController extends Controller
                     $barang->increment('stok', -$qtyDelta);
                 }
 
-                // Update detail transaksi
+                // Update detail transaksi with correct harga and subtotal
                 $detail->update([
+                    'harga' => $harga,
                     'jumlah' => $newQty,
                     'subtotal' => $newSubtotal
                 ]);
