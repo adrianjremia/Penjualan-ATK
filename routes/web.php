@@ -94,4 +94,39 @@ Route::prefix('admin')->middleware(['auth', 'role:0'])->group(function () {
     // INVOICE
     Route::get('/transaksi/{id}/invoice', [TransaksiController::class, 'invoice'])
         ->name('admin.transaksi.invoice');
+
+    // EDIT INVOICE
+    Route::get('/riwayat-transaksi/{id}/edit', [TransaksiController::class, 'editInvoice'])
+        ->name('admin.transaksi.edit');
+
+    Route::put('/riwayat-transaksi/{id}', [TransaksiController::class, 'updateInvoice'])
+        ->name('admin.transaksi.update');
+});
+
+// OWNER - Riwayat Transaksi
+use App\Http\Controllers\Owner\RiwayatTransaksiController;
+use App\Http\Controllers\Owner\ActivityLogController;
+
+Route::middleware(['auth', 'role:1'])->group(function () {
+    // Riwayat Transaksi
+    Route::prefix('pemilik/riwayat-transaksi')->group(function () {
+        Route::get('/', [RiwayatTransaksiController::class, 'index'])
+            ->name('owner.riwayat-transaksi.index');
+
+        Route::get('/{id}', [RiwayatTransaksiController::class, 'show'])
+            ->name('owner.riwayat-transaksi.show');
+
+        Route::get('/{id}/edit', [RiwayatTransaksiController::class, 'editInvoice'])
+            ->name('owner.riwayat-transaksi.edit');
+
+        Route::put('/{id}', [RiwayatTransaksiController::class, 'updateInvoice'])
+            ->name('owner.riwayat-transaksi.update');
+
+        Route::delete('/{id}', [RiwayatTransaksiController::class, 'destroy'])
+            ->name('owner.riwayat-transaksi.destroy');
+    });
+
+    // Activity Log
+    Route::get('/pemilik/activity-log', [ActivityLogController::class, 'index'])
+        ->name('owner.activity-log.index');
 });

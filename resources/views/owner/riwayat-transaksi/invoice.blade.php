@@ -1,0 +1,442 @@
+@extends('layouts.pemilik')
+
+@section('content')
+<style>
+    .container {
+        max-width: 900px;
+        background-color: white;
+        padding: 40px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 20px;
+    }
+
+    .header-left h1 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 5px;
+    }
+
+    .header-left p {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .header-right {
+        text-align: center;
+    }
+
+    .header-right .label {
+        color: #666;
+        font-size: 13px;
+        display: block;
+        margin-bottom: 3px;
+    }
+
+    .header-right .value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1a1a1a;
+    }
+
+    .store-info {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .store-info h3 {
+        font-size: 22px;
+        font-weight: 800;
+        color: #1a1a1a;
+        margin-bottom: 3px;
+        letter-spacing: 0.5px;
+    }
+
+    .store-info .subtitle {
+        font-size: 12px;
+        font-weight: 600;
+        color: #4b5563;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+
+    .store-info p {
+        color: #555;
+        font-size: 13px;
+        line-height: 1.6;
+        margin-bottom: 3px;
+    }
+
+    .transaction-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 40px;
+        padding: 20px 0;
+        border-top: 1px solid #f0f0f0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-block label {
+        display: block;
+        color: #666;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+    }
+
+    .info-block .value {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a1a1a;
+    }
+
+    .section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 20px;
+        margin-top: 30px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    table thead {
+        border-top: 2px solid #1a1a1a;
+        border-bottom: 2px solid #1a1a1a;
+    }
+
+    table th {
+        padding: 12px 0;
+        text-align: left;
+        font-size: 13px;
+        font-weight: 600;
+        color: #1a1a1a;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    table td {
+        padding: 12px 0;
+        color: #333;
+        font-size: 14px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    table tbody tr:last-child td {
+        border-bottom: 2px solid #1a1a1a;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .summary {
+        margin-top: 30px;
+        margin-bottom: 40px;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .summary-row .label {
+        color: #666;
+    }
+
+    .summary-row .value {
+        color: #333;
+        font-weight: 500;
+    }
+
+    .total-payment {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background-color: #f8f9ff;
+        border-radius: 4px;
+        margin-top: 20px;
+    }
+
+    .total-payment .label {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1a1a1a;
+    }
+
+    .total-payment .amount {
+        font-size: 28px;
+        font-weight: 700;
+        color: #4f46e5;
+    }
+
+    .footer {
+        margin-top: 50px;
+        padding-top: 30px;
+        border-top: 1px solid #f0f0f0;
+        text-align: center;
+    }
+
+    .footer-message {
+        color: #666;
+        font-size: 13px;
+        line-height: 1.6;
+        margin-bottom: 25px;
+    }
+
+    .footer-message strong {
+        display: block;
+        color: #1a1a1a;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-primary {
+        background-color: #3b82f6;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #2563eb;
+    }
+
+    .btn-secondary {
+        background-color: transparent;
+        color: #6b7280;
+        border: none;
+    }
+
+    .btn-secondary:hover {
+        color: #1f2937;
+    }
+
+    .btn-danger {
+        background-color: #ef4444;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background-color: #dc2626;
+    }
+
+    .btn img {
+        width: 16px;
+        height: 16px;
+        object-fit: contain;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #374151;
+        text-decoration: none;
+        font-size: 14px;
+        margin-bottom: 20px;
+        transition: all 0.2s;
+    }
+
+    .back-link:hover {
+        gap: 12px;
+        color: #1f2937;
+    }
+
+    .back-link img {
+        width: 16px;
+        height: 16px;
+        object-fit: contain;
+    }
+
+    @media print {
+        .sidebar {
+            display: none !important;
+        }
+
+        .main-wrapper {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+
+        .content {
+            padding: 0 !important;
+        }
+
+        body {
+            background-color: white !important;
+            padding: 0 !important;
+        }
+
+        .container {
+            max-width: 100% !important;
+            width: 100% !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            border: none !important;
+        }
+
+        .button-group, .back-link {
+            display: none !important;
+        }
+    }
+</style>
+
+<a href="{{ route('owner.riwayat-transaksi.index') }}" class="back-link">
+    <img src="{{ asset('images/icons/back.png') }}" alt="Back">
+    Kembali ke Riwayat Transaksi
+</a>
+
+<div class="container">
+    <div class="header">
+        <div class="header-left">
+            <h1>INVOICE</h1>
+            <p>Sistem Point of Sale</p>
+        </div>
+
+        <div style="text-align: center;">
+            <h3 style="font-size: 22px; font-weight: 800; color: #1a1a1a; margin-bottom: 3px;">CV. BERKAT KASIH</h3>
+            <div style="font-size: 12px; font-weight: 600; color: #4b5563; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Stationary & General Supplier</div>
+            <p style="color: #555; font-size: 13px; margin-bottom: 3px;">Jl. Teluk Gong Raya No. 1, Jakarta 14450</p>
+            <p style="color: #555; font-size: 13px;">Telp / Fax. : (021) 6685838</p>
+        </div>
+
+        <div class="header-right">
+            <span class="label">ID Transaksi:</span>
+            <div class="value">T{{ str_pad($transaksi->id_transaksi, 3, '0', STR_PAD_LEFT) }}</div>
+        </div>
+    </div>
+
+    <div class="transaction-info">
+        <div class="info-block">
+            <label>Tanggal Transaksi:</label>
+            <div class="value">
+                @php
+                    $tanggal = \Carbon\Carbon::parse($transaksi->created_at);
+                    echo $tanggal->translatedFormat('d F Y');
+                    echo ' pukul ' . $tanggal->format('H:i');
+                @endphp
+            </div>
+        </div>
+        <div class="info-block">
+            <label>Kasir:</label>
+            <div class="value">{{ $transaksi->user->username ?? 'Admin' }}</div>
+        </div>
+    </div>
+
+    <h2 class="section-title">Detail Transaksi</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nama Barang</th>
+                <th class="text-right">Harga</th>
+                <th class="text-right">Jumlah</th>
+                <th class="text-right">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php
+                $totalItem = 0;
+                $totalBarang = 0;
+            @endphp
+            @forelse($transaksi->detailTransaksi as $detail)
+                @php
+                    $totalItem++;
+                    $totalBarang += $detail->jumlah;
+                @endphp
+                <tr>
+                    <td>{{ $detail->barang->nama_barang }}</td>
+                    <td class="text-right">Rp {{ number_format($detail->harga, 0, ',', '.') }}</td>
+                    <td class="text-right">{{ $detail->jumlah }}</td>
+                    <td class="text-right">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="4" class="text-right">Tidak ada data</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+
+    <div class="summary">
+        <div class="summary-row">
+            <span class="label">Total Item:</span>
+            <span class="value">{{ $totalItem }}</span>
+        </div>
+        <div class="summary-row">
+            <span class="label">Total Barang:</span>
+            <span class="value">{{ $totalBarang }}</span>
+        </div>
+    </div>
+
+    <div class="total-payment">
+        <div class="label">Total Pembayaran:</div>
+        <div class="amount">Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-message">
+            <strong>Terima kasih atas kunjungan Anda</strong>
+            Barang yang sudah dibeli tidak dapat dikembalikan
+        </div>
+        <div class="button-group">
+            <button class="btn btn-primary" onclick="window.print()">
+                Cetak Invoice
+            </button>
+            <a href="{{ route('owner.riwayat-transaksi.edit', $transaksi->id_transaksi) }}" class="btn btn-secondary">
+                Edit Invoice
+            </a>
+            <form action="{{ route('owner.riwayat-transaksi.destroy', $transaksi->id_transaksi) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin hapus transaksi ini?');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">
+                    Hapus Transaksi
+                </button>
+            </form>
+            <a href="{{ route('owner.riwayat-transaksi.index') }}" class="btn btn-secondary">
+                Kembali
+            </a>
+        </div>
+    </div>
+</div>
+
+@endsection
