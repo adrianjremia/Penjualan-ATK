@@ -208,7 +208,7 @@
         <span>+</span> Tambah Barang
     </a>
 </div>
-
+ 
 <div class="table-wrapper">
     <table class="table">
         <thead>
@@ -254,7 +254,6 @@
             <tr>
                 <td colspan="7">
                     <div class="empty-state">
-                        <div class="empty-state-icon">📦</div>
                         <p>Data barang kosong</p>
                     </div>
                 </td>
@@ -263,12 +262,12 @@
         </tbody>
     </table>
 </div>
-
+ 
 <script>
     document.getElementById('searchInput').addEventListener('keyup', function() {
         const searchTerm = this.value.toLowerCase();
         const tableRows = document.querySelectorAll('.table tbody tr');
-
+ 
         tableRows.forEach(row => {
             if (row.textContent.toLowerCase().includes(searchTerm)) {
                 row.style.display = '';

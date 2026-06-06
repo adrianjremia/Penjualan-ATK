@@ -365,7 +365,7 @@
     if ($stokKritis > 0) {
         $alerts[] = [
             'title' => 'Stok Kritis',
-            'desc' => "Anda memiliki $stokKritis produk dengan stok < 5 unit. Segera lakukan pengadaan barang."
+            'desc' => "Anda memiliki $stokKritis produk dengan stok < 5 unit. Segera lakukan restock barang."
         ];
     }
     if ($stokMenengah > 2) {

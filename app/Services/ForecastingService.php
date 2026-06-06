@@ -210,7 +210,7 @@ class ForecastingService
         if ($stok < $week1Forecast) {
             return [
                 'type' => 'critical',
-                'message' => "STOK KRITIS: Stok saat ini ({$stok}) diprediksi tidak cukup untuk kebutuhan minggu depan ({$week1Forecast}). Segera lakukan pengadaan barang.",
+                'message' => "STOK KRITIS: Stok saat ini ({$stok}) diprediksi tidak cukup untuk kebutuhan minggu depan ({$week1Forecast}). Segera lakukan restock barang.",
                 'weeksUntilEmpty' => 0
             ];
         }

@@ -255,27 +255,6 @@
             object-fit: contain;
         }
 
-        @media print {
-            body {
-                background-color: white;
-                padding: 0;
-            }
-
-            .container {
-                box-shadow: none;
-                padding: 0;
-                border: none;
-            }
-
-            .button-group {
-                display: none;
-            }
-
-            .back-link {
-                display: none;
-            }
-        }
-
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -297,6 +276,44 @@
             height: 16px;
             object-fit: contain;
         }
+
+        /* 🛠️ SCRIPT FIX UNTUK CETAK INVOICE BERSIH */
+        @media print {
+            /* 1. Sembunyikan elemen luar bawaan layout utama */
+            .sidebar {
+                display: none !important;
+            }
+
+            /* 2. Reset paksa margin kiri wrapper konten agar ke tengah */
+            .main-wrapper {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            /* 3. Hilangkan padding bawaan dari pembungkus konten */
+            .content {
+                padding: 0 !important;
+            }
+
+            /* 4. Sesuaikan ukuran kontainer invoice ke lebar penuh kertas kertas hvs/a4 */
+            body {
+                background-color: white !important;
+                padding: 0 !important;
+            }
+
+            .container {
+                max-width: 100% !important;
+                width: 100% !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                border: none !important;
+            }
+
+            /* 5. Sembunyikan tombol navigasi dan tombol cetak */
+            .button-group, .back-link {
+                display: none !important;
+            }
+        }
 </style>
     
     <a href="{{ route('admin.transaksi.index') }}" class="back-link">
@@ -305,7 +322,6 @@
     </a>
 
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <div class="header-left">
                 <h1>INVOICE</h1>
@@ -317,7 +333,6 @@
             </div>
         </div>
 
-        <!-- Store Information -->
         <div class="store-info">
             <h3>CV. BERKAT KASIH</h3>
             <div class="subtitle">Stationary & General Supplier</div>
@@ -325,7 +340,6 @@
             <p>Telp / Fax. : (021) 6685838</p>
         </div>
 
-        <!-- Transaction Information -->
         <div class="transaction-info">
             <div class="info-block">
                 <label>Tanggal Transaksi:</label>
@@ -343,7 +357,6 @@
             </div>
         </div>
 
-        <!-- Detail Transaksi -->
         <h2 class="section-title">Detail Transaksi</h2>
         <table>
             <thead>
@@ -378,7 +391,6 @@
             </tbody>
         </table>
 
-        <!-- Summary -->
         <div class="summary">
             <div class="summary-row">
                 <span class="label">Total Item:</span>
@@ -390,13 +402,11 @@
             </div>
         </div>
 
-        <!-- Total Payment -->
         <div class="total-payment">
             <div class="label">Total Pembayaran:</div>
             <div class="amount">Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</div>
         </div>
 
-        <!-- Footer -->
         <div class="footer">
             <div class="footer-message">
                 <strong>Terima kasih atas kunjungan Anda</strong>
@@ -415,5 +425,4 @@
         </div>
     </div>
 </div>
-
 @endsection

@@ -4,9 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
-    return view('welcome');
-});
-
+       return redirect('/login'); // atau redirect()->route('login');
+   });
 use App\Http\Controllers\Auth\LoginController;
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

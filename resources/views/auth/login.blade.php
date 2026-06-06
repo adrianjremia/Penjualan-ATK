@@ -129,6 +129,41 @@
             transform: translateY(0);
         }
 
+        /* Tambahan Style untuk Akun Demo Pengujian */
+        .demo-accounts {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .demo-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .demo-item {
+            font-size: 13px;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+
+        .demo-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .demo-label {
+            font-weight: 600;
+        }
+
         @media (max-width: 480px) {
             .login-container {
                 padding: 30px 20px;
@@ -188,6 +223,16 @@
 
             <button type="submit" class="login-button">Login</button>
         </form>
+
+        <div class="demo-accounts">
+            <div class="demo-title">🔑 Akun Demo Pengujian</div>
+            <div class="demo-item">
+                <span class="demo-label">Admin:</span> username <code style="background:#e2e8f0; padding:2px 4px; border-radius:4px;">admin</code> & password <code style="background:#e2e8f0; padding:2px 4px; border-radius:4px;">admin123</code>
+            </div>
+            <div class="demo-item">
+                <span class="demo-label">Pemilik:</span> username <code style="background:#e2e8f0; padding:2px 4px; border-radius:4px;">pemilik</code> & password <code style="background:#e2e8f0; padding:2px 4px; border-radius:4px;">pemilik123</code>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -527,7 +527,7 @@
                         <img src="{{ asset('images/icons/warning.png') }}" 
                         alt="Warning" 
                         style="width:16px; height:16px; vertical-align:middle; margin-right:4px;">
-                        <strong>KRITIS:</strong> Stok tidak cukup untuk minggu depan. Segera lakukan pengadaan.
+                        <strong>KRITIS:</strong> Stok tidak cukup untuk minggu depan. Segera lakukan restock.
                     </li>
                     <li>
                         <img src="{{ asset('images/icons/info.png') }}" 
