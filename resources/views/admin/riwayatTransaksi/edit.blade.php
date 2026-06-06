@@ -249,6 +249,12 @@
         </div>
     @endif
 
+    @if(session('warning'))
+        <div class="alert alert-warning">
+            <strong>Perhatian:</strong> {{ session('warning') }}
+        </div>
+    @endif
+
     <div class="alert alert-warning">
         <strong>Perhatian:</strong> Mengubah jumlah item akan secara otomatis menambah atau mengurangi stok barang. Pastikan stok mencukupi sebelum menyimpan perubahan.
     </div>

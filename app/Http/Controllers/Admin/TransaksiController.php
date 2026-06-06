@@ -133,6 +133,33 @@ public function updateInvoice(Request $request, $id)
         'items.*.jumlah' => 'required|integer|min:1',
     ]);
 
+    // Check stock availability before updating
+    $stockWarnings = [];
+    foreach ($validated['items'] as $itemData) {
+        $detail = DetailTransaksi::findOrFail($itemData['id_detail']);
+        $barang = $detail->barang;
+
+        $oldQty = $detail->jumlah;
+        $newQty = $itemData['jumlah'];
+        $qtyDelta = $newQty - $oldQty;
+
+        // Validate stock availability
+        if ($qtyDelta > 0) {
+            // Increasing quantity - check if enough stock
+            if ($barang->stok < $qtyDelta) {
+                $stockWarnings[] = "Stok {$barang->nama_barang} tidak cukup untuk penambahan. Stok tersedia: {$barang->stok}";
+            }
+        }
+    }
+
+    // If there are stock warnings, return to edit page with warning
+    if (!empty($stockWarnings)) {
+        return redirect()
+            ->route('admin.transaksi.editInvoice', $transaksi->id_transaksi)
+            ->with('warning', implode(' | ', $stockWarnings))
+            ->withInput();
+    }
+
     DB::transaction(function () use ($transaksi, $validated) {
         $oldValues = [];
         $newValues = [];
@@ -145,14 +172,6 @@ public function updateInvoice(Request $request, $id)
             $oldQty = $detail->jumlah;
             $newQty = $itemData['jumlah'];
             $qtyDelta = $newQty - $oldQty;
-
-            // Validate stock availability
-            if ($qtyDelta > 0) {
-                // Increasing quantity - check if enough stock
-                if ($barang->stok < $qtyDelta) {
-                    throw new \Exception("Stok {$barang->nama_barang} tidak cukup untuk penambahan. Stok tersedia: {$barang->stok}");
-                }
-            }
 
             // Record old and new values
             $oldValues[] = [
