@@ -119,7 +119,7 @@ public function invoice($id)
 public function editInvoice($id)
 {
     $transaksi = Transaksi::with(['detailTransaksi.barang'])->findOrFail($id);
-    return view('admin.transaksi.edit', compact('transaksi'));
+    return view('admin.riwayatTransaksi.edit', compact('transaksi'));
 }
 
 // UPDATE INVOICE
