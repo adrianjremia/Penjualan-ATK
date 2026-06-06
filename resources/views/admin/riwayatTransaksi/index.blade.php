@@ -265,7 +265,7 @@
 
                     <td>
                         <div class="action-buttons">
-                            <a href="{{ route('admin.riwayat-transaksi.edit', $t->id_transaksi) }}" class="btn-edit">
+                            <a href="{{ route('admin.transaksi.edit', $t->id_transaksi) }}" class="btn-edit">
                                 <img src="{{ asset('images/icons/edit.png') }}" alt="Edit">
                                 Edit
                             </a>
