@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -90,6 +91,14 @@ public function index(Request $request)
         $transaksi->update([
             'total_harga' => $total
         ]);
+
+        // Log activity
+        ActivityLogService::logCreate(
+            Auth::id(),
+            'transaksi',
+            $transaksi->id_transaksi,
+            ['total_harga' => $total, 'items_count' => count($cart)]
+        );
     });
 
     // 🔥 INI YANG PENTING
@@ -104,5 +113,94 @@ public function invoice($id)
         ->findOrFail($id);
 
     return view('admin.transaksi.invoice', compact('transaksi'));
+}
+
+// EDIT INVOICE
+public function editInvoice($id)
+{
+    $transaksi = Transaksi::with(['detailTransaksi.barang'])->findOrFail($id);
+    return view('admin.transaksi.edit', compact('transaksi'));
+}
+
+// UPDATE INVOICE
+public function updateInvoice(Request $request, $id)
+{
+    $transaksi = Transaksi::with('detailTransaksi.barang')->findOrFail($id);
+
+    $validated = $request->validate([
+        'items' => 'required|array',
+        'items.*.id_detail' => 'required|exists:detail_transaksi,id_detail',
+        'items.*.jumlah' => 'required|integer|min:1',
+    ]);
+
+    DB::transaction(function () use ($transaksi, $validated) {
+        $oldValues = [];
+        $newValues = [];
+        $newTotal = 0;
+
+        foreach ($validated['items'] as $itemData) {
+            $detail = DetailTransaksi::findOrFail($itemData['id_detail']);
+            $barang = $detail->barang;
+
+            $oldQty = $detail->jumlah;
+            $newQty = $itemData['jumlah'];
+            $qtyDelta = $newQty - $oldQty;
+
+            // Validate stock availability
+            if ($qtyDelta > 0) {
+                // Increasing quantity - check if enough stock
+                if ($barang->stok < $qtyDelta) {
+                    throw new \Exception("Stok {$barang->nama_barang} tidak cukup untuk penambahan. Stok tersedia: {$barang->stok}");
+                }
+            }
+
+            // Record old and new values
+            $oldValues[] = [
+                'id_detail' => $detail->id_detail,
+                'barang' => $barang->nama_barang,
+                'jumlah' => $oldQty,
+                'subtotal' => $detail->subtotal
+            ];
+
+            $newSubtotal = $detail->harga * $newQty;
+            $newValues[] = [
+                'id_detail' => $detail->id_detail,
+                'barang' => $barang->nama_barang,
+                'jumlah' => $newQty,
+                'subtotal' => $newSubtotal
+            ];
+
+            // Update stok
+            if ($qtyDelta !== 0) {
+                $barang->increment('stok', -$qtyDelta);
+            }
+
+            // Update detail transaksi
+            $detail->update([
+                'jumlah' => $newQty,
+                'subtotal' => $newSubtotal
+            ]);
+
+            $newTotal += $newSubtotal;
+        }
+
+        // Update transaksi total
+        $transaksi->update([
+            'total_harga' => $newTotal
+        ]);
+
+        // Log activity
+        ActivityLogService::logUpdate(
+            Auth::id(),
+            'transaksi',
+            $transaksi->id_transaksi,
+            $oldValues,
+            $newValues
+        );
+    });
+
+    return redirect()
+        ->route('admin.transaksi.invoice', $transaksi->id_transaksi)
+        ->with('success', 'Invoice berhasil diperbarui');
 }
 }

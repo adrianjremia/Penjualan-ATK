@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.pemilik')
 
 @section('content')
 <style>
@@ -39,6 +39,7 @@
         margin-bottom: 24px;
         padding-bottom: 20px;
         border-bottom: 1px solid #e5e7eb;
+        flex-wrap: wrap;
     }
 
     .filter-group {
@@ -51,18 +52,10 @@
         font-size: 13px;
         font-weight: 600;
         color: #1f2937;
-        display: flex;
-        align-items: center;
-        gap: 6px;
     }
 
-    .filter-group label img {
-        width: 16px;
-        height: 16px;
-        object-fit: contain;
-    }
-
-    .filter-group input {
+    .filter-group input,
+    .filter-group select {
         padding: 10px 12px;
         border: 1px solid #d1d5db;
         border-radius: 6px;
@@ -71,7 +64,8 @@
         background: #f9fafb;
     }
 
-    .filter-group input:focus {
+    .filter-group input:focus,
+    .filter-group select:focus {
         outline: none;
         border-color: #3b82f6;
         background: #ffffff;
@@ -122,28 +116,42 @@
         color: #6b7280;
     }
 
-    .btn-detail {
+    .user-cell {
+        color: #6b7280;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 4px;
         background: transparent;
         border: none;
         color: #6b7280;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s;
         text-decoration: none;
-        padding: 0;
+        padding: 4px 8px;
     }
 
-    .btn-detail:hover {
+    .btn-action:hover {
         color: #1f2937;
     }
 
-    .btn-detail img {
-        width: 16px;
-        height: 16px;
+    .btn-action.danger:hover {
+        color: #dc2626;
+    }
+
+    .btn-action img {
+        width: 14px;
+        height: 14px;
         object-fit: contain;
     }
 
@@ -173,6 +181,19 @@
         color: #1f2937;
     }
 
+    .alert {
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .alert-success {
+        background-color: #dcfce7;
+        border: 1px solid #86efac;
+        color: #166534;
+    }
+
     @media (max-width: 768px) {
         .filter-section {
             flex-direction: column;
@@ -198,32 +219,53 @@
             gap: 16px;
             align-items: flex-start;
         }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-action {
+            width: 100%;
+            justify-content: center;
+        }
     }
 </style>
 
 <div class="page-header">
     <h1>Riwayat Transaksi</h1>
-    <p>Lihat semua transaksi yang telah dilakukan</p>
+    <p>Kelola semua transaksi penjualan - lihat, edit, atau hapus</p>
 </div>
+
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 
 <div class="card">
     <h2>Daftar Transaksi</h2>
 
     <form method="GET" id="filterForm" class="filter-section">
         <div class="filter-group">
-            <label>
-                <img src="{{ asset('images/icons/date.png') }}" alt="Tanggal">
-                Tanggal Mulai
-            </label>
-            <input type="date" name="tanggal_mulai" id="tanggalMulai" placeholder="dd/mm/yyyy" value="{{ request('tanggal_mulai') }}">
+            <label>Tanggal Mulai</label>
+            <input type="date" name="tanggal_mulai" value="{{ request('tanggal_mulai') }}">
         </div>
 
         <div class="filter-group">
-            <label>
-                <img src="{{ asset('images/icons/date.png') }}" alt="Tanggal">
-                Tanggal Akhir
-            </label>
-            <input type="date" name="tanggal_akhir" id="tanggalAkhir" placeholder="dd/mm/yyyy" value="{{ request('tanggal_akhir') }}">
+            <label>Tanggal Akhir</label>
+            <input type="date" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}">
+        </div>
+
+        <div class="filter-group">
+            <label>Filter Kasir</label>
+            <select name="id_user">
+                <option value="">Semua Kasir</option>
+                @foreach($users as $user)
+                    <option value="{{ $user->id_user }}" {{ request('id_user') == $user->id_user ? 'selected' : '' }}>
+                        {{ $user->username }}
+                    </option>
+                @endforeach
+            </select>
         </div>
     </form>
 
@@ -233,6 +275,7 @@
                 <tr>
                     <th>ID Transaksi</th>
                     <th>Tanggal</th>
+                    <th>Kasir</th>
                     <th>Jumlah Item</th>
                     <th>Total Harga</th>
                     <th>Aksi</th>
@@ -248,6 +291,8 @@
                         {{ \Carbon\Carbon::parse($t->created_at)->translatedFormat('d F Y \p\u\k\u\l H.i') }}
                     </td>
 
+                    <td class="user-cell">{{ $t->user->username ?? 'Admin' }}</td>
+
                     <td>{{ $t->detail_transaksi_count }} item</td>
 
                     <td>
@@ -255,21 +300,26 @@
                     </td>
 
                     <td>
-                        <div style="display: flex; gap: 12px;">
-                            <a href="{{ route('admin.transaksi.invoice', $t->id_transaksi) }}" class="btn-detail">
-                                <img src="{{ asset('images/icons/detail.png') }}" alt="Detail">
-                                Detail
+                        <div class="action-buttons">
+                            <a href="{{ route('owner.riwayat-transaksi.show', $t->id_transaksi) }}" class="btn-action" title="Lihat Invoice">
+                                👁️ Lihat
                             </a>
-                            <a href="{{ route('admin.transaksi.edit', $t->id_transaksi) }}" class="btn-detail">
-                                <img src="{{ asset('images/icons/edit.png') }}" alt="Edit">
-                                Edit
+                            <a href="{{ route('owner.riwayat-transaksi.edit', $t->id_transaksi) }}" class="btn-action" title="Edit Invoice">
+                                ✏️ Edit
                             </a>
+                            <form action="{{ route('owner.riwayat-transaksi.destroy', $t->id_transaksi) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin hapus transaksi ini? Stok akan dikembalikan otomatis.');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-action danger" title="Hapus Transaksi">
+                                    🗑️ Hapus
+                                </button>
+                            </form>
                         </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="empty-state">Belum ada transaksi</td>
+                    <td colspan="6" class="empty-state">Belum ada transaksi</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -289,8 +339,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const tanggalMulai = document.getElementById('tanggalMulai');
-    const tanggalAkhir = document.getElementById('tanggalAkhir');
+    const tanggalMulai = document.querySelector('input[name="tanggal_mulai"]');
+    const tanggalAkhir = document.querySelector('input[name="tanggal_akhir"]');
+    const filterUser = document.querySelector('select[name="id_user"]');
     const filterForm = document.getElementById('filterForm');
 
     function submitFilter() {
@@ -299,6 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     tanggalMulai.addEventListener('change', submitFilter);
     tanggalAkhir.addEventListener('change', submitFilter);
+    filterUser.addEventListener('change', submitFilter);
 });
 </script>
 
