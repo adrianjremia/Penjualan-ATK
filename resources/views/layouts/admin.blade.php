@@ -148,7 +148,7 @@
             <img src="{{ asset('images/icons/dataBarang.png') }}" alt="Data Barang">
             Data Barang
         </a>
-        <a href="{{ url('/admin/transaksi') }}" class="{{ request()->is('admin/transaksi') ? 'active' : '' }}">
+        <a href="{{ url('/admin/transaksi') }}" class="{{ request()->is('admin/transaksi') && !request()->is('admin/transaksi/*/edit') ? 'active' : '' }}">
             <img src="{{ asset('images/icons/transaksiPenjualan.png') }}" alt="Transaksi">
             Transaksi Penjualan
         </a>
