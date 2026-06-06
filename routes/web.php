@@ -129,4 +129,7 @@ Route::middleware(['auth', 'role:1'])->group(function () {
     // Activity Log
     Route::get('/pemilik/activity-log', [ActivityLogController::class, 'index'])
         ->name('owner.activity-log.index');
+
+    Route::get('/pemilik/record-aktivitas', [ActivityLogController::class, 'index'])
+        ->name('owner.record-aktivitas.index');
 });
