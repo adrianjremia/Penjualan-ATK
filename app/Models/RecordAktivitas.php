@@ -41,6 +41,13 @@ class RecordAktivitas extends Model
      */
     public function scopeByUser($query, $userId)
     {
+        // Special case for "pemilik" - filter by role 1
+        if ($userId === 'pemilik') {
+            return $query->whereHas('user', function ($q) {
+                $q->where('role', 1);
+            });
+        }
+        
         return $query->where('id_user', $userId);
     }
 
