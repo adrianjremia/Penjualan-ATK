@@ -129,16 +129,16 @@
     .btn-action {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: 6px;
         background: transparent;
         border: none;
         color: #6b7280;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s;
         text-decoration: none;
-        padding: 4px 8px;
+        padding: 0;
     }
 
     .btn-action:hover {
@@ -150,8 +150,8 @@
     }
 
     .btn-action img {
-        width: 14px;
-        height: 14px;
+        width: 16px;
+        height: 16px;
         object-fit: contain;
     }
 
@@ -302,16 +302,19 @@
                     <td>
                         <div class="action-buttons">
                             <a href="{{ route('owner.riwayat-transaksi.show', $t->id_transaksi) }}" class="btn-action" title="Lihat Invoice">
-                                👁️ Lihat
+                                <img src="{{ asset('images/icons/detail.png') }}" alt="Detail">
+                                Lihat
                             </a>
                             <a href="{{ route('owner.riwayat-transaksi.edit', $t->id_transaksi) }}" class="btn-action" title="Edit Invoice">
-                                ✏️ Edit
+                                <img src="{{ asset('images/icons/edit.png') }}" alt="Edit">
+                                Edit
                             </a>
                             <form action="{{ route('owner.riwayat-transaksi.destroy', $t->id_transaksi) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin hapus transaksi ini? Stok akan dikembalikan otomatis.');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn-action danger" title="Hapus Transaksi">
-                                    🗑️ Hapus
+                                    <img src="{{ asset('images/icons/hapus.png') }}" alt="Hapus">
+                                    Hapus
                                 </button>
                             </form>
                         </div>
