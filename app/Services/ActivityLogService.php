@@ -40,7 +40,7 @@ class ActivityLogService
         return self::log(
             $userId,
             "create_{$modelType}",
-            "Membuat {$modelType} baru dengan ID {$modelId}",
+            "Create {$modelType} #{$modelId}",
             $modelType,
             $modelId,
             null,
@@ -53,20 +53,7 @@ class ActivityLogService
      */
     public static function logUpdate($userId, $modelType, $modelId, $oldValues, $newValues)
     {
-        $description = "Memperbarui {$modelType} ID {$modelId}";
-        if (!empty($oldValues) && !empty($newValues)) {
-            $changes = [];
-            foreach ($newValues as $key => $newVal) {
-                if (isset($oldValues[$key]) && $oldValues[$key] !== $newVal) {
-                    $oldStr = is_array($oldValues[$key]) ? json_encode($oldValues[$key]) : (string)$oldValues[$key];
-                    $newStr = is_array($newVal) ? json_encode($newVal) : (string)$newVal;
-                    $changes[] = "{$key}: {$oldStr} → {$newStr}";
-                }
-            }
-            if (!empty($changes)) {
-                $description .= " (" . implode(", ", $changes) . ")";
-            }
-        }
+        $description = "Edit {$modelType} #{$modelId}";
 
         return self::log(
             $userId,
@@ -87,7 +74,7 @@ class ActivityLogService
         return self::log(
             $userId,
             "delete_{$modelType}",
-            "Menghapus {$modelType} ID {$modelId}",
+            "Delete {$modelType} #{$modelId}",
             $modelType,
             $modelId,
             $values,

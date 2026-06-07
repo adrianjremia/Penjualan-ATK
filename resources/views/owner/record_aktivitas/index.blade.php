@@ -291,7 +291,7 @@
                 <option value="">Semua User</option>
                 @foreach($users as $user)
                     <option value="{{ $user->id_user }}" {{ request('id_user') == $user->id_user ? 'selected' : '' }}>
-                        {{ $user->username }}
+                        {{ $user->username }} ({{ $user->role == 0 ? 'Admin' : 'Pemilik' }})
                     </option>
                 @endforeach
             </select>
@@ -359,8 +359,8 @@
 
                     <td style="text-align: center;">
                         @if($log->old_values || $log->new_values)
-                            <button class="btn-detail" onclick="showDetails('{{ addslashes(json_encode($log)) }}')">
-                                👁️ Lihat
+                            <button class="btn-detail" onclick="showDetails('{{ addslashes(json_encode($log)) }}')" title="Lihat Detail">
+                                <img src="{{ asset('images/icons/detail.png') }}" alt="Detail" style="width: 16px; height: 16px; vertical-align: middle;">
                             </button>
                         @else
                             <span style="color: #9ca3af; font-size: 12px;">-</span>
