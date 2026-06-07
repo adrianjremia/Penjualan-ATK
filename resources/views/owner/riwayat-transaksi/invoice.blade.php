@@ -435,19 +435,23 @@
         </div>
         <div class="button-group">
             <button class="btn btn-primary" onclick="window.print()">
+                <img src="{{ asset('images/icons/print.png') }}" alt="Print">
                 Cetak Invoice
             </button>
             <a href="{{ route('owner.riwayat-transaksi.edit', $transaksi->id_transaksi) }}" class="btn btn-secondary">
+                <img src="{{ asset('images/icons/edit.png') }}" alt="Edit">
                 Edit Invoice
             </a>
             <form action="{{ route('owner.riwayat-transaksi.destroy', $transaksi->id_transaksi) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin hapus transaksi ini?');">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger">
+                    <img src="{{ asset('images/icons/hapus.png') }}" alt="Hapus">
                     Hapus Transaksi
                 </button>
             </form>
             <a href="{{ route('owner.riwayat-transaksi.index') }}" class="btn btn-secondary">
+                <img src="{{ asset('images/icons/back.png') }}" alt="Back">
                 Kembali
             </a>
         </div>
