@@ -40,7 +40,7 @@ class ActivityLogService
         return self::log(
             $userId,
             "create_{$modelType}",
-            "Create {$modelType} #{$modelId}",
+            "Buat {$modelType} #{$modelId}",
             $modelType,
             $modelId,
             null,
@@ -74,7 +74,7 @@ class ActivityLogService
         return self::log(
             $userId,
             "delete_{$modelType}",
-            "Delete {$modelType} #{$modelId}",
+            "Hapus {$modelType} #{$modelId}",
             $modelType,
             $modelId,
             $values,

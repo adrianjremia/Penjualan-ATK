@@ -289,9 +289,13 @@
             <label>Filter User</label>
             <select name="id_user">
                 <option value="">Semua User</option>
+                <option value="pemilik" {{ request('id_user') == 'pemilik' ? 'selected' : '' }}>
+                    Pemilik
+                </option>
+                <option disabled>─────────────</option>
                 @foreach($users as $user)
                     <option value="{{ $user->id_user }}" {{ request('id_user') == $user->id_user ? 'selected' : '' }}>
-                        {{ $user->username }} ({{ $user->role == 0 ? 'Admin' : 'Pemilik' }})
+                        {{ $user->username }}
                     </option>
                 @endforeach
             </select>
@@ -359,8 +363,9 @@
 
                     <td style="text-align: center;">
                         @if($log->old_values || $log->new_values)
-                            <button class="btn-detail" onclick="showDetails('{{ addslashes(json_encode($log)) }}')" title="Lihat Detail">
-                                <img src="{{ asset('images/icons/detail.png') }}" alt="Detail" style="width: 16px; height: 16px; vertical-align: middle;">
+                            <button class="btn-detail" onclick="showDetails('{{ addslashes(json_encode($log)) }}')" title="Lihat Detail" style="display: inline-flex; align-items: center; gap: 6px;">
+                                <img src="{{ asset('images/icons/detail.png') }}" alt="Detail" style="width: 16px; height: 16px;">
+                                Lihat
                             </button>
                         @else
                             <span style="color: #9ca3af; font-size: 12px;">-</span>
