@@ -359,6 +359,9 @@
 
                     <td class="description">
                         {{ $log->description }}
+                        @if($log->model_id)
+                            <span style="color: #9ca3af; margin-left: 8px;">({{ $log->model_id }})</span>
+                        @endif
                     </td>
 
                     <td style="text-align: center;">

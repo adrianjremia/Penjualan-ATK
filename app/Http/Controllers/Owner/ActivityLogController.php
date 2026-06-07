@@ -43,8 +43,8 @@ class ActivityLogController extends Controller
             ->orderBy('action')
             ->pluck('action');
 
-        // Get users for filter dropdown (include current user as pemilik)
-        $users = User::whereIn('role', [0, 1])->orderBy('username')->get();
+        // Get users for filter dropdown (exclude pemilik, only admin/staff)
+        $users = User::where('role', 0)->orderBy('username')->get();
 
         return view('owner.record_aktivitas.index', compact(
             'recordAktivitas',
