@@ -1,0 +1,51 @@
+@startuml Login Flow
+title Login Sequence Diagram
+
+actor User
+participant Browser
+participant "LoginController" as LC
+participant "Auth" as Auth
+participant Database
+participant Session
+
+User->Browser: Open Login Page
+Browser->LC: GET /login
+LC-->Browser: Show Login Form
+
+User->Browser: Enter Username & Password
+Browser->LC: POST /login (credentials)
+activate LC
+
+LC->LC: Validate Input
+note right of LC: Validate username & password
+
+LC->Auth: attempt(credentials)
+activate Auth
+
+Auth->Database: Query User by Username
+Database-->Auth: User Data
+
+alt Authentication Success
+    Auth->Auth: Verify Password Hash
+    Auth->Session: Create Session
+    Session-->Auth: Session ID
+    Auth-->LC: true
+    deactivate Auth
+
+    LC->LC: Check User Role
+    
+    alt Role = 0 (Admin)
+        LC-->Browser: Redirect to /dashboard/admin
+    else Role = 1 (Pemilik)
+        LC-->Browser: Redirect to /dashboard/pemilik
+    end
+    
+else Authentication Failed
+    Auth-->LC: false
+    deactivate Auth
+    LC-->Browser: Back with Error Message
+    Browser-->User: Show "Username atau password salah"
+end
+
+deactivate LC
+@enduml
