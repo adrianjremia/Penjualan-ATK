@@ -1,0 +1,78 @@
+@startuml
+title <font size=12>Admin - Riwayat Transaksi Flow</font>
+
+actor Admin
+participant "Browser" as Browser
+participant "TransaksiController" as Controller
+participant "Database" as DB
+participant "ActivityLogService" as Log
+
+Admin -> Browser: Akses Riwayat Transaksi
+Browser -> Controller: GET /admin/riwayat-transaksi?filters
+Controller -> DB: Load transaksi dengan filter tanggal
+DB --> Controller: Return data transaksi
+Controller --> Browser: Display daftar transaksi
+
+== Edit Transaksi ==
+Admin -> Browser: Klik tombol Edit
+Browser -> Controller: GET /admin/riwayat-transaksi/{id}/edit
+Controller -> DB: Load transaksi + detail items
+DB --> Controller: Return transaksi + barang info
+Controller --> Browser: Display form edit dengan qty items
+
+Admin -> Browser: Ubah jumlah item dan submit
+Browser -> Controller: PUT /admin/riwayat-transaksi/{id}
+Controller -> DB: Start Transaction
+DB --> Controller: Transaction started
+
+Controller -> DB: Validate stok untuk qty baru
+DB --> Controller: Stok check result
+
+Controller -> DB: Update detail_transaksi qty
+Controller -> DB: Update stok barang (increment/decrement)
+DB --> Controller: Update success
+
+Controller -> DB: Calculate new total
+Controller -> DB: Update transaksi total_harga
+DB --> Controller: Total updated
+
+Controller -> Log: Log activity perubahan
+Log -> DB: Insert activity log
+DB --> Log: Activity logged
+
+Controller -> DB: Commit Transaction
+DB --> Controller: Transaction committed
+
+Controller --> Browser: Redirect ke riwayat dengan success message
+Browser --> Admin: Show update success
+
+== Delete Transaksi ==
+Admin -> Browser: Klik tombol Delete
+Browser -> Controller: DELETE /admin/riwayat-transaksi/{id}
+Controller -> DB: Start Transaction
+DB --> Controller: Transaction started
+
+Controller -> DB: Load transaksi + detail items
+DB --> Controller: Return transaksi data
+
+Controller -> DB: Get semua detail items
+loop Setiap item
+  Controller -> DB: Increment stok barang (refund)
+  DB --> Controller: Stok updated
+end
+
+Controller -> DB: Delete detail_transaksi
+Controller -> DB: Delete transaksi
+DB --> Controller: Delete success
+
+Controller -> Log: Log activity penghapusan
+Log -> DB: Insert delete log
+DB --> Log: Activity logged
+
+Controller -> DB: Commit Transaction
+DB --> Controller: Transaction committed
+
+Controller --> Browser: Redirect ke riwayat dengan success message
+Browser --> Admin: Show delete success
+
+@enduml
