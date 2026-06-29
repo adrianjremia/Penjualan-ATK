@@ -1,0 +1,42 @@
+@startuml
+title <font size=12>Sequence Diagram: Transaksi (Sampai Invoice Tampil)</font>
+
+actor User
+participant "Transaksi Form" as Form
+participant "TransaksiController" as Controller
+participant "Database" as DB
+participant "Invoice View" as Invoice
+
+User -> Form: Buka Form Transaksi
+Form -> Controller: GET /transaksi (Load barang stok > 0)
+Controller -> DB: Query Barang
+DB --> Controller: Return Barang List
+Controller --> Form: Display Form
+
+User -> Form: Tambah items ke keranjang
+User -> Form: Submit Transaksi (POST)
+Form -> Controller: POST /transaksi (dengan cart data)
+
+Controller -> DB: Start Transaction
+Controller -> DB: Create Transaksi record
+DB --> Controller: Return ID Transaksi
+
+Controller -> DB: Cek stok untuk setiap item
+alt Stok Cukup
+  Controller -> DB: Create DetailTransaksi
+  Controller -> DB: Decrement Stok Barang
+  Controller -> DB: Hitung Total Harga
+else Stok Tidak Cukup
+  Controller --> User: Error: Stok tidak mencukupi
+end
+
+Controller -> DB: Update total_harga Transaksi
+Controller -> DB: Log Activity (RecordAktivitas)
+DB --> Controller: Commit Transaction
+
+Controller -> Invoice: Redirect ke Invoice Page
+Controller -> DB: Query Transaksi + DetailTransaksi + Barang
+DB --> Invoice: Return Transaksi Data
+Invoice --> User: Display Invoice
+
+@enduml
