@@ -1,0 +1,21 @@
+@startuml
+title <font size=12>Laporan Penjualan - Owner</font>
+
+actor Owner
+participant Browser
+participant Controller
+participant Database
+participant View
+
+Owner->Browser: Akses Laporan Penjualan
+Browser->Controller: GET /pemilik/laporan-penjualan\n(dengan filter tanggal)
+Controller->Database: Query Transaksi\nberdasarkan date range
+Database->Controller: Return semua transaksi
+Controller->Controller: Hitung total transaksi\ndan total penjualan
+Controller->Controller: Group transaksi\nby date (harian)
+Controller->Controller: Hitung rata-rata\nper hari
+Controller->View: Pass data:\n- totalTransaksi\n- totalPenjualan\n- laporanHarian\n- rataRataPerHari
+View->Browser: Tampilkan laporan penjualan\ndengan grafik dan tabel detail
+Browser->Owner: Laporan siap dilihat
+
+@enduml
