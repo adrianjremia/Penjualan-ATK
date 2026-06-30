@@ -1,0 +1,36 @@
+@startuml
+title <font size=10>Record Aktivitas - Owner</font>
+
+actor Owner
+participant "Browser" as Browser
+participant "Controller" as Controller
+participant "Database" as DB
+participant "View" as View
+
+Owner -> Browser: Akses halaman Record Aktivitas
+Browser -> Controller: GET /pemilik/record-aktivitas
+Controller -> DB: Query RecordAktivitas with filters
+Note over DB: Filter: user, action, date range, search
+
+DB --> Controller: Return filtered activities
+Controller -> DB: Query distinct actions (untuk dropdown)
+Controller -> DB: Query users role=0 (untuk dropdown)
+
+DB --> Controller: Return actions & users list
+Controller -> View: Pass data (recordAktivitas, actions, users)
+View --> Browser: Render activity log table with filters
+
+Owner -> Browser: Apply filter (user/action/date/search)
+Browser -> Controller: GET dengan parameters filter
+Controller -> DB: Query dengan filter terbaru
+DB --> Controller: Return filtered results (paginate 50)
+Controller -> View: Pass filtered data
+View --> Browser: Update tabel dengan hasil filter
+
+Owner -> Browser: Klik halaman next (pagination)
+Browser -> Controller: GET dengan page parameter
+Controller -> DB: Query page berikutnya
+DB --> Controller: Return data halaman berikutnya
+View --> Browser: Tampilkan halaman berikutnya
+
+@enduml
