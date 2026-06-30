@@ -1,0 +1,29 @@
+@startuml
+title <font size=12>Laporan Laba Rugi Owner</font>
+
+actor Owner
+participant "Browser"
+participant "Controller"
+participant "Database"
+participant "View"
+
+Owner -> Browser: Akses Laporan Laba Rugi\n(filter tanggal awal & akhir)
+Browser -> Controller: GET /pemilik/laporan-laba-rugi\n(tanggal_awal, tanggal_akhir)
+
+Controller -> Database: Query Transaksi\n(dengan filter tanggal)
+Database --> Controller: Return semua transaksi\nyang sesuai
+
+Controller -> Controller: Loop setiap transaksi\n& detail transaksi
+
+Controller -> Controller: Hitung per item:\n- Harga jual\n- Harga beli\n- Laba = Jual - Beli
+
+Controller -> Controller: Aggregate per tanggal:\n- Total Pendapatan\n- Total Modal\n- Total Laba
+
+Controller -> Controller: Hitung total keseluruhan:\n- Total Pendapatan\n- Total Modal\n- Total Laba\n- Margin Keuntungan (%)
+
+Controller -> View: Pass data laporan harian\n& ringkasan total
+
+View --> Browser: Display laporan dengan:\n- Tabel detail per hari\n- Grafik Pendapatan vs Modal\n- Summary box Laba/Rugi
+
+Browser --> Owner: Tampilkan hasil laporan
+@enduml
