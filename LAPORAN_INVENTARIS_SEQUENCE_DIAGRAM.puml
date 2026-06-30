@@ -1,0 +1,20 @@
+@startuml
+title <font size=10>Laporan Inventaris (Informasi Stok) - Owner</font>
+
+actor Owner
+participant View as "Login Page"
+participant Controller as "LaporanController"
+participant Database as "Database"
+participant View2 as "Laporan Stok Page"
+
+Owner -> Controller: Akses laporan inventaris\ndengan filter search & tanggal
+Controller -> Database: Query semua barang\n(dengan search filter)
+Database --> Controller: Return daftar barang
+Controller -> Database: Query top 5 produk terlaris\n(join detail_transaksi & barang)\nJika ada tanggal filter,\nbatasi berdasarkan periode
+Database --> Controller: Return top 5 produk\ndengan total terjual & revenue
+Controller -> Controller: Untuk setiap barang:\n- Hitung total terjual\n- Hitung revenue (qty × harga_jual)\n- Include stok sekarang
+Controller -> Controller: Aggregate data:\n- Total produk\n- Total revenue periode
+Controller -> View2: Pass data: barangsWithRevenue,\ntop5Products, totalProduk,\ntotalRevenuePeriode, periodLabel
+View2 --> Owner: Tampilkan tabel inventaris,\ntop 5 produk terlaris,\ndan summary box
+
+@enduml
