@@ -1,0 +1,52 @@
+@startuml
+title <font size=10>Owner - Riwayat Transaksi</font>
+
+actor Owner
+participant "View\nRiwayat Transaksi" as View
+participant "Controller" as Ctrl
+participant "Database" as DB
+participant "Activity Log\nService" as ALS
+
+== VIEW TRANSACTION HISTORY ==
+Owner -> View: Buka halaman riwayat transaksi\ndengan filter tanggal & user
+View -> Ctrl: GET /owner/riwayat-transaksi
+Ctrl -> DB: Query transaksi\ndengan filter
+DB --> Ctrl: Kirim semua transaksi
+Ctrl --> View: Tampilkan tabel transaksi\ndengan total keseluruhan
+
+== EDIT TRANSACTION ==
+Owner -> View: Klik tombol Edit
+View -> Ctrl: GET /owner/riwayat-transaksi/{id}/edit
+Ctrl -> DB: Load detail transaksi & barang
+DB --> Ctrl: Kirim data transaksi
+Ctrl --> View: Tampilkan form edit\ndengan item dan qty
+
+Owner -> View: Ubah jumlah items & submit
+View -> Ctrl: POST /owner/riwayat-transaksi/{id}/update
+Ctrl -> DB: Mulai transaction
+Ctrl -> DB: Validate stok & hitung delta qty
+DB --> Ctrl: Stok valid
+Ctrl -> DB: Update jumlah & subtotal\ndi detail_transaksi
+Ctrl -> DB: Adjust stok barang\n(increment/decrement)
+Ctrl -> DB: Update total_harga transaksi
+Ctrl -> ALS: Log perubahan ke activity_log
+ALS -> DB: Insert activity log
+Ctrl -> DB: Commit transaction
+Ctrl --> View: Redirect ke invoice\ndengan success message
+
+== DELETE TRANSACTION ==
+Owner -> View: Klik tombol Delete
+View -> Ctrl: GET /owner/riwayat-transaksi/{id}/destroy
+Ctrl -> DB: Mulai transaction
+Ctrl -> DB: Loop semua detail transaksi
+DB --> Ctrl: Kirim detail items
+Ctrl -> DB: Refund stok untuk\nsetiap item (increment)
+Ctrl -> DB: Hapus detail_transaksi
+Ctrl -> DB: Hapus transaksi
+Ctrl -> ALS: Log penghapusan\nke activity_log
+ALS -> DB: Insert activity log
+Ctrl -> DB: Commit transaction
+Ctrl --> View: Redirect ke index\ndengan success message
+View --> Owner: Tampilkan notifikasi sukses
+
+@enduml
