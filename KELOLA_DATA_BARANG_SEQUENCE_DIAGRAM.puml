@@ -1,0 +1,53 @@
+@startuml
+title <font size=12>Kelola Data Barang - Admin</font>
+
+actor Admin
+participant "View List" as View
+participant "Controller" as Controller
+participant "Database" as Database
+
+== View Data ==
+Admin->View: Akses halaman data barang
+View->Controller: GET /admin/barang
+Controller->Database: Query semua barang
+Database-->Controller: Return daftar barang
+Controller-->View: Tampilkan tabel barang
+View-->Admin: Display list dengan action buttons
+
+== Create Barang ==
+Admin->View: Klik tombol tambah barang
+View->Controller: Tampilkan form create
+Controller-->View: Display form kosong
+Admin->View: Isi data barang baru
+View->Controller: POST /admin/barang\n(nama, kategori, harga_beli, harga_jual, stok, satuan)
+Controller->Controller: Validate data
+Controller->Database: Create barang baru
+Database-->Controller: Return success
+Controller-->View: Redirect ke list
+View-->Admin: Display success message
+
+== Update Barang ==
+Admin->View: Klik tombol edit barang
+View->Controller: GET /admin/barang/{id}/edit
+Controller->Database: Query barang by ID
+Database-->Controller: Return barang data
+Controller-->View: Display form dengan data lama
+Admin->View: Ubah data barang
+View->Controller: PUT /admin/barang/{id}\n(nama, kategori, harga_beli, harga_jual, stok, satuan)
+Controller->Controller: Validate data
+Controller->Database: Update barang
+Database-->Controller: Return success
+Controller-->View: Redirect ke list
+View-->Admin: Display success message
+
+== Delete Barang ==
+Admin->View: Klik tombol hapus barang
+View->Controller: DELETE /admin/barang/{id}
+Controller->Database: Query barang by ID
+Database-->Controller: Return barang
+Controller->Database: Delete barang
+Database-->Controller: Return success
+Controller-->View: Redirect ke list
+View-->Admin: Display success message
+
+@enduml
