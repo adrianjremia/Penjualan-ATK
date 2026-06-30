@@ -1,0 +1,42 @@
+@startuml
+title <font size=10>Prediksi Penjualan (Forecasting) Flow</font>
+
+actor Owner
+participant View
+participant Controller
+participant ForecastingService
+participant Database
+
+Owner->View: Akses halaman prediksi penjualan
+View->Controller: GET /pemilik/forecasting
+
+Controller->ForecastingService: generateForecastForAllProducts()
+ForecastingService->Database: Query semua produk
+Database-->ForecastingService: Return all barang
+
+loop Untuk setiap produk
+ForecastingService->Database: Query sales data per minggu (tahun ini)
+Database-->ForecastingService: Return weekly sales
+ForecastingService->ForecastingService: getSalesDataByWeek() - Group transaksi per minggu
+ForecastingService->ForecastingService: calculateSES(alpha=0.3) - Hitung forecast minggu depan
+ForecastingService->ForecastingService: calculateWeeklyTrend() - Hitung trend %
+ForecastingService->ForecastingService: determineStockStatus() - Tentukan status (critical/medium/safe)
+end
+
+alt Jika user pilih produk tertentu
+Owner->View: Pilih produk dari dropdown
+View->Controller: GET /pemilik/forecasting?id_barang=X
+
+Controller->ForecastingService: generateForecast(id_barang)
+ForecastingService->Database: Query sales data produk tertentu
+Database-->ForecastingService: Return weekly sales
+ForecastingService->ForecastingService: Format minggu labels & weekly breakdown
+end
+
+Controller->Database: Query semua barang untuk dropdown
+Database-->Controller: Return barang list
+
+Controller->View: Pass forecast data, summary stats, barang list
+View-->Owner: Tampilkan overview semua produk + detail produk terpilih
+
+@enduml
