@@ -1,0 +1,37 @@
+@startuml
+title <font size=12>Login Activity Diagram</font>
+
+start
+:User access login page;
+:User input username & password;
+:Submit form;
+:Validate input (required fields);
+
+if (Input valid?) then (No)
+  :Show error message;
+  :Return to login page;
+  stop
+else (Yes)
+  :Query database for user;
+  :Check password match;
+  
+  if (Credentials match?) then (No)
+    :Show error message;
+    :Return to login page;
+    stop
+  else (Yes)
+    :Create session;
+    :Check user role;
+    
+    if (Role = Admin?) then (Yes)
+      :Redirect to admin dashboard;
+    else (Pemilik/Owner)
+      :Redirect to owner dashboard;
+    endif
+    
+    :Display dashboard;
+    stop
+  endif
+endif
+
+@enduml
