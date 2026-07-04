@@ -1,0 +1,41 @@
+@startuml
+title <font size=12>Admin - Riwayat Transaksi Flow (Edit Only)</font>
+
+actor Admin
+participant Browser
+participant TransaksiController
+participant Database
+participant ActivityLogService
+
+== View Transaksi ==
+Admin -> Browser: Akses Riwayat Transaksi
+Browser -> TransaksiController: GET /admin/riwayat-transaksi/filters
+TransaksiController -> Database: Load transaksi dengan filter tanggal
+Database -> TransaksiController: Return data transaksi
+TransaksiController -> Browser: Display daftar transaksi
+Browser -> Admin: Tampilkan daftar dengan tombol Edit & Detail
+
+== Edit Transaksi ==
+Admin -> Browser: Klik tombol Edit
+Browser -> TransaksiController: GET /admin/riwayat-transaksi/{id}/edit
+TransaksiController -> Database: Load transaksi + detail items
+Database -> TransaksiController: Return transaksi & barang info
+TransaksiController -> Browser: Display form edit dengan qty items
+Browser -> Admin: Ubah jumlah item
+Admin -> Browser: Ubah quantity dan submit
+Browser -> TransaksiController: PUT /admin/riwayat-transaksi/{id}
+TransaksiController -> Database: Start Transaction
+Database -> TransaksiController: Transaction started
+TransaksiController -> Database: Validate stok untuk qty baru
+Database -> TransaksiController: Stock check result
+TransaksiController -> Database: Update detail_transaksi qty
+TransaksiController -> Database: Update stok barang (increment/decrement)
+TransaksiController -> Database: Calculate new total
+TransaksiController -> Database: Update transaksi total_harga
+ActivityLogService -> Database: Insert activity log (perubahan)
+Database -> ActivityLogService: Activity logged
+TransaksiController -> Database: Commit Transaction
+Database -> TransaksiController: Transaction committed
+TransaksiController -> Browser: Redirect ke invoice dengan success message
+Browser -> Admin: Show update success
+@enduml
