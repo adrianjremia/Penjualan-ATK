@@ -1,0 +1,181 @@
+================================================================================
+BUSINESS REQUIREMENTS DOCUMENT (BRD)
+Sistem Informasi Penjualan ATK Berkat Kasih
+Versi 2.0 - Final
+================================================================================
+
+1. EXECUTIVE SUMMARY
+================================================================================
+
+Sistem Informasi Penjualan dan Inventori untuk Toko Alat Tulis Berkat Kasih telah 
+dikembangkan dengan fitur-fitur yang komprehensif untuk mendukung operasional toko. 
+Aplikasi membantu mengelola data barang, mencatat transaksi, mengelola stok otomatis, 
+menyajikan laporan komprehensif, dan menyediakan audit trail untuk transparansi.
+
+Sistem digunakan oleh dua pengguna: Admin (kelola barang & transaksi) dan Pemilik 
+(monitor laporan & stok).
+
+2. FITUR UTAMA
+================================================================================
+
+FITUR EXISTING (Original):
+1. Sistem Login & Autentikasi
+2. Kelola Data Barang (CRUD + Pencarian)
+3. Transaksi Penjualan
+4. Pembaruan Stok Otomatis
+5. Invoice Penjualan
+6. Laporan Penjualan
+7. Laporan Laba Rugi
+8. Informasi Stok
+9. Dashboard
+
+FITUR BARU (Ditambahkan):
+10. Riwayat Transaksi - ADMIN
+    - View & Filter transaksi
+    - Edit transaksi (ubah qty, auto-adjust stok)
+    - Lihat detail & invoice
+    - Tidak bisa delete
+
+11. Riwayat Transaksi - PEMILIK
+    - View & Filter transaksi
+    - Edit transaksi (ubah qty, auto-adjust stok)
+    - Delete transaksi (refund stok otomatis)
+    - Lihat detail & invoice
+
+12. Record Aktivitas
+    - View semua aktivitas sistem
+    - Filter: user, action, tanggal, search
+    - Pagination
+    - Audit trail lengkap
+    - Read-only untuk integritas data
+
+13. Laporan Penjualan (Enhanced)
+    - Grafik penjualan harian
+    - Filter periode tanggal
+    - Statistik: Total transaksi, total penjualan, rata-rata
+    - Tabel detail per hari
+
+14. Laporan Laba Rugi (Enhanced)
+    - Analisis profit margin per produk
+    - Breakdown: Pendapatan, Modal, Laba per hari
+    - Total keseluruhan & margin keuntungan (%)
+    - Filter periode
+
+15. Laporan Inventaris (NEW)
+    - Daftar semua barang dengan stok terkini
+    - Filter: Nama barang, periode tanggal
+    - Top 5 produk terlaris (qty & revenue)
+    - Summary: Total produk, total revenue
+
+16. Prediksi Penjualan (Forecasting) (NEW)
+    - Algoritma: Single Exponential Smoothing
+    - Forecast penjualan minggu depan
+    - Trend persentase perubahan
+    - Status stok: Critical / Medium / Safe
+    - Filter produk spesifik
+
+3. KEBUTUHAN TEKNIS
+================================================================================
+
+Database Changes:
+- ActivityLog table (untuk audit trail)
+- Users table (enhanced dengan kolom tambahan)
+- Detail_Transaksi (tambah kolom harga_satuan)
+
+Backend:
+- Laravel 8+ (PHP Framework)
+- MySQL Database
+- Service Layer (ActivityLogService, ForecastingService)
+- Database Transactions (untuk data integrity)
+
+Frontend:
+- Blade Template
+- Custom CSS
+- Responsive Design
+
+API Routes:
+- Admin: /admin/barang, /admin/transaksi, /admin/riwayat-transaksi
+- Owner: /pemilik/laporan-penjualan, /pemilik/laporan-laba-rugi, 
+          /pemilik/informasi-stok, /pemilik/forecasting,
+          /pemilik/riwayat-transaksi, /pemilik/record-aktivitas
+
+4. USER WORKFLOWS
+================================================================================
+
+ADMIN WORKFLOWS:
+1. Login → Dashboard
+2. Kelola Data Barang
+   - Tambah, ubah, cari barang
+3. Catat Transaksi Penjualan
+   - Pilih barang → Input qty → Generate invoice
+4. Kelola Riwayat Transaksi
+   - View, edit qty, lihat detail/invoice
+   - TIDAK BISA DELETE
+
+PEMILIK WORKFLOWS:
+1. Login → Dashboard
+2. Monitor Riwayat Transaksi
+   - View, edit qty, delete dengan refund stok
+   - Lihat detail & invoice
+3. View Record Aktivitas
+   - Filter user, action, tanggal, search
+4. View Laporan Penjualan
+   - Filter periode, lihat grafik & statistik
+5. View Laporan Laba Rugi
+   - Filter periode, analisis profit
+6. View Laporan Inventaris
+   - Filter barang & periode
+   - Lihat top 5 produk
+7. View Prediksi Penjualan
+   - Forecast minggu depan per produk
+   - Monitor status stok
+
+5. KEAMANAN & DATA INTEGRITY
+================================================================================
+
+- Password terenkripsi dengan bcrypt
+- Session management untuk autentikasi
+- Role-based access control (Admin vs Pemilik)
+- Database transactions untuk operasi multi-step
+- Activity logging untuk audit trail
+- Validation input & error handling
+- Automatic stok refund saat delete transaksi
+- Prevent stok negatif
+
+6. TIMELINE IMPLEMENTASI
+================================================================================
+
+Phase 1 (Original): Core features (barang, transaksi, laporan dasar)
+Phase 2 (Current): Riwayat transaksi, record aktivitas, laporan enhanced, forecasting
+Phase 3 (Future): Export PDF, Email reports, Multi-store support, Mobile app
+
+7. ACCEPTANCE CRITERIA
+================================================================================
+
+✓ Semua 16 fitur berfungsi sesuai spesifikasi
+✓ Data barang, transaksi, laporan tersimpan akurat
+✓ Stok diperbarui otomatis & tidak negatif
+✓ Riwayat transaksi bisa di-edit dengan auto-adjust stok
+✓ Record aktivitas mencatat semua operasi penting
+✓ Laporan inventaris & forecasting akurat
+✓ Sistem mudah digunakan dengan UI intuitif
+✓ All testing passed (unit test, integration test, UAT)
+
+8. GLOSSARY
+================================================================================
+
+Admin              = User yang mengelola barang & transaksi
+Pemilik            = User yang monitor laporan & stok
+Riwayat Transaksi  = Daftar transaksi dengan opsi edit/delete
+Record Aktivitas   = Log aktivitas sistem untuk audit
+Audit Trail        = Catatan lengkap aktivitas untuk keamanan
+Forecasting        = Prediksi penjualan berbasis data
+Exponential        = Algoritma smoothing untuk trend analysis
+Smoothing
+Database Trans.    = Operasi DB atomic (semua atau tidak sama sekali)
+
+================================================================================
+Document Version: 2.0
+Status: Final - All Features Documented
+Generated: July 2026
+================================================================================
