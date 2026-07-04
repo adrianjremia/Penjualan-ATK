@@ -1,0 +1,35 @@
+@startuml
+title <font size=10>Activity Diagram - Laporan Inventaris (Owner)</font>
+
+start
+:Owner buka halaman laporan inventaris;
+:Tampilkan form filter: search nama barang, tanggal awal, tanggal akhir;
+:Owner input pencarian dan filter (opsional);
+:Query semua barang dari database;
+if (Ada pencarian nama barang?) then (yes)
+    :Filter barang by nama;
+else (no)
+    :Tampilkan semua barang;
+endif
+:Urutkan barang by nama_barang;
+:Untuk setiap barang, query total terjual dari detail_transaksi;
+if (Ada filter tanggal?) then (yes)
+    :Filter transaksi by tanggal_awal dan tanggal_akhir;
+else (no)
+    :Gunakan semua periode;
+endif
+:Hitung revenue per barang (total_sold × harga_jual);
+:Query top 5 produk terlaris (group by quantity);
+if (Ada filter tanggal?) then (yes)
+    :Filter top 5 by tanggal;
+else (no)
+    :Gunakan semua periode;
+endif
+:Hitung total produk, total revenue periode;
+:Tampilkan tabel lengkap barang dengan qty terjual dan revenue;
+:Tampilkan top 5 produk terlaris;
+:Tampilkan summary box: total produk, total revenue;
+:Owner bisa ubah filter dan refresh data;
+stop
+
+@enduml
