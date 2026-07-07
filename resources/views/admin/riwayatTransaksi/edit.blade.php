@@ -249,6 +249,12 @@
         </div>
     @endif
 
+    @if(session('warning'))
+        <div class="alert alert-warning">
+            <strong>Perhatian:</strong> {{ session('warning') }}
+        </div>
+    @endif
+
     <div class="alert alert-warning">
         <strong>Perhatian:</strong> Mengubah jumlah item akan secara otomatis menambah atau mengurangi stok barang. Pastikan stok mencukupi sebelum menyimpan perubahan.
     </div>
@@ -287,7 +293,13 @@
                     <div>
                         <label>Harga</label>
                         <div class="item-info">
-                            <strong>Rp {{ number_format($detail->harga, 0, ',', '.') }}</strong>
+                            <strong>
+                                @if($detail->harga)
+                                    Rp {{ number_format($detail->harga, 0, ',', '.') }}
+                                @else
+                                    Rp {{ number_format($detail->barang->harga_jual, 0, ',', '.') }}
+                                @endif
+                            </strong>
                         </div>
                     </div>
                     <div>
@@ -298,15 +310,15 @@
                             value="{{ $detail->jumlah }}" 
                             min="1"
                             class="qty-input"
-                            data-harga="{{ $detail->harga }}"
+                            data-harga="{{ $detail->harga ?: $detail->barang->harga_jual }}"
                             data-index="{{ $loop->index }}"
                             onchange="updateSubtotal(this)">
                         <input type="hidden" name="items[{{ $loop->index }}][id_detail]" value="{{ $detail->id_detail }}">
                     </div>
                     <div>
                         <label>Subtotal</label>
-                        <div class="subtotal-display" id="subtotal-{{ $loop->index }}">
-                            Rp {{ number_format($detail->subtotal, 0, ',', '.') }}
+                        <div class="subtotal-display" id="subtotal-{{ $loop->index }}" data-original="{{ $detail->harga ?: $detail->barang->harga_jual }}">
+                            Rp {{ number_format($detail->harga && $detail->subtotal ? $detail->subtotal : ($detail->barang->harga_jual * $detail->jumlah), 0, ',', '.') }}
                         </div>
                     </div>
                     <div style="display: flex; align-items: flex-end; padding-bottom: 5px;">
@@ -322,7 +334,16 @@
 
         <div class="total-payment">
             <div class="label">Total Pembayaran:</div>
-            <div class="amount" id="total-amount">Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</div>
+            <div class="amount" id="total-amount">
+                @php
+                    $calculatedTotal = 0;
+                    foreach ($transaksi->detailTransaksi as $detail) {
+                        $harga = $detail->harga ?: $detail->barang->harga_jual;
+                        $calculatedTotal += $harga * $detail->jumlah;
+                    }
+                @endphp
+                Rp {{ number_format($calculatedTotal, 0, ',', '.') }}
+            </div>
         </div>
 
         <div class="button-group">

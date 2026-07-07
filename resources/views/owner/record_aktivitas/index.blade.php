@@ -57,12 +57,13 @@
     .filter-group input,
     .filter-group select {
         padding: 10px 12px;
-        border: 1px solid #d1d5db;
+        border: 1.5px solid #d1d5db;
         border-radius: 6px;
         font-size: 14px;
         font-family: inherit;
         background: #f9fafb;
         min-width: 150px;
+        transition: all 0.2s;
     }
 
     .filter-group input:focus,
@@ -70,35 +71,92 @@
         outline: none;
         border-color: #3b82f6;
         background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
+    /* Search group - upgraded */
     .search-group {
         display: flex;
-        align-items: flex-end;
+        flex-direction: column;
         gap: 8px;
-    }
-
-    .search-group input {
         flex: 1;
-        min-width: 250px;
+        min-width: 260px;
     }
 
-    .search-group button {
-        padding: 10px 16px;
-        background-color: #3b82f6;
+    .search-group label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .search-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-input-wrapper svg.search-icon {
+        position: absolute;
+        left: 12px;
+        width: 16px;
+        height: 16px;
+        color: #9ca3af;
+        pointer-events: none;
+        flex-shrink: 0;
+    }
+
+    .search-input-wrapper input {
+        width: 100%;
+        padding: 10px 100px 10px 38px;
+        border: 1.5px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: inherit;
+        background: #f9fafb;
+        color: #1f2937;
+        transition: all 0.2s;
+        box-sizing: border-box;
+    }
+
+    .search-input-wrapper input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-input-wrapper input::placeholder {
+        color: #b0b7c3;
+    }
+
+    .search-btn-inline {
+        position: absolute;
+        right: 6px;
+        padding: 6px 14px;
+        background: #3b82f6;
         color: white;
         border: none;
         border-radius: 6px;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
     }
 
-    .search-group button:hover {
-        background-color: #2563eb;
+    .search-btn-inline:hover {
+        background: #2563eb;
     }
 
+    .search-btn-inline svg {
+        width: 13px;
+        height: 13px;
+    }
+
+    /* Table */
     .table-wrapper {
         overflow-x: auto;
         margin-bottom: 20px;
@@ -187,6 +245,7 @@
         padding: 40px 20px;
     }
 
+    /* Pagination */
     .pagination {
         display: flex;
         justify-content: center;
@@ -194,7 +253,7 @@
         margin-top: 20px;
         padding-top: 20px;
         border-top: 1px solid #e5e7eb;
-    }
+    }s
 
     .pagination a,
     .pagination span {
@@ -218,6 +277,25 @@
         color: white;
     }
 
+    /* Btn detail */
+    .btn-detail {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: #3b82f6;
+        font-size: 14px;
+        transition: all 0.2s;
+        padding: 4px 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-detail:hover {
+        color: #2563eb;
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
         .filter-section {
             flex-direction: column;
@@ -235,14 +313,7 @@
         }
 
         .search-group {
-            flex-direction: column;
-        }
-
-        .search-group input {
             min-width: auto;
-        }
-
-        .search-group button {
             width: 100%;
         }
 
@@ -289,6 +360,10 @@
             <label>Filter User</label>
             <select name="id_user">
                 <option value="">Semua User</option>
+                <option value="pemilik" {{ request('id_user') == 'pemilik' ? 'selected' : '' }}>
+                    Pemilik
+                </option>
+                <option disabled>─────────────</option>
                 @foreach($users as $user)
                     <option value="{{ $user->id_user }}" {{ request('id_user') == $user->id_user ? 'selected' : '' }}>
                         {{ $user->username }}
@@ -310,10 +385,25 @@
         </div>
 
         <div class="search-group">
-            <label style="display: none;">Cari</label>
-            <input type="text" name="search" placeholder="Cari deskripsi..." value="{{ request('search') }}">
-            <button type="submit">Cari</button>
-        </div>
+    <label>Cari Deskripsi</label>
+    <div class="search-input-wrapper">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+        </svg>
+        <input 
+            type="text" 
+            name="search" 
+            placeholder="Cari deskripsi aktivitas..." 
+            value="{{ request('search') }}"
+        >
+        <button type="submit" class="search-btn-inline">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+            </svg>
+            Cari
+        </button>
+    </div>
+</div>
     </form>
 
     <div class="table-wrapper">
@@ -355,12 +445,16 @@
 
                     <td class="description">
                         {{ $log->description }}
+                        @if($log->model_id)
+                            <span style="color: #9ca3af; margin-left: 8px;">({{ $log->model_id }})</span>
+                        @endif
                     </td>
 
                     <td style="text-align: center;">
                         @if($log->old_values || $log->new_values)
-                            <button class="btn-detail" onclick="showDetails('{{ addslashes(json_encode($log)) }}')">
-                                👁️ Lihat
+                            <button class="btn-detail" onclick="showDetails('{{ addslashes(json_encode($log)) }}')" title="Lihat Detail" style="display: inline-flex; align-items: center; gap: 6px;">
+                                <img src="{{ asset('images/icons/detail.png') }}" alt="Detail" style="width: 16px; height: 16px;">
+                                Lihat
                             </button>
                         @else
                             <span style="color: #9ca3af; font-size: 12px;">-</span>

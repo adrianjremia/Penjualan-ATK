@@ -148,9 +148,7 @@
     <p>Selamat datang di sistem Point of Sale</p>
 </div>
 
-<!-- STAT CARDS -->
 <div class="stats-grid">
-    <!-- Total Barang -->
     <div class="stat-card">
         <div class="stat-content">
             <h3>Total Barang</h3>
@@ -162,7 +160,6 @@
         </div>
     </div>
 
-    <!-- Transaksi Hari Ini -->
     <div class="stat-card">
         <div class="stat-content">
             <h3>Transaksi Hari Ini</h3>
@@ -174,7 +171,6 @@
         </div>
     </div>
 
-    <!-- Pendapatan Hari Ini -->
     <div class="stat-card">
         <div class="stat-content">
             <h3>Pendapatan Hari Ini</h3>
@@ -187,7 +183,6 @@
     </div>
 </div>
 
-<!-- TRANSAKSI TERBARU -->
 <div class="card">
     <h2>Transaksi Terbaru</h2>
 

@@ -37,10 +37,12 @@ class ActivityLogService
      */
     public static function logCreate($userId, $modelType, $modelId, $values)
     {
+        $description = "Buat transaksi";
+        
         return self::log(
             $userId,
             "create_{$modelType}",
-            "Membuat {$modelType} baru dengan ID {$modelId}",
+            $description,
             $modelType,
             $modelId,
             null,
@@ -53,18 +55,39 @@ class ActivityLogService
      */
     public static function logUpdate($userId, $modelType, $modelId, $oldValues, $newValues)
     {
-        $description = "Memperbarui {$modelType} ID {$modelId}";
-        if (!empty($oldValues) && !empty($newValues)) {
-            $changes = [];
-            foreach ($newValues as $key => $newVal) {
-                if (isset($oldValues[$key]) && $oldValues[$key] !== $newVal) {
-                    $oldStr = is_array($oldValues[$key]) ? json_encode($oldValues[$key]) : (string)$oldValues[$key];
-                    $newStr = is_array($newVal) ? json_encode($newVal) : (string)$newVal;
-                    $changes[] = "{$key}: {$oldStr} → {$newStr}";
+        $description = "Edit transaksi";
+        
+        // Generate simple change summary
+        if (!empty($newValues) && is_array($newValues)) {
+            $changedItems = 0;
+            $changedFields = [];
+            
+            // Count how many items changed
+            foreach ($newValues as $index => $newVal) {
+                if (isset($oldValues[$index])) {
+                    $oldVal = $oldValues[$index];
+                    // Check if any field in the item changed
+                    if ($oldVal !== $newVal) {
+                        $changedItems++;
+                        // Extract simple field names that changed
+                        if (is_array($newVal) && isset($newVal['barang'])) {
+                            $barangName = $newVal['barang'];
+                            if (isset($newVal['jumlah']) && isset($oldVal['jumlah']) && 
+                                $newVal['jumlah'] != $oldVal['jumlah']) {
+                                $changedFields[] = "jumlah {$barangName}";
+                            }
+                        }
+                    }
                 }
             }
-            if (!empty($changes)) {
-                $description .= " (" . implode(", ", $changes) . ")";
+            
+            // Create simple description
+            if ($changedItems > 0) {
+                if (count($changedFields) > 0 && count($changedFields) <= 2) {
+                    $description = "Ubah " . implode(", ", $changedFields);
+                } else {
+                    $description = "Ubah $changedItems item";
+                }
             }
         }
 
@@ -84,10 +107,12 @@ class ActivityLogService
      */
     public static function logDelete($userId, $modelType, $modelId, $values = null)
     {
+        $description = "Hapus transaksi";
+        
         return self::log(
             $userId,
             "delete_{$modelType}",
-            "Menghapus {$modelType} ID {$modelId}",
+            $description,
             $modelType,
             $modelId,
             $values,

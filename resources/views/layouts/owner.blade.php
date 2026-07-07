@@ -165,7 +165,7 @@
             Riwayat Transaksi
         </a>
         <a href="{{ url('/pemilik/record-aktivitas') }}" class="{{ request()->is('pemilik/record-aktivitas*') ? 'active' : '' }}">
-            <img src="{{ asset('images/icons/recordAktivitas.png') }}" alt="Record Aktivitas">
+            <img src="{{ asset('images/icons/transaksi.png') }}" alt="Record Aktivitas">
             Record Aktivitas
         </a>
     </div>

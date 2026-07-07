@@ -225,7 +225,7 @@
         </form>
 
         <div class="demo-accounts">
-            <div class="demo-title">🔑 Akun Demo Pengujian</div>
+            <div class="demo-title">Akun Demo Pengujian</div>
             <div class="demo-item">
                 <span class="demo-label">Admin:</span> username <code style="background:#e2e8f0; padding:2px 4px; border-radius:4px;">admin</code> & password <code style="background:#e2e8f0; padding:2px 4px; border-radius:4px;">admin123</code>
             </div>

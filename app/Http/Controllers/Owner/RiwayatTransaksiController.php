@@ -75,6 +75,33 @@ class RiwayatTransaksiController extends Controller
             'items.*.jumlah' => 'required|integer|min:1',
         ]);
 
+        // Check stock availability before updating
+        $stockWarnings = [];
+        foreach ($validated['items'] as $itemData) {
+            $detail = DetailTransaksi::findOrFail($itemData['id_detail']);
+            $barang = $detail->barang;
+
+            $oldQty = $detail->jumlah;
+            $newQty = $itemData['jumlah'];
+            $qtyDelta = $newQty - $oldQty;
+
+            // Validate stock availability
+            if ($qtyDelta > 0) {
+                // Increasing quantity - check if enough stock
+                if ($barang->stok < $qtyDelta) {
+                    $stockWarnings[] = "Stok {$barang->nama_barang} tidak cukup untuk penambahan. Stok tersedia: {$barang->stok}";
+                }
+            }
+        }
+
+        // If there are stock warnings, return to edit page with warning
+        if (!empty($stockWarnings)) {
+            return redirect()
+                ->route('owner.riwayat-transaksi.edit', $transaksi->id_transaksi)
+                ->with('warning', implode(' | ', $stockWarnings))
+                ->withInput();
+        }
+
         DB::transaction(function () use ($transaksi, $validated) {
             $oldValues = [];
             $newValues = [];
@@ -88,13 +115,8 @@ class RiwayatTransaksiController extends Controller
                 $newQty = $itemData['jumlah'];
                 $qtyDelta = $newQty - $oldQty;
 
-                // Validate stock availability
-                if ($qtyDelta > 0) {
-                    // Increasing quantity - check if enough stock
-                    if ($barang->stok < $qtyDelta) {
-                        throw new \Exception("Stok {$barang->nama_barang} tidak cukup untuk penambahan. Stok tersedia: {$barang->stok}");
-                    }
-                }
+                // Use actual harga (fallback to barang.harga_jual if detail.harga is 0 or null)
+                $harga = $detail->harga ?: $barang->harga_jual;
 
                 // Record old and new values
                 $oldValues[] = [
@@ -104,7 +126,7 @@ class RiwayatTransaksiController extends Controller
                     'subtotal' => $detail->subtotal
                 ];
 
-                $newSubtotal = $detail->harga * $newQty;
+                $newSubtotal = $harga * $newQty;
                 $newValues[] = [
                     'id_detail' => $detail->id_detail,
                     'barang' => $barang->nama_barang,
@@ -117,8 +139,9 @@ class RiwayatTransaksiController extends Controller
                     $barang->increment('stok', -$qtyDelta);
                 }
 
-                // Update detail transaksi
+                // Update detail transaksi with correct harga and subtotal
                 $detail->update([
+                    'harga' => $harga,
                     'jumlah' => $newQty,
                     'subtotal' => $newSubtotal
                 ]);

@@ -371,8 +371,6 @@ function formatRupiah(value) {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
-// Initialize on page load
-// Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     updateSubmitButton();
 
@@ -487,10 +485,8 @@ function renderCart() {
     document.getElementById('totalItem').innerText = totalItem;
     document.getElementById('totalBarang').innerText = totalBarang;
 
-    // kirim ke backend
     document.getElementById('cartInput').value = JSON.stringify(cart);
 
-    // update button state
     updateSubmitButton();
 }
 </script>

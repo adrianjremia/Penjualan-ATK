@@ -249,7 +249,6 @@
     <p>Ringkasan laporan bisnis Anda bulan ini</p>
 </div>
 
-<!-- KPI Grid -->
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-content">
@@ -288,7 +287,6 @@
     </div>
 </div>
 
-<!-- Weekly Sales Overview -->
 <div class="card">
     <h2>Penjualan 7 Hari Terakhir</h2>
     <div class="weekly-grid">
@@ -301,7 +299,6 @@
     </div>
 </div>
 
-<!-- Inventory Health -->
 <div class="card">
     <h2>Status Inventaris</h2>
     <div class="inventory-status-grid">
@@ -325,7 +322,6 @@
     </div>
 </div>
 
-<!-- Top 5 Products -->
 @if($top5Products->count() > 0)
 <div class="card">
     <h2>Top 5 Produk Terlaris (Bulan Ini)</h2>
@@ -359,7 +355,6 @@
 </div>
 @endif
 
-<!-- Alerts -->
 @php
     $alerts = [];
     if ($stokKritis > 0) {
