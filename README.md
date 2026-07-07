@@ -1,59 +1,279 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Informasi Penjualan dan Inventori ATK Berkat Kasih
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web berbasis Laravel untuk mengelola penjualan, inventori, dan laporan bisnis pada Toko Alat Tulis Berkat Kasih.
 
-## About Laravel
+## Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Admin
+- Kelola Data Barang (CRUD)
+- Catat Transaksi Penjualan
+- Edit Riwayat Transaksi
+- Lihat Invoice & Detail Transaksi
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Pemilik
+- Dashboard Penjualan
+- Laporan Penjualan (dengan grafik & statistik)
+- Laporan Laba Rugi (analisis profit & margin)
+- Laporan Inventaris (top 5 produk terlaris)
+- Prediksi Penjualan (forecasting mingguan)
+- Riwayat Transaksi (view, edit, delete dengan auto-refund stok)
+- Record Aktivitas (audit trail lengkap)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tech Stack
 
-## Learning Laravel
+- **Backend**: Laravel 8+
+- **Database**: MySQL
+- **Frontend**: Blade Template, Custom CSS
+- **Server**: Apache (XAMPP)
+- **Language**: PHP 7.4+
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Instalasi
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Prerequisites
+- PHP 7.4+
+- MySQL
+- Composer
+- XAMPP atau web server lainnya
 
-## Laravel Sponsors
+### Step by Step
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. Clone repository
+```bash
+git clone https://github.com/adrianjremia/Penjualan-ATK.git
+cd Penjualan-ATK
+```
 
-### Premium Partners
+2. Install dependencies
+```bash
+composer install
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+3. Setup environment
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+4. Konfigurasi database di file `.env`
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=penjualan_atk
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+5. Jalankan migration
+```bash
+php artisan migrate
+```
+
+6. Jalankan seeder (opsional - untuk data dummy)
+```bash
+php artisan db:seed
+```
+
+7. Jalankan aplikasi
+```bash
+php artisan serve
+```
+
+Aplikasi akan berjalan di `http://localhost:8000`
+
+## Default Login
+
+**Admin**
+- Username: admin
+- Password: password
+
+**Pemilik**
+- Username: pemilik
+- Password: password
+
+## Struktur Project
+
+```
+Penjualan-ATK/
+├── app/
+│   ├── Http/Controllers/
+│   │   ├── Admin/
+│   │   └── Owner/
+│   ├── Models/
+│   ├── Services/
+│   │   ├── ActivityLogService.php
+│   │   └── ForecastingService.php
+│   └── ...
+├── resources/
+│   ├── views/
+│   │   ├── admin/
+│   │   ├── owner/
+│   │   ├── layouts/
+│   │   └── auth/
+│   ├── css/
+│   └── js/
+├── routes/
+│   ├── web.php
+│   └── api.php
+├── database/
+│   ├── migrations/
+│   └── seeders/
+├── .env.example
+├── composer.json
+└── README.md
+```
+
+## Routes / Endpoints
+
+### Admin Routes
+- `/admin/dashboard` - Dashboard Admin
+- `/admin/barang` - Kelola Data Barang
+- `/admin/transaksi` - Catat Transaksi Penjualan
+- `/admin/riwayat-transaksi` - Riwayat Transaksi
+
+### Owner Routes
+- `/pemilik/dashboard` - Dashboard Pemilik
+- `/pemilik/laporan-penjualan` - Laporan Penjualan
+- `/pemilik/laporan-laba-rugi` - Laporan Laba Rugi
+- `/pemilik/informasi-stok` - Laporan Inventaris
+- `/pemilik/forecasting` - Prediksi Penjualan
+- `/pemilik/riwayat-transaksi` - Riwayat Transaksi
+- `/pemilik/record-aktivitas` - Record Aktivitas
+
+### Auth Routes
+- `/login` - Login page
+- `/logout` - Logout
+
+## Database Schema
+
+### Main Tables
+- `users` - Data pengguna (Admin & Pemilik)
+- `barang` - Data barang/produk
+- `transaksi` - Data transaksi penjualan
+- `detail_transaksi` - Detail item per transaksi
+- `activity_logs` - Log aktivitas sistem
+
+## Fitur Detail
+
+### Riwayat Transaksi
+- **Admin**: Bisa view dan edit (tanpa delete)
+- **Pemilik**: Bisa view, edit, dan delete dengan auto-refund stok
+
+### Record Aktivitas
+- Mencatat semua aktivitas: create, update, delete barang/transaksi
+- Filter berdasarkan: user, action, tanggal, search
+- Pagination 50 per halaman
+
+### Laporan Penjualan
+- Visualisasi grafik penjualan harian
+- Filter berdasarkan periode tanggal
+- Statistik: Total transaksi, total penjualan, rata-rata per hari
+- Tabel breakdown detail per hari
+
+### Laporan Laba Rugi
+- Breakdown profit margin harian
+- Analisis: Pendapatan, Modal, Laba
+- Total keseluruhan & margin keuntungan %
+- Filter periode
+
+### Laporan Inventaris
+- Daftar semua barang dengan stok terkini
+- Top 5 produk terlaris (qty & revenue)
+- Filter barang dan periode
+- Summary statistik
+
+### Prediksi Penjualan
+- Algoritma: Single Exponential Smoothing (alpha=0.3)
+- Forecast penjualan minggu depan per produk
+- Trend persentase perubahan
+- Status stok: Critical / Medium / Safe
+- Filter produk spesifik
+
+## Security Features
+
+- Password encryption dengan bcrypt
+- Role-based access control (Admin vs Pemilik)
+- Session management
+- CSRF token protection
+- Input validation & sanitization
+- Activity logging untuk audit trail
+- Database transactions untuk data integrity
+
+## Performance
+
+- Pagination untuk data besar
+- Query optimization dengan eager loading
+- Caching untuk laporan statis
+- Database indexing pada foreign keys
+
+## Testing
+
+Untuk menjalankan test:
+```bash
+php artisan test
+```
+
+## Troubleshooting
+
+### Database Connection Error
+- Pastikan MySQL running
+- Check konfigurasi `.env`
+- Jalankan `php artisan migrate`
+
+### Permission Denied
+- Check folder `storage` dan `bootstrap/cache` writable
+- Jalankan: `chmod -R 775 storage bootstrap/cache`
+
+### Artisan Commands Not Found
+- Pastikan sudah `composer install`
+- Jalankan: `php artisan --version`
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. Fork repository
+2. Buat feature branch: `git checkout -b feature/nama-fitur`
+3. Commit changes: `git commit -m 'Add fitur baru'`
+4. Push ke branch: `git push origin feature/nama-fitur`
+5. Open Pull Request
 
-## Code of Conduct
+## Project Status
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**Version**: 2.0  
+**Status**: Active Development  
+**Last Updated**: July 2026  
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Fitur Completed (16/16)
+- ✅ Login & Authentication
+- ✅ Kelola Barang
+- ✅ Transaksi Penjualan
+- ✅ Update Stok Otomatis
+- ✅ Invoice
+- ✅ Laporan Penjualan
+- ✅ Laporan Laba Rugi
+- ✅ Informasi Stok
+- ✅ Dashboard
+- ✅ Riwayat Transaksi (Admin & Pemilik)
+- ✅ Record Aktivitas
+- ✅ Laporan Inventaris
+- ✅ Prediksi Penjualan
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Proyek penelitian - Universitas
+
+## Contact & Support
+
+- **Developer**: Adrian Jremia
+- **Email**: adrian.jremia@student.uksw.edu
+- **Repository**: https://github.com/adrianjremia/Penjualan-ATK
+
+## Dokumentasi
+
+Untuk dokumentasi lengkap, lihat:
+- `BRD_FINAL.txt` - Business Requirements Document
+- `PENJELASAN_FITUR_BARU.md` - Penjelasan detail semua fitur
+- `DEVELOPMENT_CHANGES_SUMMARY.md` - Summary perubahan development
+
+---
+
+**Made with ❤️ for Toko Alat Tulis Berkat Kasih**
