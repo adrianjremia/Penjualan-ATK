@@ -168,6 +168,10 @@
             <img src="{{ asset('images/icons/recordAktivitas.png') }}" alt="Record Aktivitas">
             Record Aktivitas
         </a>
+        <a href="{{ url('/pemilik/ganti-password') }}" class="{{ request()->is('pemilik/ganti-password*') ? 'active' : '' }}">
+            <img src="{{ asset('images/icons/dashboard.png') }}" alt="Ganti Password">
+            Ganti Password
+        </a>
     </div>
 
     <div class="sidebar-footer">
