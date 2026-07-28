@@ -219,6 +219,56 @@
     }
 
     table th {
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+        color: #1f2937;
+        font-size: 13px;
+    }
+
+    table th a {
+        color: #1f2937;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    table th a:hover {
+        color: #3b82f6;
+    }
+
+    table th a .sort-indicator {
+        display: inline-block;
+        font-size: 12px;
+        margin-left: 4px;
+        color: #9ca3af;
+    }
+
+    table th a.active .sort-indicator {
+        color: #3b82f6;
+    }
+
+    table td {
+        padding: 12px;
+        border-bottom: 1px solid #e5e7eb;
+        color: #374151;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    table thead {
+        background: #f9fafb;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    table th {
         padding: 14px 12px;
         text-align: left;
         font-weight: 600;
@@ -361,16 +411,56 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <div class="table-wrapper">
         <table>
-            <thead>
-                <tr>
-                    <th>ID Barang</th>
-                    <th>Nama Barang</th>
-                    <th>Kategori</th>
-                    <th>Stok Saat Ini</th>
-                    <th>Jumlah Terjual</th>
-                    <th>Total Revenue</th>
-                </tr>
-            </thead>
+                <thead>
+                    <tr>
+                        <th>ID Barang</th>
+                        @php
+                            $newDirection = (request('sort') === 'nama_barang' && request('direction') === 'desc') ? 'asc' : 'desc';
+                        @endphp
+                        <th>
+                            <a href="?sort=nama_barang&direction={{ $newDirection }}&tanggal_awal={{ request('tanggal_awal') }}&tanggal_akhir={{ request('tanggal_akhir') }}&search={{ request('search') }}" class="{{ request('sort') === 'nama_barang' ? 'active' : '' }}">
+                                Nama Barang
+                                @if(request('sort') === 'nama_barang')
+                                    <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        <th>Kategori</th>
+                        @php
+                            $newDirection = (request('sort') === 'stok' && request('direction') === 'desc') ? 'asc' : 'desc';
+                        @endphp
+                        <th>
+                            <a href="?sort=stok&direction={{ $newDirection }}&tanggal_awal={{ request('tanggal_awal') }}&tanggal_akhir={{ request('tanggal_akhir') }}&search={{ request('search') }}" class="{{ request('sort') === 'stok' ? 'active' : '' }}">
+                                Stok Saat Ini
+                                @if(request('sort') === 'stok')
+                                    <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        @php
+                            $newDirection = (request('sort') === 'total_sold' && request('direction') === 'desc') ? 'asc' : 'desc';
+                        @endphp
+                        <th>
+                            <a href="?sort=total_sold&direction={{ $newDirection }}&tanggal_awal={{ request('tanggal_awal') }}&tanggal_akhir={{ request('tanggal_akhir') }}&search={{ request('search') }}" class="{{ request('sort') === 'total_sold' ? 'active' : '' }}">
+                                Jumlah Terjual
+                                @if(request('sort') === 'total_sold')
+                                    <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        @php
+                            $newDirection = (request('sort') === 'revenue' && request('direction') === 'desc') ? 'asc' : 'desc';
+                        @endphp
+                        <th>
+                            <a href="?sort=revenue&direction={{ $newDirection }}&tanggal_awal={{ request('tanggal_awal') }}&tanggal_akhir={{ request('tanggal_akhir') }}&search={{ request('search') }}" class="{{ request('sort') === 'revenue' ? 'active' : '' }}">
+                                Total Revenue
+                                @if(request('sort') === 'revenue')
+                                    <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
             <tbody>
                 @forelse($barangsWithRevenue as $barang)
                 <tr>

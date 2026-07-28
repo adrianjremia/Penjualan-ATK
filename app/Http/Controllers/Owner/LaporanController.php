@@ -49,6 +49,30 @@ class LaporanController extends Controller
             ];
         })->sortByDesc('tanggal')->values();
 
+        // Handle sorting
+        $currentSort = request('sort', 'tanggal');
+        $currentDirection = request('direction', 'desc');
+
+        // Validate allowed sort columns
+        $allowedSorts = ['tanggal', 'total_transaksi', 'total_penjualan'];
+        if (!in_array($currentSort, $allowedSorts)) {
+            $currentSort = 'tanggal';
+            $currentDirection = 'desc';
+        }
+
+        // Validate direction
+        if (!in_array($currentDirection, ['asc', 'desc'])) {
+            $currentDirection = 'desc';
+        }
+
+        // Apply sorting to laporanHarian
+        $laporanHarian = collect($laporanHarian)->sortBy(function($item) use ($currentSort) {
+            if ($currentSort === 'tanggal') {
+                return $item['tanggal']->timestamp;
+            }
+            return $item[$currentSort] ?? 0;
+        }, SORT_NUMERIC, $currentDirection === 'desc')->values();
+
         // Rata-rata per hari
         $rataRataPerHari = $totalTransaksi > 0 ? $totalPenjualan / count($laporanHarian) : 0;
 
@@ -56,7 +80,9 @@ class LaporanController extends Controller
             'totalTransaksi',
             'totalPenjualan',
             'laporanHarian',
-            'rataRataPerHari'
+            'rataRataPerHari',
+            'currentSort',
+            'currentDirection'
         ));
     }
 
@@ -109,9 +135,33 @@ class LaporanController extends Controller
             }
         }
 
-        // Sort by date descending
-        krsort($laporanHarian);
-        $laporanHarian = array_values($laporanHarian);
+        // Handle sorting
+        $currentSort = request('sort', 'tanggal');
+        $currentDirection = request('direction', 'desc');
+
+        // Validate allowed sort columns
+        $allowedSorts = ['tanggal', 'pendapatan', 'modal', 'laba'];
+        if (!in_array($currentSort, $allowedSorts)) {
+            $currentSort = 'tanggal';
+            $currentDirection = 'desc';
+        }
+
+        // Validate direction
+        if (!in_array($currentDirection, ['asc', 'desc'])) {
+            $currentDirection = 'desc';
+        }
+
+        // Apply sorting to laporanHarian
+        $laporanHarianCollection = collect($laporanHarian);
+        if ($currentSort === 'tanggal') {
+            $laporanHarian = $laporanHarianCollection->sortBy(function($item) {
+                return $item['tanggal']->timestamp;
+            }, SORT_NUMERIC, $currentDirection === 'desc')->values()->toArray();
+        } else {
+            $laporanHarian = $laporanHarianCollection->sortBy(function($item) use ($currentSort) {
+                return $item[$currentSort] ?? 0;
+            }, SORT_NUMERIC, $currentDirection === 'desc')->values()->toArray();
+        }
 
         $totalLaba = $totalPendapatan - $totalModal;
         $marginKeuntungan = $totalPendapatan > 0 ? round(($totalLaba / $totalPendapatan) * 100, 2) : 0;
@@ -121,7 +171,9 @@ class LaporanController extends Controller
             'totalModal',
             'totalLaba',
             'laporanHarian',
-            'marginKeuntungan'
+            'marginKeuntungan',
+            'currentSort',
+            'currentDirection'
         ));
     }
 
@@ -183,8 +235,32 @@ class LaporanController extends Controller
             ->limit(5)
             ->get();
 
+        // Handle sorting for barangs table
+        $currentSort = request('sort', 'nama_barang');
+        $currentDirection = request('direction', 'desc');
+
+        // Validate allowed sort columns for barangs table
+        $allowedSorts = ['nama_barang', 'stok', 'total_sold', 'revenue'];
+        if (!in_array($currentSort, $allowedSorts)) {
+            $currentSort = 'nama_barang';
+            $currentDirection = 'desc';
+        }
+
+        // Validate direction
+        if (!in_array($currentDirection, ['asc', 'desc'])) {
+            $currentDirection = 'desc';
+        }
+
+        // Apply sorting to barangsWithRevenue
+        $barangsWithRevenue = collect($barangsWithRevenue)->sortBy(function($item) use ($currentSort) {
+            if ($currentSort === 'nama_barang') {
+                return strtolower($item[$currentSort]);
+            }
+            return $item[$currentSort] ?? 0;
+        }, SORT_NATURAL | SORT_FLAG_CASE, $currentDirection === 'desc')->values()->toArray();
+
         $totalProduk = Barang::count();
-        $totalRevenuePeriode = $barangsWithRevenue->sum('revenue');
+        $totalRevenuePeriode = collect($barangsWithRevenue)->sum('revenue');
 
         return view('owner.laporan.stok', compact(
             'barangsWithRevenue',
@@ -193,7 +269,9 @@ class LaporanController extends Controller
             'totalRevenuePeriode',
             'tanggalAwal',
             'tanggalAkhir',
-            'periodLabel'
+            'periodLabel',
+            'currentSort',
+            'currentDirection'
         ));
     }
 

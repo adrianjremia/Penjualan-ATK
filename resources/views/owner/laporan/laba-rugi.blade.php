@@ -142,6 +142,31 @@
         color: #1f2937;
     }
 
+    table th a {
+        color: #1f2937;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    table th a:hover {
+        color: #3b82f6;
+    }
+
+    table th a .sort-indicator {
+        display: inline-block;
+        font-size: 12px;
+        margin-left: 4px;
+        color: #9ca3af;
+    }
+
+    table th a.active .sort-indicator {
+        color: #3b82f6;
+    }
+
     table td {
         padding: 14px 12px;
         border-bottom: 1px solid #e5e7eb;
@@ -295,15 +320,55 @@
 
     <div class="table-wrapper">
         <table>
-            <thead>
-                <tr>
-                    <th>Tanggal</th>
-                    <th>Pendapatan</th>
-                    <th>Modal</th>
-                    <th>Laba/Rugi</th>
-                    <th>Margin</th>
-                </tr>
-            </thead>
+                <thead>
+                    <tr>
+                        @php
+                            $newDirection = (request('sort') === 'tanggal' && request('direction') === 'desc') ? 'asc' : 'desc';
+                        @endphp
+                        <th>
+                            <a href="?sort=tanggal&direction={{ $newDirection }}&tanggal_awal={{ request('tanggal_awal') }}&tanggal_akhir={{ request('tanggal_akhir') }}" class="{{ request('sort') === 'tanggal' ? 'active' : '' }}">
+                                Tanggal
+                                @if(request('sort') === 'tanggal')
+                                    <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        @php
+                            $newDirection = (request('sort') === 'pendapatan' && request('direction') === 'desc') ? 'asc' : 'desc';
+                        @endphp
+                        <th>
+                            <a href="?sort=pendapatan&direction={{ $newDirection }}&tanggal_awal={{ request('tanggal_awal') }}&tanggal_akhir={{ request('tanggal_akhir') }}" class="{{ request('sort') === 'pendapatan' ? 'active' : '' }}">
+                                Pendapatan
+                                @if(request('sort') === 'pendapatan')
+                                    <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        @php
+                            $newDirection = (request('sort') === 'modal' && request('direction') === 'desc') ? 'asc' : 'desc';
+                        @endphp
+                        <th>
+                            <a href="?sort=modal&direction={{ $newDirection }}&tanggal_awal={{ request('tanggal_awal') }}&tanggal_akhir={{ request('tanggal_akhir') }}" class="{{ request('sort') === 'modal' ? 'active' : '' }}">
+                                Modal
+                                @if(request('sort') === 'modal')
+                                    <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        @php
+                            $newDirection = (request('sort') === 'laba' && request('direction') === 'desc') ? 'asc' : 'desc';
+                        @endphp
+                        <th>
+                            <a href="?sort=laba&direction={{ $newDirection }}&tanggal_awal={{ request('tanggal_awal') }}&tanggal_akhir={{ request('tanggal_akhir') }}" class="{{ request('sort') === 'laba' ? 'active' : '' }}">
+                                Laba/Rugi
+                                @if(request('sort') === 'laba')
+                                    <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
+                        <th>Margin</th>
+                    </tr>
+                </thead>
             <tbody>
                 @forelse ($laporanHarian as $laporan)
                 <tr>
