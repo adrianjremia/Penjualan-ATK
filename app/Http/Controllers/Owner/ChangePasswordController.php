@@ -21,13 +21,20 @@ class ChangePasswordController extends Controller
 
     public function changePassword(Request $request)
     {
+        // Debug: Log request data
+        \Log::info('[v0] Change password request:', [
+            'user_id' => $request->input('user_id'),
+            'user_id_type' => gettype($request->input('user_id')),
+        ]);
+
         // Validate input
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|integer|exists:users,id',
             'old_password' => 'nullable|string',
             'new_password' => 'required|string|min:8|confirmed',
         ], [
             'user_id.required' => 'Pilih user yang ingin diubah passwordnya',
+            'user_id.integer' => 'Format user tidak valid',
             'user_id.exists' => 'User tidak ditemukan',
             'old_password.required' => 'Password lama diperlukan',
             'new_password.required' => 'Password baru diperlukan',

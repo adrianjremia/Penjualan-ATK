@@ -52,7 +52,7 @@
             <label for="user_id" style="display: block; font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 6px;">
                 Pilih Pengguna
             </label>
-            <select id="user_id" name="user_id" onchange="toggleOldPasswordField()" style="width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; font-family: inherit;">
+            <select id="user_id" name="user_id" onchange="toggleOldPasswordField()" required style="width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; font-family: inherit;">
                 <option value="">-- Pilih Pengguna --</option>
                 @foreach ($users as $user)
                     @php
