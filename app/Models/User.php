@@ -13,6 +13,9 @@ class User extends Authenticatable
     // Nama tabel
     protected $table = 'users';
 
+    // Primary key
+    protected $primaryKey = 'id_user';
+
     public $incrementing = true;
     protected $keyType = 'int';
 

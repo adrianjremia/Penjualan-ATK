@@ -23,24 +23,22 @@ class ChangePasswordController extends Controller
     {
         // Validate input
         $validated = $request->validate([
-            'user_id' => 'required|integer',
+            'user_id' => 'required|integer|exists:users,id_user',
             'old_password' => 'nullable|string',
             'new_password' => 'required|string|min:8|confirmed',
         ], [
             'user_id.required' => 'Pilih user yang ingin diubah passwordnya',
+            'user_id.exists' => 'User tidak ditemukan',
             'old_password.required' => 'Password lama diperlukan',
             'new_password.required' => 'Password baru diperlukan',
             'new_password.min' => 'Password minimal 8 karakter',
             'new_password.confirmed' => 'Konfirmasi password tidak sesuai',
         ]);
 
-        // Find user by id (Eloquent will use the defined primary key from User model)
+        // Find user by id_user (primary key in User model)
         $selectedUser = User::find($validated['user_id']);
-        if (!$selectedUser) {
-            return back()->withErrors(['user_id' => 'User tidak ditemukan']);
-        }
         $currentUser = Auth::user();
-        $isChangingOwnPassword = $selectedUser->id === $currentUser->id;
+        $isChangingOwnPassword = $selectedUser->id_user === $currentUser->id_user;
 
         // Validate old password jika mengubah password sendiri
         if ($isChangingOwnPassword) {
@@ -67,7 +65,7 @@ class ChangePasswordController extends Controller
         ActivityLogService::logUpdate(
             auth()->id(),
             'User',
-            $selectedUser->id,
+            $selectedUser->id_user,
             ['password' => 'hidden'],
             ['password' => 'updated']
         );
