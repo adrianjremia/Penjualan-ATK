@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Transaksi;
 use Carbon\Carbon;
+use App\Services\ForecastingService;
 
 class DashboardController extends Controller
 {
@@ -62,14 +63,11 @@ class DashboardController extends Controller
         $penjualanHariIni = Transaksi::whereDate('created_at', Carbon::today())
             ->sum('total_harga');
 
-        // Stok kritis (stok < 5)
-        $stokKritis = Barang::where('stok', '<', 5)->count();
-
-        // Stok menengah (5-10)
-        $stokMenengah = Barang::whereBetween('stok', [5, 10])->count();
-
-        // Stok aman (>10)
-        $stokAman = Barang::where('stok', '>', 10)->count();
+        // Stok kritis, menengah, aman - berdasarkan ForecastingService
+        $allForecasts = ForecastingService::generateForecastForAllProducts();
+        $stokKritis = collect($allForecasts)->filter(fn($f) => $f['status']['type'] === 'critical')->count();
+        $stokMenengah = collect($allForecasts)->filter(fn($f) => $f['status']['type'] === 'medium')->count();
+        $stokAman = collect($allForecasts)->filter(fn($f) => $f['status']['type'] === 'safe')->count();
 
         // Penjualan mingguan (last 7 days)
         $penjualanMingguan = [];
