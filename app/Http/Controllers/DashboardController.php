@@ -82,6 +82,22 @@ class DashboardController extends Controller
             ];
         }
 
+        // Handle sorting for top 5 products
+        $currentSort = request('sort', 'total_sold');
+        $currentDirection = request('direction', 'desc');
+
+        // Validate allowed sort columns
+        $allowedSorts = ['nama_barang', 'total_sold', 'total_revenue'];
+        if (!in_array($currentSort, $allowedSorts)) {
+            $currentSort = 'total_sold';
+            $currentDirection = 'desc';
+        }
+
+        // Validate direction
+        if (!in_array($currentDirection, ['asc', 'desc'])) {
+            $currentDirection = 'desc';
+        }
+
         // Top 5 Produk Terlaris bulan ini (by quantity)
         $top5Products = \DB::table('detail_transaksi')
             ->join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
@@ -92,7 +108,7 @@ class DashboardController extends Controller
             ->whereMonth('transaksi.created_at', Carbon::now()->month)
             ->whereYear('transaksi.created_at', Carbon::now()->year)
             ->groupBy('barang.id_barang', 'barang.nama_barang', 'barang.harga_jual')
-            ->orderByDesc('total_sold')
+            ->orderBy($currentSort, $currentDirection)
             ->limit(5)
             ->get();
 
@@ -108,7 +124,9 @@ class DashboardController extends Controller
             'stokAman',
             'penjualanMingguan',
             'top5Products',
-            'marginBulanIni'
+            'marginBulanIni',
+            'currentSort',
+            'currentDirection'
         ));
     }
 }

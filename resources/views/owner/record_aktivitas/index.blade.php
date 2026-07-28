@@ -1,6 +1,7 @@
 @extends('layouts.owner')
 
 @section('content')
+<x-owner-content>
 <style>
     .page-header {
         margin-bottom: 2rem;
@@ -181,6 +182,31 @@
         font-size: 13px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+    }
+
+    table th a {
+        color: #1f2937;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    table th a:hover {
+        color: #3b82f6;
+    }
+
+    table th a .sort-indicator {
+        display: inline-block;
+        font-size: 12px;
+        margin-left: 4px;
+        color: #9ca3af;
+    }
+
+    table th a.active .sort-indicator {
+        color: #3b82f6;
     }
 
     table td {
@@ -410,9 +436,39 @@
         <table>
             <thead>
                 <tr>
-                    <th>Waktu</th>
-                    <th>User</th>
-                    <th>Aksi</th>
+                    @php
+                        $newDirection = (request('sort') === 'created_at' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=created_at&direction={{ $newDirection }}&tanggal_mulai={{ request('tanggal_mulai') }}&tanggal_akhir={{ request('tanggal_akhir') }}&id_user={{ request('id_user') }}&action={{ request('action') }}&search={{ request('search') }}" class="{{ request('sort') === 'created_at' ? 'active' : '' }}">
+                            Waktu
+                            @if(request('sort') === 'created_at')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
+                    @php
+                        $newDirection = (request('sort') === 'id_user' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=id_user&direction={{ $newDirection }}&tanggal_mulai={{ request('tanggal_mulai') }}&tanggal_akhir={{ request('tanggal_akhir') }}&id_user={{ request('id_user') }}&action={{ request('action') }}&search={{ request('search') }}" class="{{ request('sort') === 'id_user' ? 'active' : '' }}">
+                            User
+                            @if(request('sort') === 'id_user')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
+                    @php
+                        $newDirection = (request('sort') === 'action' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=action&direction={{ $newDirection }}&tanggal_mulai={{ request('tanggal_mulai') }}&tanggal_akhir={{ request('tanggal_akhir') }}&id_user={{ request('id_user') }}&action={{ request('action') }}&search={{ request('search') }}" class="{{ request('sort') === 'action' ? 'active' : '' }}">
+                            Aksi
+                            @if(request('sort') === 'action')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
                     <th>Deskripsi</th>
                     <th style="width: 100px; text-align: center;">Detail</th>
                 </tr>
@@ -677,5 +733,7 @@
         color: #2563eb;
     }
 </style>
+
+</x-owner-content>
 
 @endsection

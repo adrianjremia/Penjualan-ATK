@@ -1,6 +1,7 @@
 @extends('layouts.owner')
 
 @section('content')
+<x-owner-content>
 <style>
     .page-header {
         margin-bottom: 2rem;
@@ -274,10 +275,40 @@
             <thead>
                 <tr>
                     <th>ID Transaksi</th>
-                    <th>Tanggal</th>
-                    <th>Kasir</th>
+                    @php
+                        $newDirection = (request('sort') === 'created_at' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=created_at&direction={{ $newDirection }}&tanggal_mulai={{ request('tanggal_mulai') }}&tanggal_akhir={{ request('tanggal_akhir') }}&id_user={{ request('id_user') }}" class="{{ request('sort') === 'created_at' ? 'active' : '' }}">
+                            Tanggal
+                            @if(request('sort') === 'created_at')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
+                    @php
+                        $newDirection = (request('sort') === 'id_user' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=id_user&direction={{ $newDirection }}&tanggal_mulai={{ request('tanggal_mulai') }}&tanggal_akhir={{ request('tanggal_akhir') }}&id_user={{ request('id_user') }}" class="{{ request('sort') === 'id_user' ? 'active' : '' }}">
+                            Kasir
+                            @if(request('sort') === 'id_user')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
                     <th>Jumlah Item</th>
-                    <th>Total Harga</th>
+                    @php
+                        $newDirection = (request('sort') === 'total_harga' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=total_harga&direction={{ $newDirection }}&tanggal_mulai={{ request('tanggal_mulai') }}&tanggal_akhir={{ request('tanggal_akhir') }}&id_user={{ request('id_user') }}" class="{{ request('sort') === 'total_harga' ? 'active' : '' }}">
+                            Total Harga
+                            @if(request('sort') === 'total_harga')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -356,5 +387,7 @@ document.addEventListener('DOMContentLoaded', function() {
     filterUser.addEventListener('change', submitFilter);
 });
 </script>
+
+</x-owner-content>
 
 @endsection

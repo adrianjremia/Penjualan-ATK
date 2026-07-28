@@ -35,7 +35,26 @@ class RiwayatTransaksiController extends Controller
             $query->where('id_user', $request->input('id_user'));
         }
 
-        $transaksis = $query->orderBy('created_at', 'desc')->get();
+        // Handle sorting
+        $currentSort = request('sort', 'created_at');
+        $currentDirection = request('direction', 'desc');
+
+        // Validate allowed sort columns
+        $allowedSorts = ['created_at', 'total_harga', 'id_user'];
+        if (!in_array($currentSort, $allowedSorts)) {
+            $currentSort = 'created_at';
+            $currentDirection = 'desc';
+        }
+
+        // Validate direction
+        if (!in_array($currentDirection, ['asc', 'desc'])) {
+            $currentDirection = 'desc';
+        }
+
+        // Apply sorting to query
+        $query->orderBy($currentSort, $currentDirection);
+
+        $transaksis = $query->get();
         $totalKeseluruhan = $transaksis->sum('total_harga');
 
         // Get list of users for filter dropdown
@@ -44,7 +63,9 @@ class RiwayatTransaksiController extends Controller
         return view('owner.riwayat-transaksi.index', compact(
             'transaksis',
             'totalKeseluruhan',
-            'users'
+            'users',
+            'currentSort',
+            'currentDirection'
         ));
     }
 

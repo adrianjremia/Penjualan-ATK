@@ -1,6 +1,7 @@
 @extends('layouts.owner')
 
 @section('content')
+<x-owner-content>
 <style>
     .page-header {
         margin-bottom: 2rem;
@@ -290,5 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     @endif
 </div>
+
+</x-owner-content>
 
 @endsection

@@ -1,6 +1,7 @@
 @extends('layouts.owner')
 
 @section('content')
+<x-owner-content>
 <style>
     .page-header {
         margin-bottom: 2rem;
@@ -188,6 +189,31 @@
         color: #1f2937;
     }
 
+    table th a {
+        color: #1f2937;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    table th a:hover {
+        color: #3b82f6;
+    }
+
+    table th a .sort-indicator {
+        display: inline-block;
+        font-size: 12px;
+        margin-left: 4px;
+        color: #9ca3af;
+    }
+
+    table th a.active .sort-indicator {
+        color: #3b82f6;
+    }
+
     table td {
         padding: 14px 12px;
         border-bottom: 1px solid #e5e7eb;
@@ -329,9 +355,39 @@
         <table>
             <thead>
                 <tr>
-                    <th>Produk</th>
-                    <th>Terjual</th>
-                    <th>Revenue</th>
+                    @php
+                        $newDirection = (request('sort') === 'nama_barang' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=nama_barang&direction={{ $newDirection }}" class="{{ request('sort') === 'nama_barang' ? 'active' : '' }}">
+                            Produk
+                            @if(request('sort') === 'nama_barang')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
+                    @php
+                        $newDirection = (request('sort') === 'total_sold' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=total_sold&direction={{ $newDirection }}" class="{{ request('sort') === 'total_sold' ? 'active' : '' }}">
+                            Terjual
+                            @if(request('sort') === 'total_sold')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
+                    @php
+                        $newDirection = (request('sort') === 'total_revenue' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=total_revenue&direction={{ $newDirection }}" class="{{ request('sort') === 'total_revenue' ? 'active' : '' }}">
+                            Revenue
+                            @if(request('sort') === 'total_revenue')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -384,5 +440,7 @@
     </div>
 </div>
 @endif
+
+</x-owner-content>
 
 @endsection

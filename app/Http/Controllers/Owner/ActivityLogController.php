@@ -35,7 +35,26 @@ class ActivityLogController extends Controller
             $query->searchDescription($request->input('search'));
         }
 
-        $recordAktivitas = $query->orderBy('created_at', 'desc')->paginate(50);
+        // Handle sorting
+        $currentSort = request('sort', 'created_at');
+        $currentDirection = request('direction', 'desc');
+
+        // Validate allowed sort columns
+        $allowedSorts = ['created_at', 'id_user', 'action'];
+        if (!in_array($currentSort, $allowedSorts)) {
+            $currentSort = 'created_at';
+            $currentDirection = 'desc';
+        }
+
+        // Validate direction
+        if (!in_array($currentDirection, ['asc', 'desc'])) {
+            $currentDirection = 'desc';
+        }
+
+        // Apply sorting to query
+        $query->orderBy($currentSort, $currentDirection);
+
+        $recordAktivitas = $query->paginate(50);
 
         // Get unique actions for filter dropdown
         $actions = RecordAktivitas::select('action')
@@ -49,7 +68,9 @@ class ActivityLogController extends Controller
         return view('owner.record_aktivitas.index', compact(
             'recordAktivitas',
             'actions',
-            'users'
+            'users',
+            'currentSort',
+            'currentDirection'
         ));
     }
 }
