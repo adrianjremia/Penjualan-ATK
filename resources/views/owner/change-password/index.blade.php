@@ -10,19 +10,37 @@
     </div>
 
     @if ($errors->any())
-        <div style="background: #fee2e2; border: 1px solid #fecaca; border-radius: 6px; padding: 12px 16px; margin-bottom: 20px;">
-            <p style="color: #991b1b; font-weight: 600; margin-bottom: 8px;">Terjadi Kesalahan</p>
-            <ul style="margin: 0; padding: 0; color: #991b1b; font-size: 14px;">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+        <div style="background: #fef2f2; border: 1px solid #fee2e2; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+            <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                <div style="flex-shrink: 0;">
+                    <svg style="width: 20px; height: 20px; color: #dc2626;" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div style="flex: 1;">
+                    <h3 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #7f1d1d;">Terjadi Kesalahan</h3>
+                    <ul style="margin: 0; padding-left: 20px; color: #991b1b; font-size: 13px; line-height: 1.6;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
         </div>
     @endif
 
     @if (session('success'))
-        <div style="background: #dcfce7; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px 16px; margin-bottom: 20px;">
-            <p style="color: #166534; font-weight: 600;">{{ session('success') }}</p>
+        <div style="background: #f0fdf4; border: 1px solid #dcfce7; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+            <div style="display: flex; gap: 12px;">
+                <div style="flex-shrink: 0;">
+                    <svg style="width: 20px; height: 20px; color: #16a34a;" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div style="flex: 1;">
+                    <p style="margin: 0; color: #166534; font-weight: 600; font-size: 14px;">{{ session('success') }}</p>
+                </div>
+            </div>
         </div>
     @endif
 
