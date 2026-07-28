@@ -73,7 +73,12 @@
             <label for="old_password" style="display: block; font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 6px;">
                 Password Lama
             </label>
-            <input type="password" id="old_password" name="old_password" placeholder="Masukkan password lama" style="width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; font-family: inherit;">
+            <div style="position: relative; display: flex; align-items: center;">
+                <input type="password" id="old_password" name="old_password" placeholder="Masukkan password lama" style="width: 100%; padding: 10px 12px; padding-right: 40px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; font-family: inherit;">
+                <button type="button" onclick="togglePasswordVisibility('old_password')" style="position: absolute; right: 12px; background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center;">
+                    <img src="{{ asset('images/icons/detail.png') }}" alt="Show Password" style="width: 18px; height: 18px; opacity: 0.6;">
+                </button>
+            </div>
             @error('old_password')
                 <p style="color: #dc2626; font-size: 12px; margin-top: 4px;">{{ $message }}</p>
             @enderror
@@ -84,7 +89,12 @@
             <label for="new_password" style="display: block; font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 6px;">
                 Password Baru
             </label>
-            <input type="password" id="new_password" name="new_password" placeholder="Masukkan password baru (minimal 8 karakter)" style="width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; font-family: inherit;">
+            <div style="position: relative; display: flex; align-items: center;">
+                <input type="password" id="new_password" name="new_password" placeholder="Masukkan password baru (minimal 8 karakter)" style="width: 100%; padding: 10px 12px; padding-right: 40px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; font-family: inherit;">
+                <button type="button" onclick="togglePasswordVisibility('new_password')" style="position: absolute; right: 12px; background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center;">
+                    <img src="{{ asset('images/icons/detail.png') }}" alt="Show Password" style="width: 18px; height: 18px; opacity: 0.6;">
+                </button>
+            </div>
             <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Minimal 8 karakter</p>
             @error('new_password')
                 <p style="color: #dc2626; font-size: 12px; margin-top: 4px;">{{ $message }}</p>
@@ -96,7 +106,12 @@
             <label for="new_password_confirmation" style="display: block; font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 6px;">
                 Konfirmasi Password Baru
             </label>
-            <input type="password" id="new_password_confirmation" name="new_password_confirmation" placeholder="Konfirmasi password baru" style="width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; font-family: inherit;">
+            <div style="position: relative; display: flex; align-items: center;">
+                <input type="password" id="new_password_confirmation" name="new_password_confirmation" placeholder="Konfirmasi password baru" style="width: 100%; padding: 10px 12px; padding-right: 40px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; font-family: inherit;">
+                <button type="button" onclick="togglePasswordVisibility('new_password_confirmation')" style="position: absolute; right: 12px; background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center;">
+                    <img src="{{ asset('images/icons/detail.png') }}" alt="Show Password" style="width: 18px; height: 18px; opacity: 0.6;">
+                </button>
+            </div>
             @error('new_password_confirmation')
                 <p style="color: #dc2626; font-size: 12px; margin-top: 4px;">{{ $message }}</p>
             @enderror
@@ -131,6 +146,12 @@ function toggleOldPasswordField() {
         document.getElementById('old_password').required = false;
         document.getElementById('old_password').value = '';
     }
+}
+
+function togglePasswordVisibility(fieldId) {
+    const field = document.getElementById(fieldId);
+    const isPassword = field.type === 'password';
+    field.type = isPassword ? 'text' : 'password';
 }
 </script>
 
