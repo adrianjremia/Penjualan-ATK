@@ -99,6 +99,31 @@
         color: #1f2937;
     }
 
+    table th a {
+        color: #1f2937;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    table th a:hover {
+        color: #3b82f6;
+    }
+
+    table th a .sort-indicator {
+        display: inline-block;
+        font-size: 12px;
+        margin-left: 4px;
+        color: #9ca3af;
+    }
+
+    table th a.active .sort-indicator {
+        color: #3b82f6;
+    }
+
     table td {
         padding: 14px 12px;
         border-bottom: 1px solid #e5e7eb;
@@ -240,10 +265,50 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID Transaksi</th>
-                    <th>Tanggal</th>
-                    <th>Jumlah Item</th>
-                    <th>Total Harga</th>
+                    @php
+                        $newDirection = (request('sort') === 'id_transaksi' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=id_transaksi&direction={{ $newDirection }}&tanggal_mulai={{ request('tanggal_mulai') }}&tanggal_akhir={{ request('tanggal_akhir') }}" class="{{ request('sort') === 'id_transaksi' ? 'active' : '' }}">
+                            ID Transaksi
+                            @if(request('sort') === 'id_transaksi')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
+                    @php
+                        $newDirection = (request('sort') === 'created_at' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=created_at&direction={{ $newDirection }}&tanggal_mulai={{ request('tanggal_mulai') }}&tanggal_akhir={{ request('tanggal_akhir') }}" class="{{ request('sort') === 'created_at' ? 'active' : '' }}">
+                            Tanggal
+                            @if(request('sort') === 'created_at')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
+                    @php
+                        $newDirection = (request('sort') === 'detail_transaksi_count' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=detail_transaksi_count&direction={{ $newDirection }}&tanggal_mulai={{ request('tanggal_mulai') }}&tanggal_akhir={{ request('tanggal_akhir') }}" class="{{ request('sort') === 'detail_transaksi_count' ? 'active' : '' }}">
+                            Jumlah Item
+                            @if(request('sort') === 'detail_transaksi_count')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
+                    @php
+                        $newDirection = (request('sort') === 'total_harga' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=total_harga&direction={{ $newDirection }}&tanggal_mulai={{ request('tanggal_mulai') }}&tanggal_akhir={{ request('tanggal_akhir') }}" class="{{ request('sort') === 'total_harga' ? 'active' : '' }}">
+                            Total Harga
+                            @if(request('sort') === 'total_harga')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
                     <th>Aksi</th>
                 </tr>
             </thead>

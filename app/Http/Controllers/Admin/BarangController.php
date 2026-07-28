@@ -9,10 +9,28 @@ use Illuminate\Http\Request;
 class BarangController extends Controller
 {
     // Tampilkan semua barang
-    public function index()
+    public function index(Request $request)
     {
-        $barang = Barang::all();
-        return view('admin.barang.index', compact('barang'));
+        // Handle sorting
+        $currentSort = request('sort', 'id_barang');
+        $currentDirection = request('direction', 'desc');
+
+        // Validate allowed sort columns
+        $allowedSorts = ['id_barang', 'nama_barang', 'kategori', 'harga_beli', 'harga_jual', 'stok', 'satuan'];
+        if (!in_array($currentSort, $allowedSorts)) {
+            $currentSort = 'id_barang';
+            $currentDirection = 'desc';
+        }
+
+        // Validate direction
+        if (!in_array($currentDirection, ['asc', 'desc'])) {
+            $currentDirection = 'desc';
+        }
+
+        // Apply sorting to query
+        $barang = Barang::orderBy($currentSort, $currentDirection)->get();
+
+        return view('admin.barang.index', compact('barang', 'currentSort', 'currentDirection'));
     }
 
     // Form tambah barang

@@ -101,6 +101,31 @@
         color: #374151;
     }
 
+    .table th a {
+        color: #374151;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .table th a:hover {
+        color: #2563eb;
+    }
+
+    .table th a .sort-indicator {
+        display: inline-block;
+        font-size: 12px;
+        margin-left: 4px;
+        color: #9ca3af;
+    }
+
+    .table th a.active .sort-indicator {
+        color: #2563eb;
+    }
+
     .table tbody td {
         padding: 14px 16px;
         border-bottom: 1px solid #e5e7eb;
@@ -213,19 +238,79 @@
     <table class="table">
         <thead>
             <tr>
-                <th>ID Barang</th>
-                <th>Nama Barang</th>
-                <th>Kategori</th>
-                <th>Harga Beli</th>
-                <th>Harga Jual</th>
-                <th>Stok</th>
+                @php
+                    $newDirection = (request('sort') === 'id_barang' && request('direction') === 'desc') ? 'asc' : 'desc';
+                @endphp
+                <th>
+                    <a href="?sort=id_barang&direction={{ $newDirection }}" class="{{ request('sort') === 'id_barang' ? 'active' : '' }}">
+                        ID Barang
+                        @if(request('sort') === 'id_barang')
+                            <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </a>
+                </th>
+                @php
+                    $newDirection = (request('sort') === 'nama_barang' && request('direction') === 'desc') ? 'asc' : 'desc';
+                @endphp
+                <th>
+                    <a href="?sort=nama_barang&direction={{ $newDirection }}" class="{{ request('sort') === 'nama_barang' ? 'active' : '' }}">
+                        Nama Barang
+                        @if(request('sort') === 'nama_barang')
+                            <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </a>
+                </th>
+                @php
+                    $newDirection = (request('sort') === 'kategori' && request('direction') === 'desc') ? 'asc' : 'desc';
+                @endphp
+                <th>
+                    <a href="?sort=kategori&direction={{ $newDirection }}" class="{{ request('sort') === 'kategori' ? 'active' : '' }}">
+                        Kategori
+                        @if(request('sort') === 'kategori')
+                            <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </a>
+                </th>
+                @php
+                    $newDirection = (request('sort') === 'harga_beli' && request('direction') === 'desc') ? 'asc' : 'desc';
+                @endphp
+                <th>
+                    <a href="?sort=harga_beli&direction={{ $newDirection }}" class="{{ request('sort') === 'harga_beli' ? 'active' : '' }}">
+                        Harga Beli
+                        @if(request('sort') === 'harga_beli')
+                            <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </a>
+                </th>
+                @php
+                    $newDirection = (request('sort') === 'harga_jual' && request('direction') === 'desc') ? 'asc' : 'desc';
+                @endphp
+                <th>
+                    <a href="?sort=harga_jual&direction={{ $newDirection }}" class="{{ request('sort') === 'harga_jual' ? 'active' : '' }}">
+                        Harga Jual
+                        @if(request('sort') === 'harga_jual')
+                            <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </a>
+                </th>
+                @php
+                    $newDirection = (request('sort') === 'stok' && request('direction') === 'desc') ? 'asc' : 'desc';
+                @endphp
+                <th>
+                    <a href="?sort=stok&direction={{ $newDirection }}" class="{{ request('sort') === 'stok' ? 'active' : '' }}">
+                        Stok
+                        @if(request('sort') === 'stok')
+                            <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </a>
+                </th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
             @forelse ($barang as $item)
             <tr>
-                <td>{{ str_pad($item->id_barang, 4, '0', STR_PAD_LEFT) }}</td>
+                <td>{{ $item->id_barang }}</td>
                 <td>{{ $item->nama_barang }}</td>
                 <td>{{ $item->kategori }}</td>
                 <td>Rp {{ number_format($item->harga_beli, 0, ',', '.') }}</td>
