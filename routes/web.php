@@ -106,6 +106,7 @@ Route::prefix('admin')->middleware(['auth', 'role:0'])->group(function () {
 // OWNER - Riwayat Transaksi
 use App\Http\Controllers\Owner\RiwayatTransaksiController;
 use App\Http\Controllers\Owner\ActivityLogController;
+use App\Http\Controllers\Owner\ChangePasswordController;
 
 Route::middleware(['auth', 'role:1'])->group(function () {
     // Riwayat Transaksi
@@ -127,9 +128,13 @@ Route::middleware(['auth', 'role:1'])->group(function () {
     });
 
     // Activity Log
-    Route::get('/pemilik/activity-log', [ActivityLogController::class, 'index'])
-        ->name('owner.activity-log.index');
-
     Route::get('/pemilik/record-aktivitas', [ActivityLogController::class, 'index'])
-        ->name('owner.record-aktivitas.index');
+        ->name('owner.record_aktivitas.index');
+
+    // Change Password
+    Route::get('/pemilik/ganti-password', [ChangePasswordController::class, 'index'])
+        ->name('owner.change-password.index');
+
+    Route::post('/pemilik/ganti-password', [ChangePasswordController::class, 'changePassword'])
+        ->name('owner.change-password.store');
 });

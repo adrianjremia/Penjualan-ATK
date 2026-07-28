@@ -165,8 +165,12 @@
             Riwayat Transaksi
         </a>
         <a href="{{ url('/pemilik/record-aktivitas') }}" class="{{ request()->is('pemilik/record-aktivitas*') ? 'active' : '' }}">
-            <img src="{{ asset('images/icons/transaksi.png') }}" alt="Record Aktivitas">
-            Record Aktivitas
+            <img src="{{ asset('images/icons/logAktivitas.png') }}" alt="Log Aktivitas">
+            Log Aktivitas
+        </a>
+        <a href="{{ url('/pemilik/ganti-password') }}" class="{{ request()->is('pemilik/ganti-password*') ? 'active' : '' }}">
+            <img src="{{ asset('images/icons/changePW.png') }}" alt="Ganti Password">
+            Ganti Password
         </a>
     </div>
 
