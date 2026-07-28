@@ -37,8 +37,11 @@
             <select id="user_id" name="user_id" onchange="toggleOldPasswordField()" style="width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; font-family: inherit;">
                 <option value="">-- Pilih Pengguna --</option>
                 @foreach ($users as $user)
+                    @php
+                        $roleName = $user->role == 0 ? 'Admin' : 'Pemilik';
+                    @endphp
                     <option value="{{ $user->id }}" data-user-id="{{ $user->id }}" data-current-user="{{ auth()->id() }}">
-                        {{ $user->name }} ({{ $user->role }})
+                        {{ $user->name }} ({{ $roleName }})
                     </option>
                 @endforeach
             </select>
