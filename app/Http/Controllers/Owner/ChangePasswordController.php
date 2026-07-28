@@ -21,15 +21,9 @@ class ChangePasswordController extends Controller
 
     public function changePassword(Request $request)
     {
-        // Debug: Log request data
-        \Log::info('[v0] Change password request:', [
-            'user_id' => $request->input('user_id'),
-            'user_id_type' => gettype($request->input('user_id')),
-        ]);
-
         // Validate input
         $validated = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
+            'user_id' => 'required|integer|exists:users,id_user',
             'old_password' => 'nullable|string',
             'new_password' => 'required|string|min:8|confirmed',
         ], [
@@ -42,9 +36,10 @@ class ChangePasswordController extends Controller
             'new_password.confirmed' => 'Konfirmasi password tidak sesuai',
         ]);
 
-        $selectedUser = User::findOrFail($validated['user_id']);
+        // Find user by id_user (primary key)
+        $selectedUser = User::where('id_user', $validated['user_id'])->firstOrFail();
         $currentUser = Auth::user();
-        $isChangingOwnPassword = $selectedUser->id === $currentUser->id;
+        $isChangingOwnPassword = $selectedUser->id_user === $currentUser->id_user;
 
         // Validate old password jika mengubah password sendiri
         if ($isChangingOwnPassword) {
@@ -71,7 +66,7 @@ class ChangePasswordController extends Controller
         ActivityLogService::logUpdate(
             auth()->id(),
             'User',
-            $selectedUser->id,
+            $selectedUser->id_user,
             ['password' => 'hidden'],
             ['password' => 'updated']
         );
