@@ -413,7 +413,17 @@ document.addEventListener('DOMContentLoaded', function() {
         <table>
                 <thead>
                     <tr>
-                        <th>ID Barang</th>
+                        @php
+                            $newDirection = (request('sort') === 'id_barang' && request('direction') === 'desc') ? 'asc' : 'desc';
+                        @endphp
+                        <th>
+                            <a href="?sort=id_barang&direction={{ $newDirection }}&tanggal_awal={{ request('tanggal_awal') }}&tanggal_akhir={{ request('tanggal_akhir') }}&search={{ request('search') }}" class="{{ request('sort') === 'id_barang' ? 'active' : '' }}">
+                                ID Barang
+                                @if(request('sort') === 'id_barang')
+                                    <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
                         @php
                             $newDirection = (request('sort') === 'nama_barang' && request('direction') === 'desc') ? 'asc' : 'desc';
                         @endphp
@@ -425,7 +435,17 @@ document.addEventListener('DOMContentLoaded', function() {
                                 @endif
                             </a>
                         </th>
-                        <th>Kategori</th>
+                        @php
+                            $newDirection = (request('sort') === 'kategori' && request('direction') === 'desc') ? 'asc' : 'desc';
+                        @endphp
+                        <th>
+                            <a href="?sort=kategori&direction={{ $newDirection }}&tanggal_awal={{ request('tanggal_awal') }}&tanggal_akhir={{ request('tanggal_akhir') }}&search={{ request('search') }}" class="{{ request('sort') === 'kategori' ? 'active' : '' }}">
+                                Kategori
+                                @if(request('sort') === 'kategori')
+                                    <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
                         @php
                             $newDirection = (request('sort') === 'stok' && request('direction') === 'desc') ? 'asc' : 'desc';
                         @endphp

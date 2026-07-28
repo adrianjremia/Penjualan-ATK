@@ -140,7 +140,7 @@ class LaporanController extends Controller
         $currentDirection = request('direction', 'desc');
 
         // Validate allowed sort columns
-        $allowedSorts = ['tanggal', 'pendapatan', 'modal', 'laba'];
+        $allowedSorts = ['tanggal', 'pendapatan', 'modal', 'laba', 'margin'];
         if (!in_array($currentSort, $allowedSorts)) {
             $currentSort = 'tanggal';
             $currentDirection = 'desc';
@@ -151,8 +151,12 @@ class LaporanController extends Controller
             $currentDirection = 'desc';
         }
 
-        // Apply sorting to laporanHarian
-        $laporanHarianCollection = collect($laporanHarian);
+        // Apply sorting to laporanHarian with margin calculation
+        $laporanHarianCollection = collect($laporanHarian)->map(function($item) {
+            $item['margin'] = $item['pendapatan'] > 0 ? (($item['laba'] / $item['pendapatan']) * 100) : 0;
+            return $item;
+        });
+        
         if ($currentSort === 'tanggal') {
             $laporanHarian = $laporanHarianCollection->sortBy(function($item) {
                 return $item['tanggal']->timestamp;
@@ -240,7 +244,7 @@ class LaporanController extends Controller
         $currentDirection = request('direction', 'desc');
 
         // Validate allowed sort columns for barangs table
-        $allowedSorts = ['nama_barang', 'stok', 'total_sold', 'revenue'];
+        $allowedSorts = ['id_barang', 'nama_barang', 'kategori', 'stok', 'total_sold', 'revenue'];
         if (!in_array($currentSort, $allowedSorts)) {
             $currentSort = 'nama_barang';
             $currentDirection = 'desc';
@@ -253,8 +257,8 @@ class LaporanController extends Controller
 
         // Apply sorting to barangsWithRevenue
         $barangsWithRevenue = collect($barangsWithRevenue)->sortBy(function($item) use ($currentSort) {
-            if ($currentSort === 'nama_barang') {
-                return strtolower($item[$currentSort]);
+            if ($currentSort === 'nama_barang' || $currentSort === 'kategori') {
+                return strtolower($item[$currentSort] ?? '');
             }
             return $item[$currentSort] ?? 0;
         }, SORT_NATURAL | SORT_FLAG_CASE, $currentDirection === 'desc')->values()->toArray();

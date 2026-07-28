@@ -366,7 +366,17 @@
                                 @endif
                             </a>
                         </th>
-                        <th>Margin</th>
+                        @php
+                            $newDirection = (request('sort') === 'margin' && request('direction') === 'desc') ? 'asc' : 'desc';
+                        @endphp
+                        <th>
+                            <a href="?sort=margin&direction={{ $newDirection }}&tanggal_awal={{ request('tanggal_awal') }}&tanggal_akhir={{ request('tanggal_akhir') }}" class="{{ request('sort') === 'margin' ? 'active' : '' }}">
+                                Margin
+                                @if(request('sort') === 'margin')
+                                    <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
+                        </th>
                     </tr>
                 </thead>
             <tbody>
@@ -376,7 +386,7 @@
                     <td class="text-profit">Rp {{ number_format($laporan['pendapatan'], 0, ',', '.') }}</td>
                     <td class="text-expense">Rp {{ number_format($laporan['modal'], 0, ',', '.') }}</td>
                     <td class="text-profit">Rp {{ number_format($laporan['laba'], 0, ',', '.') }}</td>
-                    <td>{{ $laporan['pendapatan'] > 0 ? round(($laporan['laba'] / $laporan['pendapatan']) * 100, 1) : 0 }}%</td>
+                    <td>{{ round($laporan['margin'], 1) }}%</td>
                 </tr>
                 @empty
                 <tr>

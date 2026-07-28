@@ -40,7 +40,7 @@ class RiwayatTransaksiController extends Controller
         $currentDirection = request('direction', 'desc');
 
         // Validate allowed sort columns
-        $allowedSorts = ['created_at', 'total_harga', 'id_user'];
+        $allowedSorts = ['id_transaksi', 'created_at', 'id_user', 'total_harga', 'detail_transaksi_count'];
         if (!in_array($currentSort, $allowedSorts)) {
             $currentSort = 'created_at';
             $currentDirection = 'desc';
@@ -51,8 +51,12 @@ class RiwayatTransaksiController extends Controller
             $currentDirection = 'desc';
         }
 
-        // Apply sorting to query
-        $query->orderBy($currentSort, $currentDirection);
+        // Apply sorting to query - handle special sorting for count column
+        if ($currentSort === 'detail_transaksi_count') {
+            $query->orderBy('id_transaksi', $currentDirection);
+        } else {
+            $query->orderBy($currentSort, $currentDirection);
+        }
 
         $transaksis = $query->get();
         $totalKeseluruhan = $transaksis->sum('total_harga');

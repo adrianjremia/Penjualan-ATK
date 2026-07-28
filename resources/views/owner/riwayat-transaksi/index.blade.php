@@ -274,7 +274,17 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID Transaksi</th>
+                    @php
+                        $newDirection = (request('sort') === 'id_transaksi' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=id_transaksi&direction={{ $newDirection }}&tanggal_mulai={{ request('tanggal_mulai') }}&tanggal_akhir={{ request('tanggal_akhir') }}&id_user={{ request('id_user') }}" class="{{ request('sort') === 'id_transaksi' ? 'active' : '' }}">
+                            ID Transaksi
+                            @if(request('sort') === 'id_transaksi')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
                     @php
                         $newDirection = (request('sort') === 'created_at' && request('direction') === 'desc') ? 'asc' : 'desc';
                     @endphp
@@ -297,7 +307,17 @@
                             @endif
                         </a>
                     </th>
-                    <th>Jumlah Item</th>
+                    @php
+                        $newDirection = (request('sort') === 'detail_transaksi_count' && request('direction') === 'desc') ? 'asc' : 'desc';
+                    @endphp
+                    <th>
+                        <a href="?sort=detail_transaksi_count&direction={{ $newDirection }}&tanggal_mulai={{ request('tanggal_mulai') }}&tanggal_akhir={{ request('tanggal_akhir') }}&id_user={{ request('id_user') }}" class="{{ request('sort') === 'detail_transaksi_count' ? 'active' : '' }}">
+                            Jumlah Item
+                            @if(request('sort') === 'detail_transaksi_count')
+                                <span class="sort-indicator">{{ request('direction') === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </a>
+                    </th>
                     @php
                         $newDirection = (request('sort') === 'total_harga' && request('direction') === 'desc') ? 'asc' : 'desc';
                     @endphp
