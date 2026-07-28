@@ -58,7 +58,7 @@
                     @php
                         $roleName = $user->role == 0 ? 'Admin' : 'Pemilik';
                     @endphp
-                    <option value="{{ $user->id }}" data-user-id="{{ $user->id }}" data-current-user="{{ auth()->id() }}">
+                    <option value="{{ $user->id_user }}" data-user-id="{{ $user->id_user }}" data-current-user="{{ auth()->id_user() }}">
                         {{ $user->name }} ({{ $roleName }})
                     </option>
                 @endforeach
