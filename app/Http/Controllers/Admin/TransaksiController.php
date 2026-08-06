@@ -93,8 +93,13 @@ public function index(Request $request)
         $total = 0;
 
         foreach ($cart as $item) {
-            $barang = Barang::findOrFail($item['id_barang']);
+            // 🔒 LOCK barang untuk prevent race condition
+            // Jika 2 admin simultaneous, yang 1 akan menunggu
+            $barang = Barang::where('id_barang', $item['id_barang'])
+                            ->lockForUpdate()
+                            ->firstOrFail();
 
+            // Cek stok dengan data TERKINI (sudah di-lock)
             if ($barang->stok < $item['jumlah']) {
                 throw new \Exception("Stok {$barang->nama_barang} tidak mencukupi");
             }
