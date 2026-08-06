@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class ForecastingService
 {
-    const ALPHA = 0.3; // Constant alpha untuk SES
+    const ALPHA = 0.5; // Constant alpha untuk SES (dinaikkan untuk responsif lebih cepat)
 
     /**
      * Hitung Single Exponential Smoothing (SES) dengan Alpha 0.3
